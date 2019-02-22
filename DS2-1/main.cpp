@@ -8,6 +8,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ using namespace std;
 #define MENU_MAXHEAP            1
 #define MENU_DEAP               2
 
-#define DATA_SIZE               11
+#define DATA_SIZE               12
 #define DATA_ID                 0
 #define DATA_NAME               1
 #define DATA_DEPARTMENT_ID      2
@@ -28,9 +29,11 @@ using namespace std;
 #define DATA_GRADUATES          8
 #define DATA_CITY               9
 #define DATA_TYPE               10
+#define DATA_ORDER              11
 // clang-format on
 
 static bool inputSuccess;
+static int order;
 void errorHandling(string message);
 
 static string getOnlyDigits(string str)
@@ -60,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder;
+static vector<int> selectOrder = { DATA_STUDENTS };
 
 class Data {
     string column[DATA_SIZE];
@@ -94,8 +97,9 @@ public:
             }
         }
 
-        if (count != DATA_SIZE)
+		if (count != DATA_SIZE - 1)
             inputSuccess = false;
+		else data.column[count] = to_string(order);
 
         return in;
     }
@@ -113,9 +117,9 @@ public:
     bool operator>(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            if (stringToInt(column[i]) > stringToInt(b.column[i]))
                 return true;
-            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
                 return false;
             // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
         }
@@ -125,9 +129,9 @@ public:
     bool operator>=(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            if (stringToInt(column[i]) > stringToInt(b.column[i]))
                 return true;
-            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
                 return false;
             // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
         }
@@ -137,9 +141,9 @@ public:
     bool operator<=(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            if (stringToInt(column[i]) < stringToInt(b.column[i]))
                 return true;
-            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
                 return false;
             // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
         }
@@ -149,23 +153,72 @@ public:
     bool operator<(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            if (stringToInt(column[i]) < stringToInt(b.column[i]))
                 return true;
-            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
                 return false;
             // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
         }
         return false;
     }
+
+	void print()
+	{
+		for (auto i : selectOrder)
+			cout << ' ' << column[i];
+	}
+	int getorder() 
+	{
+		return convertToInt(DATA_ORDER);
+	}
 };
 
 class Heap {
+
+public:
+    vector<Data> heap;
+	virtual bool cmp(int &cur, int &pre) = 0;
+
+	void bubbleup(int &cur, int &pre) 
+	{
+		if (cmp(cur, pre)) {
+			swap(heap[cur], heap[pre]);
+			cur = pre;
+			pre = (pre - 1) / 2;
+			bubbleup(cur, pre);
+		}
+	}
+
+	void insert(Data temp) 
+	{
+		heap.push_back(temp);
+		int cur = heap.size() - 1;
+		int pre = (cur - 1) / 2;
+		bubbleup(cur, pre);
+	}
+
+	void print_ans() 
+	{
+		int ans[3] = { 0,  heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1 };
+		for (int i = 0; i < 3; i++) {
+			cout << '[' << heap[ans[i]].getorder() << ']';
+			heap[ans[i]].print();
+			cout << endl;
+		}
+	}
+	
 };
 
-class MaxHeap {
+class MaxHeap : public Heap{
+	bool cmp(int &cur, int &pre) {
+		return (heap[cur] > heap[pre]) ? true : false;
+	}
 };
 
-class MinHeap {
+class MinHeap : public Heap {
+	bool cmp(int &cur, int &pre) {
+		return (heap[cur] < heap[pre]) ? true : false;
+	}
 };
 
 class Deap {
@@ -174,6 +227,9 @@ class Deap {
 class HandleFile {
     fstream fin;
     fstream fout;
+
+	MaxHeap maxheap;
+	MinHeap minheap; // test
 
     // common function
     int numberInput(string message, string errorMsg)
@@ -237,7 +293,29 @@ class HandleFile {
     }
 
 public:
-    bool task1() { return 0; }
+    bool task1() { 
+		string fileName = fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
+		order = 1;
+		// if fileName == "" then quit to menu
+		if (fileName != "") {
+			Data temp;
+			while (fin >> temp) // >> overload
+				if (inputSuccess) {
+					maxheap.insert(temp);
+					order++;
+				}
+
+			maxheap.print_ans();
+			// print out something
+		}
+		else {
+			cout << "switch to menu" << endl;
+		}
+
+		fin.close();
+
+		return fileName == ""; // {quit: 0, continue: 1}
+	}
 
     bool task2() { return 0; }
 };
