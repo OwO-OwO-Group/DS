@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
     string column[DATA_SIZE];
@@ -194,9 +194,7 @@ public:
 
     int bottom() { return heap.size() - 1; }
 
-    Data& operator[](int &index) {
-        return heap[index];
-    }
+    Data &operator[](int &index) { return heap[index]; }
 
     void insert(Data temp)
     {
@@ -207,8 +205,8 @@ public:
 
     void print_ans()
     {
-        string name[3] = { "root", "bottom", "left bottom" };
-        int ans[3] = { 0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1 };
+        string name[3] = {"root", "bottom", "left bottom"};
+        int ans[3] = {0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1};
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].print();
@@ -216,9 +214,7 @@ public:
         }
     }
 
-    int size() {
-        return heap.size();
-    }
+    int size() { return heap.size(); }
 };
 
 class MaxHeap : public Heap {
@@ -240,31 +236,39 @@ class Deap {
     MinHeap minheap;
     bool isminheap = true;
 
-    bool isfull(int size) {
-        return size == 1 ? false : pow(2, floor(log2(size))) == pow(2, log2(size));
+    bool isfull(int size)
+    {
+        return size == 1 ? false
+                         : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
+
 public:
-    void insert(Data temp) {
-        if (isminheap && isfull(minheap.size() + 1)) isminheap = false;
-        else if (!isminheap && isfull(maxheap.size() + 1)) isminheap = true;
+    void insert(Data temp)
+    {
+        if (isminheap && isfull(minheap.size() + 1))
+            isminheap = false;
+        else if (!isminheap && isfull(maxheap.size() + 1))
+            isminheap = true;
         if (isminheap) {
             int pre = preNode(minheap.size());
-            if (maxheap.size() != 0 && temp > maxheap[pre]) swap(temp, maxheap[pre]);
+            if (maxheap.size() != 0 && temp > maxheap[pre])
+                swap(temp, maxheap[pre]);
             minheap.insert(temp);
-            
         }
         else {
             int cur = maxheap.size();
-            if (temp < minheap[cur]) swap(temp, minheap[cur]);
+            if (temp < minheap[cur])
+                swap(temp, minheap[cur]);
             maxheap.insert(temp);
         }
     }
 
     void print_ans()
     {
-        string name[2] = { "bottom", "left bottom" };
+        string name[2] = {"bottom", "left bottom"};
         if (isminheap) {
-            int ans[2] = { minheap.size() - 1, pow(2, floor(log2(minheap.size()))) - 1 };
+            int ans[2] = {minheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1};
             for (int i = 0; i < 2; i++) {
                 cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
                 minheap[ans[i]].print();
@@ -272,14 +276,17 @@ public:
             }
         }
         else {
-            int ans[2] = { maxheap.size() - 1, pow(2, floor(log2(minheap.size()))) - 1 };
+            int ans[2] = {maxheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1};
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
-                    cout << name[i] << ":[" << maxheap[ans[i]].getorder() << ']';
+                    cout << name[i] << ":[" << maxheap[ans[i]].getorder()
+                         << ']';
                     maxheap[ans[i]].print();
                 }
                 if (i == 1) {
-                    cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
+                    cout << name[i] << ":[" << minheap[ans[i]].getorder()
+                         << ']';
                     minheap[ans[i]].print();
                 }
                 cout << endl;
@@ -368,7 +375,7 @@ public:
             Data temp;
             while (fin >> temp) // >> overload
                 if (inputSuccess) {
-                    deap.insert(temp);
+                    maxheap.insert(temp);
                     order++;
                 }
 
@@ -384,7 +391,8 @@ public:
         return fileName == ""; // {quit: 0, continue: 1}
     }
 
-    bool task2() {
+    bool task2()
+    {
         string fileName =
             fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
         order = 1;
