@@ -171,28 +171,33 @@ public:
     int getorder() { return convertToInt(DATA_ORDER); }
 };
 
+#define preNode(i) (i - 1) / 2
+
 class Heap {
 
 public:
     vector<Data> heap;
     virtual bool cmp(int &cur, int &pre) = 0;
 
-    void bubbleup(int &cur, int &pre)
+    // Reheap up from cur to selected root node
+    void reheapUp(int cur, int root = 0)
     {
-        if (cmp(cur, pre)) {
+        int pre = preNode(cur);
+        // Compare and check is arrival root
+        while (cur > root && cmp(cur, pre)) {
             swap(heap[cur], heap[pre]);
             cur = pre;
-            pre = (pre - 1) / 2;
-            bubbleup(cur, pre);
+            pre = preNode(cur);
         }
     }
+
+    int bottom() { return heap.size() - 1; }
 
     void insert(Data temp)
     {
         heap.push_back(temp);
-        int cur = heap.size() - 1;
-        int pre = (cur - 1) / 2;
-        bubbleup(cur, pre);
+        // Reheap last item
+        reheapUp(bottom());
     }
 
     void print_ans()
