@@ -1,6 +1,7 @@
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version
 #include <algorithm>
+#include <cmath>
 #include <ctime>
 #include <fstream>
 #include <functional>
@@ -8,7 +9,6 @@
 #include <iterator>
 #include <string>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 
@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
     string column[DATA_SIZE];
@@ -97,9 +97,10 @@ public:
             }
         }
 
-		if (count != DATA_SIZE - 1)
+        if (count != DATA_SIZE - 1)
             inputSuccess = false;
-		else data.column[count] = to_string(order);
+        else
+            data.column[count] = to_string(order);
 
         return in;
     }
@@ -162,63 +163,61 @@ public:
         return false;
     }
 
-	void print()
-	{
-		for (auto i : selectOrder)
-			cout << ' ' << column[i];
-	}
-	int getorder() 
-	{
-		return convertToInt(DATA_ORDER);
-	}
+    void print()
+    {
+        for (auto i : selectOrder)
+            cout << ' ' << column[i];
+    }
+    int getorder() { return convertToInt(DATA_ORDER); }
 };
 
 class Heap {
 
 public:
     vector<Data> heap;
-	virtual bool cmp(int &cur, int &pre) = 0;
+    virtual bool cmp(int &cur, int &pre) = 0;
 
-	void bubbleup(int &cur, int &pre) 
-	{
-		if (cmp(cur, pre)) {
-			swap(heap[cur], heap[pre]);
-			cur = pre;
-			pre = (pre - 1) / 2;
-			bubbleup(cur, pre);
-		}
-	}
+    void bubbleup(int &cur, int &pre)
+    {
+        if (cmp(cur, pre)) {
+            swap(heap[cur], heap[pre]);
+            cur = pre;
+            pre = (pre - 1) / 2;
+            bubbleup(cur, pre);
+        }
+    }
 
-	void insert(Data temp) 
-	{
-		heap.push_back(temp);
-		int cur = heap.size() - 1;
-		int pre = (cur - 1) / 2;
-		bubbleup(cur, pre);
-	}
+    void insert(Data temp)
+    {
+        heap.push_back(temp);
+        int cur = heap.size() - 1;
+        int pre = (cur - 1) / 2;
+        bubbleup(cur, pre);
+    }
 
-	void print_ans() 
-	{
-		int ans[3] = { 0,  heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1 };
-		for (int i = 0; i < 3; i++) {
-			cout << '[' << heap[ans[i]].getorder() << ']';
-			heap[ans[i]].print();
-			cout << endl;
-		}
-	}
-	
+    void print_ans()
+    {
+        int ans[3] = {0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1};
+        for (int i = 0; i < 3; i++) {
+            cout << '[' << heap[ans[i]].getorder() << ']';
+            heap[ans[i]].print();
+            cout << endl;
+        }
+    }
 };
 
-class MaxHeap : public Heap{
-	bool cmp(int &cur, int &pre) {
-		return (heap[cur] > heap[pre]) ? true : false;
-	}
+class MaxHeap : public Heap {
+    bool cmp(int &cur, int &pre)
+    {
+        return (heap[cur] > heap[pre]) ? true : false;
+    }
 };
 
 class MinHeap : public Heap {
-	bool cmp(int &cur, int &pre) {
-		return (heap[cur] < heap[pre]) ? true : false;
-	}
+    bool cmp(int &cur, int &pre)
+    {
+        return (heap[cur] < heap[pre]) ? true : false;
+    }
 };
 
 class Deap {
@@ -228,8 +227,8 @@ class HandleFile {
     fstream fin;
     fstream fout;
 
-	MaxHeap maxheap;
-	MinHeap minheap; // test
+    MaxHeap maxheap;
+    MinHeap minheap; // test
 
     // common function
     int numberInput(string message, string errorMsg)
@@ -293,29 +292,31 @@ class HandleFile {
     }
 
 public:
-    bool task1() { 
-		string fileName = fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
-		order = 1;
-		// if fileName == "" then quit to menu
-		if (fileName != "") {
-			Data temp;
-			while (fin >> temp) // >> overload
-				if (inputSuccess) {
-					maxheap.insert(temp);
-					order++;
-				}
+    bool task1()
+    {
+        string fileName =
+            fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
+        order = 1;
+        // if fileName == "" then quit to menu
+        if (fileName != "") {
+            Data temp;
+            while (fin >> temp) // >> overload
+                if (inputSuccess) {
+                    maxheap.insert(temp);
+                    order++;
+                }
 
-			maxheap.print_ans();
-			// print out something
-		}
-		else {
-			cout << "switch to menu" << endl;
-		}
+            maxheap.print_ans();
+            // print out something
+        }
+        else {
+            cout << "switch to menu" << endl;
+        }
 
-		fin.close();
+        fin.close();
 
-		return fileName == ""; // {quit: 0, continue: 1}
-	}
+        return fileName == ""; // {quit: 0, continue: 1}
+    }
 
     bool task2() { return 0; }
 };
