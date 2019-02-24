@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = {DATA_STUDENTS};
+static vector<int> selectOrder = { DATA_STUDENTS };
 
 class Data {
     string column[DATA_SIZE];
@@ -192,6 +192,32 @@ public:
         }
     }
 
+    int findchild(int cur) 
+    {
+        int child1 = cur * 2 + 1;
+        int child2 = cur * 2 + 2;
+        int size = heap.size();
+        if (child2 < size) {
+            if (cmp(child2, child1)) return child2;
+            else return child1;
+        }
+        else if (child1 < size) {
+            return child1;
+        }
+        else return size;
+    }
+
+    void reheapDown(int cur, int root = 0)
+    {
+        int child = findchild(cur);
+        // Compare and check is arrival root
+        while (child < heap.size() && cmp(child, cur)) {
+            swap(heap[cur], heap[child]);
+            cur = child;
+            child = findchild(cur);
+        }
+    }
+
     int bottom() { return heap.size() - 1; }
 
     Data &operator[](int &index) { return heap[index]; }
@@ -203,10 +229,19 @@ public:
         reheapUp(bottom());
     }
 
+    void remove()
+    {
+        while (heap.size()){
+            swap(heap[0], heap[heap.size() - 1]);
+            heap.pop_back();
+            reheapDown(0);
+        }
+    }
+
     void print_ans()
     {
-        string name[3] = {"root", "bottom", "left bottom"};
-        int ans[3] = {0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1};
+        string name[3] = { "root", "bottom", "left bottom" };
+        int ans[3] = { 0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1 };
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].print();
@@ -239,7 +274,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-                         : pow(2, floor(log2(size))) == pow(2, log2(size));
+            : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
 public:
@@ -265,10 +300,10 @@ public:
 
     void print_ans()
     {
-        string name[2] = {"bottom", "left bottom"};
+        string name[2] = { "bottom", "left bottom" };
         if (isminheap) {
-            int ans[2] = {minheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1};
+            int ans[2] = { minheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1 };
             for (int i = 0; i < 2; i++) {
                 cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
                 minheap[ans[i]].print();
@@ -276,17 +311,17 @@ public:
             }
         }
         else {
-            int ans[2] = {maxheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1};
+            int ans[2] = { maxheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1 };
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
                     cout << name[i] << ":[" << maxheap[ans[i]].getorder()
-                         << ']';
+                        << ']';
                     maxheap[ans[i]].print();
                 }
                 if (i == 1) {
                     cout << name[i] << ":[" << minheap[ans[i]].getorder()
-                         << ']';
+                        << ']';
                     minheap[ans[i]].print();
                 }
                 cout << endl;
