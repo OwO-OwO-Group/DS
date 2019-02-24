@@ -16,6 +16,7 @@ using namespace std;
 #define MENU_QUIT               0
 #define MENU_MAXHEAP            1
 #define MENU_DEAP               2
+#define MENU_DEBUG              3
 
 #define DATA_SIZE               12
 #define DATA_ID                 0
@@ -31,6 +32,8 @@ using namespace std;
 #define DATA_TYPE               10
 #define DATA_ORDER              11
 // clang-format on
+
+// #define DEBUG
 
 static bool inputSuccess;
 static int order;
@@ -66,9 +69,9 @@ static int stringToInt(string str)
 static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
+public:
     string column[DATA_SIZE];
 
-public:
     friend istream &operator>>(istream &in, Data &data)
     {
         string input, temp;
@@ -173,12 +176,16 @@ public:
 };
 
 #define preNode(i) (i - 1) / 2
+#define rightNode(i) 2 * i + 2
+#define leftNode(i) 2 * i + 1
 
 class Heap {
 
 public:
     vector<Data> heap;
-    virtual bool cmp(int &cur, int &pre) = 0;
+    virtual bool cmp(int cur, int pre) = 0;
+
+    Heap() {}
 
     // Reheap up from cur to selected root node
     void reheapUp(int cur, int root = 0)
@@ -192,6 +199,35 @@ public:
         }
     }
 
+    bool exist(int index) { return index <= heap.size() - 1; }
+
+    void reheapDown(int cur)
+    {
+        // break if cur is leaf
+        if (!exist(leftNode(cur)) && !exist(rightNode(cur)))
+            return;
+
+        // must have left node
+        int larger = leftNode(cur);
+
+        // check right node exist and largest than left
+        if (cmp(rightNode(cur), larger))
+            larger = rightNode(cur);
+
+        // if root less than child swap and reheap again
+        if (cmp(larger, cur)) {
+            swap(heap[larger], heap[cur]);
+            reheapDown(larger);
+        }
+    }
+
+    Heap(vector<Data> array) : heap(array) {}
+
+    void rebuild()
+    {
+        for (int i = heap.size(); i >= 0; i--)
+            reheapDown(i);
+    }
     int bottom() { return heap.size() - 1; }
 
     Data &operator[](int &index) { return heap[index]; }
@@ -218,14 +254,17 @@ public:
 };
 
 class MaxHeap : public Heap {
-    bool cmp(int &cur, int &pre)
+public:
+    MaxHeap() : Heap() {}
+    MaxHeap(vector<Data> array) : Heap(array) {}
+    bool cmp(int cur, int pre)
     {
         return (heap[cur] > heap[pre]) ? true : false;
     }
 };
 
 class MinHeap : public Heap {
-    bool cmp(int &cur, int &pre)
+    bool cmp(int cur, int pre)
     {
         return (heap[cur] < heap[pre]) ? true : false;
     }
@@ -416,6 +455,24 @@ public:
 
         return fileName == ""; // {quit: 0, continue: 1} }
     }
+#ifdef DEBUG
+    bool debug()
+    {
+        int size = 6;
+        int key[size] = {6, 3, 5, 9, 2, 10};
+        vector<Data> array(size);
+        for (int i = 0; i < size; i++)
+            array[i].column[selectOrder[0]] = to_string(key[i]);
+
+        MaxHeap heap1(array);
+        heap1.rebuild();
+
+        for (auto i : heap1.heap)
+            cout << i.column[selectOrder[0]] << endl;
+
+        return 1;
+    }
+#endif
 };
 
 int main(int argc, char *argv[])
@@ -448,7 +505,11 @@ int main(int argc, char *argv[])
         case MENU_DEAP:
             result = f.task2();
             break;
-
+#ifdef DEBUG
+        case MENU_DEBUG:
+            result = f.debug();
+            break;
+#endif
         default:
             errorHandling("Error: Command not found!");
             continue;
