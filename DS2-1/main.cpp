@@ -241,6 +241,12 @@ protected:
 public:
     Data &operator[](int &index) { return heap[index]; }
 
+    void rebuild()
+    {
+        for (int i = heap.size() / 2; i >= 0; i--)
+            reheapDown(i);
+    }
+
     int size() { return heap.size(); }
 
     void push(Data temp)
