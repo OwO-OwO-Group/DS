@@ -179,23 +179,32 @@ public:
 };
 
 #define preNode(i) (i - 1) / 2
+#define rightNode(i) 2 * i + 2
+#define leftNode(i) 2 * i + 1
 
 class Heap {
 
     virtual bool cmp(int &cur, int &pre) = 0;
-    int findchild(int cur)
+    bool exist(int index) { return index <= heap.size() - 1; }
+    int largestChild(int cur)
     {
-        int child1 = cur * 2 + 1;
-        int child2 = cur * 2 + 2;
+        int left = leftNode(cur);
+        int right = rightNode(cur);
         int size = heap.size();
-        if (child2 < size) {
-            if (cmp(child2, child1)) return child2;
-            else return child1;
-        }
-        else if (child1 < size) {
-            return child1;
-        }
-        else return size;
+
+        // return size if cur no child
+        if (!exist(left) && !exist(right))
+            return size;
+
+        // if right not exist, left is largest
+        if (!exist(right))
+            return left;
+
+        // return largest child
+        if (cmp(right, left))
+            return right;
+        else
+            return left;
     }
 
 protected:
@@ -212,10 +221,13 @@ public:
     void reheapUp(int cur, int root = 0)
     {
         int pre = preNode(cur);
+
         // Compare and check is arrival root
         while (cur > root && cmp(cur, pre)) {
             swap(heap[cur], heap[pre]);
             cur = pre;
+
+            // iterate until arrival root
             pre = preNode(cur);
         }
     }
@@ -223,14 +235,25 @@ public:
     // Reheap down from root to leaf
     int reheapDown(int cur, int root = 0)
     {
-        int child = findchild(cur);
-        // Compare and check is arrival root
-        while (child < heap.size() && cmp(child, cur)) {
+        int child = largestChild(cur);
+
+        // Compare and check is arrival leaf
+        while (exist(child) && cmp(child, cur)) {
             swap(heap[cur], heap[child]);
             cur = child;
-            child = findchild(cur);
+
+            // iterate until arrival left
+            child = largestChild(cur);
         }
         return cur;
+    }
+
+public:
+
+    void rebuild()
+    {
+        for (int i = heap.size() / 2; i >= 0; i--)
+            reheapDown(i);
     }
 
     void push(Data temp)
@@ -293,6 +316,10 @@ class Deap {
         return size == 1 ? false
             : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
+    int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
+    int leftbottom() { return pow(2, floor(log2(minheap.size()))) - 1; }
+    Heap &bottomHeap() { if (isminheap) return minheap;
+                            else return maxheap; }
     int crosspond(int cur, int side) {
         if (side) {
             if (maxheap.size()) {
@@ -380,30 +407,18 @@ public:
 
     void print_ans()
     {
-        string name[2] = { "bottom", "left bottom" };
-        if (isminheap) {
-            int ans[2] = { minheap.bottom(), minheap.leftbottom() };
-            for (int i = 0; i < 2; i++) {
-                cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
-                minheap[ans[i]].println();
-            }
-        }
-        else {
-            int ans[2] = { maxheap.bottom(), minheap.leftbottom() };
-            for (int i = 0; i < 2; i++) {
-                if (i == 0) {
-                    cout << name[i] << ":[" << maxheap[ans[i]].getorder()
-                        << ']';
-                    maxheap[ans[i]].print();
-                }
-                if (i == 1) {
-                    cout << name[i] << ":[" << minheap[ans[i]].getorder()
-                        << ']';
-                    minheap[ans[i]].print();
-                }
-                cout << endl;
-            }
-        }
+        int ans[2] = { bottom(), leftbottom() };
+
+        // println left bottom data
+        Heap &bottomheap = bottomHeap();
+        cout << "bottom"
+            << ":[" << bottomheap[ans[0]].getorder() << ']';
+        bottomheap[ans[0]].println();
+
+        // left bottom always at minheap
+        cout << "left bottom"
+            << ":[" << minheap[ans[1]].getorder() << ']';
+        minheap[ans[1]].println();
     }
 };
 
