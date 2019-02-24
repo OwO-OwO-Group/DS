@@ -169,6 +169,12 @@ public:
             cout << ' ' << column[i];
     }
 
+    void println()
+    {
+        for (auto i : selectOrder)
+            cout << ' ' << column[i] << endl;
+    }
+
     int getorder() { return convertToInt(DATA_ORDER); }
 };
 
@@ -271,8 +277,7 @@ public:
         int ans[3] = {0, bottom(), leftbottom()};
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
-            heap[ans[i]].print();
-            cout << endl;
+            heap[ans[i]].println();
         }
     }
 };
@@ -302,6 +307,25 @@ class Deap {
                          : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
+    int bottom()
+    {
+        if (isminheap)
+            return minheap.size() - 1;
+
+        else
+            return maxheap.size() - 1;
+    }
+
+    int leftbottom() { return pow(2, floor(log2(minheap.size()))) - 1; }
+
+    Heap &bottomHeap()
+    {
+        if (isminheap)
+            return minheap;
+        else
+            return maxheap;
+    }
+
 public:
     void push(Data temp)
     {
@@ -329,33 +353,18 @@ public:
 
     void print_ans()
     {
-        string name[2] = {"bottom", "left bottom"};
-        if (isminheap) {
-            int ans[2] = {minheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1};
-            for (int i = 0; i < 2; i++) {
-                cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
-                minheap[ans[i]].print();
-                cout << endl;
-            }
-        }
-        else {
-            int ans[2] = {maxheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1};
-            for (int i = 0; i < 2; i++) {
-                if (i == 0) {
-                    cout << name[i] << ":[" << maxheap[ans[i]].getorder()
-                         << ']';
-                    maxheap[ans[i]].print();
-                }
-                if (i == 1) {
-                    cout << name[i] << ":[" << minheap[ans[i]].getorder()
-                         << ']';
-                    minheap[ans[i]].print();
-                }
-                cout << endl;
-            }
-        }
+        int ans[2] = {bottom(), leftbottom()};
+
+        // println left bottom data
+        Heap &bottomheap = bottomHeap();
+        cout << "bottom"
+             << ":[" << bottomheap[ans[0]].getorder() << ']';
+        bottomheap[ans[0]].println();
+
+        // left bottom always at minheap
+        cout << "left bottom"
+             << ":[" << minheap[ans[1]].getorder() << ']';
+        minheap[ans[1]].println();
     }
 };
 
