@@ -176,11 +176,15 @@ public:
 
 class Heap {
 
-public:
+protected:
     vector<Data> heap;
     virtual bool cmp(int &cur, int &pre) = 0;
 
-    // Reheap up from cur to selected root node
+    int root() { return 0; }
+    int bottom() { return heap.size() - 1; }
+    int leftbottom() { return pow(2, floor(log2(heap.size()))) - 1; }
+
+    // Reheap up from cur to root
     void reheapUp(int cur, int root = 0)
     {
         int pre = preNode(cur);
@@ -192,6 +196,7 @@ public:
         }
     }
 
+    // Reheap down from root to leaf
     int findchild(int cur) 
     {
         int child1 = cur * 2 + 1;
@@ -218,30 +223,31 @@ public:
         }
     }
 
-    int bottom() { return heap.size() - 1; }
-
+public:
     Data &operator[](int &index) { return heap[index]; }
 
-    void insert(Data temp)
+    int size() { return heap.size(); }
+
+    void push(Data temp)
     {
         heap.push_back(temp);
         // Reheap last item
         reheapUp(bottom());
     }
 
-    void remove()
+    void pop()
     {
-        while (heap.size()){
-            swap(heap[0], heap[heap.size() - 1]);
+        if (heap.size()){
+            swap(heap[root()], heap[bottom()]);
             heap.pop_back();
-            reheapDown(0);
+            reheapDown(root());
         }
     }
 
     void print_ans()
     {
         string name[3] = { "root", "bottom", "left bottom" };
-        int ans[3] = { 0, heap.size() - 1, pow(2, floor(log2(heap.size()))) - 1 };
+        int ans[3] = { 0, bottom(), leftbottom() };
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].print();
@@ -249,7 +255,6 @@ public:
         }
     }
 
-    int size() { return heap.size(); }
 };
 
 class MaxHeap : public Heap {
@@ -278,7 +283,7 @@ class Deap {
     }
 
 public:
-    void insert(Data temp)
+    void push(Data temp)
     {
         if (isminheap && isfull(minheap.size() + 1))
             isminheap = false;
@@ -288,14 +293,22 @@ public:
             int pre = preNode(minheap.size());
             if (maxheap.size() != 0 && temp > maxheap[pre])
                 swap(temp, maxheap[pre]);
-            minheap.insert(temp);
+            minheap.push(temp);
         }
         else {
             int cur = maxheap.size();
             if (temp < minheap[cur])
                 swap(temp, minheap[cur]);
-            maxheap.insert(temp);
+            maxheap.push(temp);
         }
+    }
+
+    void pop_min() {
+
+    }
+
+    void pop_max() {
+
     }
 
     void print_ans()
@@ -410,7 +423,7 @@ public:
             Data temp;
             while (fin >> temp) // >> overload
                 if (inputSuccess) {
-                    maxheap.insert(temp);
+                    maxheap.push(temp);
                     order++;
                 }
 
@@ -436,7 +449,7 @@ public:
             Data temp;
             while (fin >> temp) // >> overload
                 if (inputSuccess) {
-                    deap.insert(temp);
+                    deap.push(temp);
                     order++;
                 }
 
