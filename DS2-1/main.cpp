@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
     string column[DATA_SIZE];
@@ -173,6 +173,8 @@ public:
 };
 
 #define preNode(i) (i - 1) / 2
+#define rightNode(i) 2 * i + 2
+#define leftNode(i) 2 * i + 1
 
 class Heap {
 
@@ -183,43 +185,56 @@ protected:
     int root() { return 0; }
     int bottom() { return heap.size() - 1; }
     int leftbottom() { return pow(2, floor(log2(heap.size()))) - 1; }
+    bool exist(int index) { return index <= heap.size() - 1; }
 
     // Reheap up from cur to root
     void reheapUp(int cur, int root = 0)
     {
         int pre = preNode(cur);
+
         // Compare and check is arrival root
         while (cur > root && cmp(cur, pre)) {
             swap(heap[cur], heap[pre]);
             cur = pre;
+
+            // iterate until arrival root
             pre = preNode(cur);
         }
     }
 
     // Reheap down from root to leaf
-    int findchild(int cur) 
+    int largestChild(int cur)
     {
-        int child1 = cur * 2 + 1;
-        int child2 = cur * 2 + 2;
+        int left = leftNode(cur);
+        int right = rightNode(cur);
         int size = heap.size();
-        if (child2 < size) {
-            if (cmp(child2, child1)) return child2;
-            else return child1;
-        }
-        else if (child1 < size) {
-            return child1;
-        }
-        else return size;
+
+        // return size if cur no child
+        if (!exist(left) && !exist(right))
+            return size;
+
+        // if right not exist, left is largest
+        if (!exist(right))
+            return left;
+
+        // return largest child
+        if (cmp(right, left))
+            return right;
+        else
+            return left;
     }
 
     void reheapDown(int cur, int root = 0)
     {
-        int child = findchild(cur);
-        // Compare and check is arrival root
-        while (child < heap.size() && cmp(child, cur)) {
+        int child = largestChild(cur);
+
+        // Compare and check is arrival leaf
+        while (exist(child) && cmp(child, cur)) {
             swap(heap[cur], heap[child]);
             cur = child;
-            child = findchild(cur);
+
+            // iterate until arrival left
+            child = largestChild(cur);
         }
     }
 
@@ -237,7 +252,7 @@ public:
 
     void pop()
     {
-        if (heap.size()){
+        if (heap.size()) {
             swap(heap[root()], heap[bottom()]);
             heap.pop_back();
             reheapDown(root());
@@ -246,15 +261,14 @@ public:
 
     void print_ans()
     {
-        string name[3] = { "root", "bottom", "left bottom" };
-        int ans[3] = { 0, bottom(), leftbottom() };
+        string name[3] = {"root", "bottom", "left bottom"};
+        int ans[3] = {0, bottom(), leftbottom()};
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].print();
             cout << endl;
         }
     }
-
 };
 
 class MaxHeap : public Heap {
@@ -279,7 +293,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-            : pow(2, floor(log2(size))) == pow(2, log2(size));
+                         : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
 public:
@@ -303,20 +317,16 @@ public:
         }
     }
 
-    void pop_min() {
+    void pop_min() {}
 
-    }
-
-    void pop_max() {
-
-    }
+    void pop_max() {}
 
     void print_ans()
     {
-        string name[2] = { "bottom", "left bottom" };
+        string name[2] = {"bottom", "left bottom"};
         if (isminheap) {
-            int ans[2] = { minheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1 };
+            int ans[2] = {minheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1};
             for (int i = 0; i < 2; i++) {
                 cout << name[i] << ":[" << minheap[ans[i]].getorder() << ']';
                 minheap[ans[i]].print();
@@ -324,17 +334,17 @@ public:
             }
         }
         else {
-            int ans[2] = { maxheap.size() - 1,
-                          pow(2, floor(log2(minheap.size()))) - 1 };
+            int ans[2] = {maxheap.size() - 1,
+                          pow(2, floor(log2(minheap.size()))) - 1};
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
                     cout << name[i] << ":[" << maxheap[ans[i]].getorder()
-                        << ']';
+                         << ']';
                     maxheap[ans[i]].print();
                 }
                 if (i == 1) {
                     cout << name[i] << ":[" << minheap[ans[i]].getorder()
-                        << ']';
+                         << ']';
                     minheap[ans[i]].print();
                 }
                 cout << endl;
