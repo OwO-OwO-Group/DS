@@ -66,9 +66,9 @@ static int stringToInt(string str)
 static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
-    string column[DATA_SIZE];
 
 public:
+    string column[DATA_SIZE];
     friend istream &operator>>(istream &in, Data &data)
     {
         string input, temp;
@@ -247,8 +247,9 @@ public:
         }
         return cur;
     }
+    Heap() {}
+    Heap(vector<Data> array) : heap(array) {}
 
-public:
     void rebuild()
     {
         for (int i = heap.size() / 2; i >= 0; i--)
@@ -287,10 +288,15 @@ public:
 };
 
 class MaxHeap : public Heap {
+
     bool cmp(int &cur, int &pre)
     {
         return (heap[cur] > heap[pre]) ? true : false;
     }
+
+public:
+    MaxHeap() : Heap() {}
+    MaxHeap(vector<Data> array) : Heap(array) {}
 };
 
 class MinHeap : public Heap {
@@ -298,6 +304,10 @@ class MinHeap : public Heap {
     {
         return (heap[cur] < heap[pre]) ? true : false;
     }
+
+public:
+    MinHeap() : Heap() {}
+    MinHeap(vector<Data> array) : Heap(array) {}
 };
 
 class Deap {
@@ -537,8 +547,58 @@ public:
     }
 };
 
+void testDeap()
+{
+    cout << "testDeap" << endl;
+    Deap deap1;
+}
+
+void testMaxHeap()
+{
+    cout << "testMaxHeap" << endl;
+    int size = 6;
+    int key[size] = {6, 3, 5, 9, 2, 10};
+    vector<Data> array(size);
+    for (int i = 0; i < size; i++)
+        array[i].column[selectOrder[0]] = to_string(key[i]);
+
+    MaxHeap heap1(array);
+    heap1.rebuild();
+
+    for (int i = 0; i < heap1.size(); i++)
+        cout << heap1[i].column[selectOrder[0]] << endl;
+}
+
+void testMinHeap()
+{
+    cout << "testMinHeap" << endl;
+    int size = 6;
+    int key[size] = {6, 3, 5, 9, 2, 10};
+    vector<Data> array(size);
+    for (int i = 0; i < size; i++)
+        array[i].column[selectOrder[0]] = to_string(key[i]);
+
+    MinHeap heap1(array);
+    heap1.rebuild();
+
+    for (int i = 0; i < heap1.size(); i++)
+        cout << heap1[i].column[selectOrder[0]] << endl;
+}
+
+int debug(void)
+{
+    cout << "hello world!" << endl;
+    testMaxHeap();
+    testMinHeap();
+    testDeap();
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
+#ifdef DEBUG1111
+    debug();
+#else
     int mode;   // 選單選項
     int result; // 指令回傳檢查
     while (true) {
@@ -579,6 +639,7 @@ int main(int argc, char *argv[])
         else
             cout << endl;
     };
+#endif
     return 0;
 }
 
