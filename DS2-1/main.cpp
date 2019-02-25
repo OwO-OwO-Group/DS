@@ -340,15 +340,20 @@ class Deap {
         return cur;
     }
 
-public:
-    int size() { return minheap.size() + maxheap.size(); }
-
-    void push(Data temp)
+    void updateSideStage()
     {
         if (isminheap && isfull(minheap.size() + 1))
             isminheap = false;
         else if (!isminheap && isfull(maxheap.size() + 1))
             isminheap = true;
+    }
+
+public:
+    int size() { return minheap.size() + maxheap.size(); }
+
+    void push(Data temp)
+    {
+        updateSideStage();
         if (isminheap) {
             int cross = crosspond(minheap.size(), maxheap);
             if (cross >= 0 && temp > maxheap[cross]) {
@@ -375,15 +380,14 @@ public:
             if (isminheap) {
                 swap(minheap[minheap.root()], minheap[minheap.bottom()]);
                 minheap.pop_back();
-                if (isfull(minheap.size() + 1))
-                    isminheap = false;
             }
             else {
                 swap(minheap[minheap.root()], maxheap[maxheap.bottom()]);
                 maxheap.pop_back();
-                if (isfull(maxheap.size() + 1))
-                    isminheap = true;
             }
+
+            updateSideStage();
+
             int cur = minheap.reheapDown(minheap.root());
             int cross = crosspond(cur, maxheap);
             if (minheap[cur] > maxheap[cross]) {
@@ -403,15 +407,14 @@ public:
             if (!isminheap) {
                 swap(maxheap[maxheap.root()], maxheap[maxheap.bottom()]);
                 maxheap.pop_back();
-                if (isfull(maxheap.size() + 1))
-                    isminheap = true;
             }
             else {
                 swap(maxheap[maxheap.root()], minheap[minheap.bottom()]);
                 minheap.pop_back();
-                if (isfull(minheap.size() + 1))
-                    isminheap = false;
             }
+
+            updateSideStage();
+
             int cur = maxheap.reheapDown(maxheap.root());
             int cross = crosspond(cur, minheap);
             if (maxheap[cur] < minheap[cross]) {
@@ -422,10 +425,8 @@ public:
         else {
             result = minheap[minheap.root()];
             minheap.pop_back();
-            if (isminheap && isfull(minheap.size() + 1))
-                isminheap = false;
-            else if (!isminheap && isfull(maxheap.size() + 1))
-                isminheap = true;
+
+            updateSideStage();
         }
 
         return result;
