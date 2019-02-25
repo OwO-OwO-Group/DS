@@ -381,14 +381,10 @@ public:
         Data result;
         if (minheap.size()) {
             result = minheap[minheap.root()];
-            if (isminheap) {
-                swap(minheap[minheap.root()], minheap[minheap.bottom()]);
-                minheap.pop_back();
-            }
-            else {
-                swap(minheap[minheap.root()], maxheap[maxheap.bottom()]);
-                maxheap.pop_back();
-            }
+
+            Heap &bottomheap = bottomHeap();
+            swap(minheap[minheap.root()], bottomheap[bottomheap.bottom()]);
+            bottomheap.pop_back();
 
             updateSideStage();
 
@@ -408,14 +404,10 @@ public:
         Data result;
         if (maxheap.size()) {
             result = maxheap[maxheap.root()];
-            if (!isminheap) {
-                swap(maxheap[maxheap.root()], maxheap[maxheap.bottom()]);
-                maxheap.pop_back();
-            }
-            else {
-                swap(maxheap[maxheap.root()], minheap[minheap.bottom()]);
-                minheap.pop_back();
-            }
+
+            Heap &bottomheap = bottomHeap();
+            swap(maxheap[maxheap.root()], bottomheap[bottomheap.bottom()]);
+            bottomheap.pop_back();
 
             updateSideStage();
 
