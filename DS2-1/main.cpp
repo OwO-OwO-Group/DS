@@ -291,7 +291,9 @@ public:
         cout << "[";
         for (auto i : heap)
             cout << i.column[selectOrder[0]] << ", ";
-        cout << "\b\b]" << endl;
+        if (heap.size() > 0)
+            cout << "\b\b";
+        cout << "]" << endl;
     }
 };
 
@@ -452,10 +454,12 @@ public:
 
     void print()
     {
-        cout << "minheap" << endl;
+        cout << "{" << endl;
+        cout << "    minheap:";
         minheap.print();
-        cout << "maxheap" << endl;
+        cout << "    maxheap:";
         maxheap.print();
+        cout << "}";
     }
 };
 
@@ -584,7 +588,7 @@ public:
 
 void testDeap()
 {
-    cout << "testDeap" << endl;
+    cout << endl << "== testDeap ==" << endl << endl;
     int size = 6;
     int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
@@ -596,25 +600,27 @@ void testDeap()
         heap1.push(array[i]);
     heap1.print();
 
-    cout << "pop max" << endl;
+    cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_max().column[selectOrder[0]]
              << " size:" << heap1.size() << endl,
-            heap1.pop_max(), heap1.print();
+            heap1.print();
 
     Deap heap2;
     for (int i = 0; i < size; i++)
         heap2.push(array[i]);
+    heap2.print();
 
-    cout << "pop min" << endl;
+    cout << endl << "== pop min ==" << endl << endl;
     while (heap2.size() > 0)
         cout << heap2.pop_min().column[selectOrder[0]]
-             << " size:" << heap2.size() << endl;
+             << " size:" << heap2.size() << endl,
+            heap2.print();
 }
 
 void testMaxHeap()
 {
-    cout << "testMaxHeap" << endl;
+    cout << endl << "== testMaxHeap ==" << endl << endl;
     int size = 6;
     int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
@@ -628,7 +634,7 @@ void testMaxHeap()
 
 void testMinHeap()
 {
-    cout << "testMinHeap" << endl;
+    cout << endl << "== testMinHeap ==" << endl << endl;
     int size = 6;
     int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
