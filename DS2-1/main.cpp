@@ -313,14 +313,7 @@ class Deap {
 
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
     int leftbottom() { return pow(2, floor(log2(minheap.size()))) - 1; }
-
-    Heap &bottomHeap()
-    {
-        if (isminheap)
-            return minheap;
-        else
-            return maxheap;
-    }
+    Heap &bottomHeap() { return isminheap ? (Heap &)minheap : (Heap &)maxheap; }
 
     int crosspond(int cur, Heap &side)
     {
