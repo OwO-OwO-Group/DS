@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
 
@@ -188,7 +188,6 @@ public:
 
 private:
     bool cmp(int &cur, int &pre) { return cmp(heap[cur], heap[pre]); }
-    
 
 protected:
     vector<Data> heap;
@@ -307,8 +306,8 @@ public:
 
     void print_ans()
     {
-        string name[3] = { "root", "bottom", "left bottom" };
-        int ans[3] = { 0, bottom(), leftbottom() };
+        string name[3] = {"root", "bottom", "left bottom"};
+        int ans[3] = {0, bottom(), leftbottom()};
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].println();
@@ -351,7 +350,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-            : pow(2, floor(log2(size))) == pow(2, log2(size));
+                         : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
@@ -368,10 +367,10 @@ class Deap {
         if (side.size() == 0)
             return -1;
         if (!side.exist(cur)) {
-           // two side diff must be one // while (!side.exist(cur)) 
+            // two side diff must be one // while (!side.exist(cur))
             cur = preNode(cur);
         }
-            
+
         return cur;
     }
 
@@ -430,7 +429,8 @@ public:
                     maxheap.reheapUp(corres);
                 }
             }
-            else isminheap = true;
+            else
+                isminheap = true;
         }
 
         return result;
@@ -458,14 +458,16 @@ public:
                     swap(maxheap[cur], minheap[corres]);
                     minheap.reheapUp(corres);
                 }
-                else if (!maxheap.exist(leftNode(cur))){
+                else if (!maxheap.exist(leftNode(cur))) {
                     int child = minheap.leastChild(corres);
-                    if (child < minheap.size() && maxheap[cur] < minheap[child]) {
+                    if (child < minheap.size() &&
+                        maxheap[cur] < minheap[child]) {
                         swap(maxheap[cur], minheap[child]);
                     }
                 }
             }
-            else isminheap = true;
+            else
+                isminheap = true;
         }
         else {
             result = minheap[minheap.root()];
@@ -479,17 +481,17 @@ public:
 
     void print_ans()
     {
-        int ans[2] = { bottom(), leftbottom() };
+        int ans[2] = {bottom(), leftbottom()};
 
         // println bottom data
         Heap &bottomheap = bottomHeap();
         cout << "bottom"
-            << ":[" << bottomheap[ans[0]].getorder() << ']';
+             << ":[" << bottomheap[ans[0]].getorder() << ']';
         bottomheap[ans[0]].println();
 
         // left bottom always at minheap
         cout << "left bottom"
-            << ":[" << minheap[ans[1]].getorder() << ']';
+             << ":[" << minheap[ans[1]].getorder() << ']';
         minheap[ans[1]].println();
     }
 
@@ -630,8 +632,8 @@ public:
 int testDeap()
 {
     cout << endl << "== testDeap ==" << endl << endl;
-    int size = 6;
-    int key[6] = { 6, 3, 5, 9, 2, 10 };
+    int key[] = {6, 3, 5, 9, 2, 10, 13, 1, 23, 4};
+    int size = sizeof(key) / sizeof(int);
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].column[selectOrder[0]] = to_string(key[i]);
@@ -644,22 +646,23 @@ int testDeap()
     cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_max().column[selectOrder[0]]
-        << " size:" << heap1.size() << endl,
-        heap1.print();
+             << " size:" << heap1.size() << endl,
+            heap1.print();
 
-    Deap heap2;
     for (int i = 0; i < size; i++)
-        heap2.push(array[i]);
-    heap2.print();
+        heap1.push(array[i]);
+    heap1.print();
 
     cout << endl << "== pop min ==" << endl << endl;
-    while (heap2.size() > 0)
-        cout << heap2.pop_min().column[selectOrder[0]]
-        << " size:" << heap2.size() << endl,
-        heap2.print();
+    while (heap1.size() > 0)
+        cout << heap1.pop_min().column[selectOrder[0]]
+             << " size:" << heap1.size() << endl,
+            heap1.print();
 
     return false;
 }
+
+void debug() { testDeap(); }
 
 int main(int argc, char *argv[])
 {
@@ -693,9 +696,6 @@ int main(int argc, char *argv[])
 
         case MENU_DEAP:
             result = f.task2();
-            break;
-        case 3:
-            result = testDeap();
             break;
 
         default:
