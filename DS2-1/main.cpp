@@ -185,7 +185,6 @@ public:
 class Heap {
 
     virtual bool cmp(int &cur, int &pre) = 0;
-    bool exist(int index) { return index <= heap.size() - 1; }
     int largestChild(int cur)
     {
         int left = leftNode(cur);
@@ -211,6 +210,7 @@ protected:
     vector<Data> heap;
 
 public:
+    bool exist(int index) { return index <= heap.size() - 1; }
     int size() { return heap.size(); }
     int root() { return 0; }
     int bottom() { return heap.size() - 1; }
@@ -322,26 +322,13 @@ class Deap {
             return maxheap;
     }
 
-    int crosspond(int cur, int side)
+    int crosspond(int cur, Heap &side)
     {
-        if (side) {
-            if (maxheap.size()) {
-                while (cur > maxheap.size() - 1)
-                    cur = (cur - 1) / 2;
-                return cur;
-            }
-            else
-                return -1;
-        } // min look max
-        else {
-            if (minheap.size()) {
-                while (cur > minheap.size() - 1)
-                    cur = (cur - 1) / 2;
-                return cur;
-            }
-            else
-                return -1;
-        } // max look min
+        if (side.size() == 0)
+            return -1;
+        while (!side.exist(cur))
+            cur = preNode(cur);
+        return cur;
     }
 
 public:
@@ -352,7 +339,7 @@ public:
         else if (!isminheap && isfull(maxheap.size() + 1))
             isminheap = true;
         if (isminheap) {
-            int cross = crosspond(minheap.size(), true);
+            int cross = crosspond(minheap.size(), maxheap);
             if (cross >= 0 && temp > maxheap[cross]) {
                 swap(temp, maxheap[cross]);
                 maxheap.reheapUp(cross);
@@ -360,7 +347,7 @@ public:
             minheap.push(temp);
         }
         else {
-            int cross = crosspond(maxheap.size(), false);
+            int cross = crosspond(maxheap.size(), minheap);
             if (cross >= 0 && temp < minheap[cross]) {
                 swap(temp, minheap[cross]);
                 minheap.reheapUp(cross);
@@ -385,7 +372,7 @@ public:
                     isminheap = true;
             }
             int cur = minheap.reheapDown(minheap.root());
-            int cross = crosspond(cur, true);
+            int cross = crosspond(cur, maxheap);
             if (minheap[cur] > maxheap[cross]) {
                 swap(minheap[cur], maxheap[cross]);
                 maxheap.reheapUp(cross);
@@ -409,7 +396,7 @@ public:
                     isminheap = false;
             }
             int cur = maxheap.reheapDown(maxheap.root());
-            int cross = crosspond(cur, false);
+            int cross = crosspond(cur, minheap);
             if (maxheap[cur] < minheap[cross]) {
                 swap(maxheap[cur], minheap[cross]);
                 minheap.reheapUp(cross);
