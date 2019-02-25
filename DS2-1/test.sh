@@ -6,3 +6,7 @@ echo "
 2 101
 2 102
 "|./a.out
+
+echo
+g++ main.cpp -DDEBUG1111
+echo "0" |./a.out
