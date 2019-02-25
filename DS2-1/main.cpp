@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = {DATA_STUDENTS};
+static vector<int> selectOrder = { DATA_STUDENTS };
 
 class Data {
 
@@ -188,7 +188,20 @@ public:
 
 private:
     bool cmp(int &cur, int &pre) { return cmp(heap[cur], heap[pre]); }
-    int largestChild(int cur)
+    
+
+protected:
+    vector<Data> heap;
+
+public:
+    bool exist(int index) { return index <= heap.size() - 1; }
+    int size() { return heap.size(); }
+    int root() { return 0; }
+    int bottom() { return heap.size() - 1; }
+    int leftbottom() { return pow(2, floor(log2(heap.size()))) - 1; }
+    Data &operator[](int index) { return heap[index]; }
+
+    int mostChild(int cur)
     {
         int left = leftNode(cur);
         int right = rightNode(cur);
@@ -202,23 +215,33 @@ private:
         if (!exist(right))
             return left;
 
-        // return largest child
+        // return most child
         if (cmp(right, left))
             return right;
         else
             return left;
     }
 
-protected:
-    vector<Data> heap;
+    int leastChild(int cur)
+    {
+        int left = leftNode(cur);
+        int right = rightNode(cur);
+        int size = heap.size();
 
-public:
-    bool exist(int index) { return index <= heap.size() - 1; }
-    int size() { return heap.size(); }
-    int root() { return 0; }
-    int bottom() { return heap.size() - 1; }
-    int leftbottom() { return pow(2, floor(log2(heap.size()))) - 1; }
-    Data &operator[](int index) { return heap[index]; }
+        // return size if cur no child
+        if (!exist(left) && !exist(right))
+            return size;
+
+        // if right not exist, left is largest
+        if (!exist(right))
+            return left;
+
+        // return most child
+        if (cmp(right, left))
+            return left;
+        else
+            return right;
+    }
 
     // Reheap up from cur to root
     void reheapUp(int cur, int root = 0)
@@ -238,7 +261,7 @@ public:
     // Reheap down from root to leaf
     int reheapDown(int cur, int root = 0)
     {
-        int child = largestChild(cur);
+        int child = mostChild(cur);
 
         // Compare and check is arrival leaf
         while (exist(child) && cmp(child, cur)) {
@@ -246,7 +269,7 @@ public:
             cur = child;
 
             // iterate until arrival left
-            child = largestChild(cur);
+            child = mostChild(cur);
         }
         return cur;
     }
@@ -284,8 +307,8 @@ public:
 
     void print_ans()
     {
-        string name[3] = {"root", "bottom", "left bottom"};
-        int ans[3] = {0, bottom(), leftbottom()};
+        string name[3] = { "root", "bottom", "left bottom" };
+        int ans[3] = { 0, bottom(), leftbottom() };
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].println();
@@ -328,7 +351,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-                         : pow(2, floor(log2(size))) == pow(2, log2(size));
+            : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
@@ -344,8 +367,11 @@ class Deap {
     {
         if (side.size() == 0)
             return -1;
-        while (!side.exist(cur))
+        if (!side.exist(cur)) {
+           // two side diff must be one // while (!side.exist(cur)) 
             cur = preNode(cur);
+        }
+            
         return cur;
     }
 
@@ -396,12 +422,15 @@ public:
             updateSideStage();
 
             // minheap is modified so we reheap
-            int cur = minheap.reheapDown(minheap.root());
-            int corres = corresNode(cur, maxheap);
-            if (minheap[cur] > maxheap[corres]) {
-                swap(minheap[cur], maxheap[corres]);
-                maxheap.reheapUp(corres);
+            if (maxheap.size()) {
+                int cur = minheap.reheapDown(minheap.root());
+                int corres = corresNode(cur, maxheap);
+                if (corres >= 0 && minheap[cur] > maxheap[corres]) {
+                    swap(minheap[cur], maxheap[corres]);
+                    maxheap.reheapUp(corres);
+                }
             }
+            else isminheap = true;
         }
 
         return result;
@@ -422,12 +451,21 @@ public:
             updateSideStage();
 
             // maxheap is modified so we reheap
-            int cur = maxheap.reheapDown(maxheap.root());
-            int corres = corresNode(cur, minheap);
-            if (maxheap[cur] < minheap[corres]) {
-                swap(maxheap[cur], minheap[corres]);
-                minheap.reheapUp(corres);
+            if (maxheap.size()) {
+                int cur = maxheap.reheapDown(maxheap.root());
+                int corres = corresNode(cur, minheap);
+                if (maxheap[cur] < minheap[corres]) {
+                    swap(maxheap[cur], minheap[corres]);
+                    minheap.reheapUp(corres);
+                }
+                else if (!maxheap.exist(leftNode(cur))){
+                    int child = minheap.leastChild(corres);
+                    if (child < minheap.size() && maxheap[cur] < minheap[child]) {
+                        swap(maxheap[cur], minheap[child]);
+                    }
+                }
             }
+            else isminheap = true;
         }
         else {
             result = minheap[minheap.root()];
@@ -441,17 +479,17 @@ public:
 
     void print_ans()
     {
-        int ans[2] = {bottom(), leftbottom()};
+        int ans[2] = { bottom(), leftbottom() };
 
         // println bottom data
         Heap &bottomheap = bottomHeap();
         cout << "bottom"
-             << ":[" << bottomheap[ans[0]].getorder() << ']';
+            << ":[" << bottomheap[ans[0]].getorder() << ']';
         bottomheap[ans[0]].println();
 
         // left bottom always at minheap
         cout << "left bottom"
-             << ":[" << minheap[ans[1]].getorder() << ']';
+            << ":[" << minheap[ans[1]].getorder() << ']';
         minheap[ans[1]].println();
     }
 
@@ -589,11 +627,11 @@ public:
     }
 };
 
-void testDeap()
+int testDeap()
 {
     cout << endl << "== testDeap ==" << endl << endl;
     int size = 6;
-    int key[size] = {6, 3, 5, 9, 2, 10};
+    int key[6] = { 6, 3, 5, 9, 2, 10 };
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].column[selectOrder[0]] = to_string(key[i]);
@@ -606,8 +644,8 @@ void testDeap()
     cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_max().column[selectOrder[0]]
-             << " size:" << heap1.size() << endl,
-            heap1.print();
+        << " size:" << heap1.size() << endl,
+        heap1.print();
 
     Deap heap2;
     for (int i = 0; i < size; i++)
@@ -617,45 +655,10 @@ void testDeap()
     cout << endl << "== pop min ==" << endl << endl;
     while (heap2.size() > 0)
         cout << heap2.pop_min().column[selectOrder[0]]
-             << " size:" << heap2.size() << endl,
-            heap2.print();
-}
+        << " size:" << heap2.size() << endl,
+        heap2.print();
 
-void testMaxHeap()
-{
-    cout << endl << "== testMaxHeap ==" << endl << endl;
-    int size = 6;
-    int key[size] = {6, 3, 5, 9, 2, 10};
-    vector<Data> array(size);
-    for (int i = 0; i < size; i++)
-        array[i].column[selectOrder[0]] = to_string(key[i]);
-
-    MaxHeap heap1(array);
-    heap1.rebuild();
-    heap1.print();
-}
-
-void testMinHeap()
-{
-    cout << endl << "== testMinHeap ==" << endl << endl;
-    int size = 6;
-    int key[size] = {6, 3, 5, 9, 2, 10};
-    vector<Data> array(size);
-    for (int i = 0; i < size; i++)
-        array[i].column[selectOrder[0]] = to_string(key[i]);
-
-    MinHeap heap1(array);
-    heap1.rebuild();
-    heap1.print();
-}
-
-int debug(void)
-{
-    cout << "hello world!" << endl;
-    testMaxHeap();
-    testMinHeap();
-    testDeap();
-    return 0;
+    return false;
 }
 
 int main(int argc, char *argv[])
@@ -690,6 +693,9 @@ int main(int argc, char *argv[])
 
         case MENU_DEAP:
             result = f.task2();
+            break;
+        case 3:
+            result = testDeap();
             break;
 
         default:
