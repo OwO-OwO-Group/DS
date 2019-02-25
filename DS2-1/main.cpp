@@ -406,6 +406,19 @@ public:
         curHeap.push(temp);
     }
 
+    // use bottom node to replace root node and remove bottom node
+    void replaceRoot(Heap &heap)
+    {
+        // using bottom of bottomheap to replace root of heap
+        Heap &bottomheap = bottomHeap();
+        swap(heap[heap.root()], bottomheap[bottomheap.bottom()]);
+        bottomheap.pop_back();
+
+        // max or min heap is changed, so update side stage
+        updateSideStage();
+    }
+
+    // pop and return min data
     Data pop_min()
     {
         Data result;
@@ -413,12 +426,7 @@ public:
             result = minheap[minheap.root()];
 
             // using bottom of bottomheap to replace root of minheap
-            Heap &bottomheap = bottomHeap();
-            swap(minheap[minheap.root()], bottomheap[bottomheap.bottom()]);
-            bottomheap.pop_back();
-
-            // max or min heap is changed, so update side stage
-            updateSideStage();
+            replaceRoot(minheap);
 
             // minheap is modified so we reheap
             if (maxheap.size()) {
@@ -436,6 +444,7 @@ public:
         return result;
     }
 
+    // pop and return max data
     Data pop_max()
     {
         Data result;
@@ -443,12 +452,7 @@ public:
             result = maxheap[maxheap.root()];
 
             // using bottom of bottomheap to replace root of maxheap
-            Heap &bottomheap = bottomHeap();
-            swap(maxheap[maxheap.root()], bottomheap[bottomheap.bottom()]);
-            bottomheap.pop_back();
-
-            // max or min heap is changed, so update side stage
-            updateSideStage();
+            replaceRoot(maxheap);
 
             // maxheap is modified so we reheap
             if (maxheap.size()) {
@@ -471,8 +475,9 @@ public:
         }
         else {
             result = minheap[minheap.root()];
-            minheap.pop_back();
 
+            // only minheap has one item
+            minheap.pop_back();
             updateSideStage();
         }
 
