@@ -288,8 +288,10 @@ public:
 
     void print()
     {
+        cout << "[";
         for (auto i : heap)
-            cout << i.column[selectOrder[0]] << endl;
+            cout << i.column[selectOrder[0]] << ", ";
+        cout << "\b\b]" << endl;
     }
 };
 
