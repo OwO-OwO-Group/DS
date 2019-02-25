@@ -183,8 +183,11 @@ public:
 #define leftNode(i) 2 * i + 1
 
 class Heap {
+public:
+    virtual bool cmp(Data &cur, Data &pre) = 0;
 
-    virtual bool cmp(int &cur, int &pre) = 0;
+private:
+    bool cmp(int &cur, int &pre) { return cmp(heap[cur], heap[pre]); }
     int largestChild(int cur)
     {
         int left = leftNode(cur);
@@ -247,6 +250,7 @@ public:
         }
         return cur;
     }
+
     Heap() {}
     Heap(vector<Data> array) : heap(array) {}
 
@@ -298,11 +302,7 @@ public:
 };
 
 class MaxHeap : public Heap {
-
-    bool cmp(int &cur, int &pre)
-    {
-        return (heap[cur] > heap[pre]) ? true : false;
-    }
+    bool cmp(Data &cur, Data &pre) { return cur > pre; }
 
 public:
     MaxHeap() : Heap() {}
@@ -310,10 +310,7 @@ public:
 };
 
 class MinHeap : public Heap {
-    bool cmp(int &cur, int &pre)
-    {
-        return (heap[cur] < heap[pre]) ? true : false;
-    }
+    bool cmp(Data &cur, Data &pre) { return cur < pre; }
 
 public:
     MinHeap() : Heap() {}
@@ -334,6 +331,10 @@ class Deap {
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
     int leftbottom() { return pow(2, floor(log2(minheap.size()))) - 1; }
     Heap &bottomHeap() { return isminheap ? (Heap &)minheap : (Heap &)maxheap; }
+    Heap &bottomHeapN()
+    {
+        return !isminheap ? (Heap &)minheap : (Heap &)maxheap;
+    }
 
     int crosspond(int cur, Heap &side)
     {
@@ -358,22 +359,17 @@ public:
     void push(Data temp)
     {
         updateSideStage();
-        if (isminheap) {
-            int cross = crosspond(minheap.size(), maxheap);
-            if (cross >= 0 && temp > maxheap[cross]) {
-                swap(temp, maxheap[cross]);
-                maxheap.reheapUp(cross);
-            }
-            minheap.push(temp);
+
+        Heap &curHeap = bottomHeap();
+        Heap &crossHeap = bottomHeapN();
+        int cross = crosspond(curHeap.size(), crossHeap);
+
+        if (cross >= 0 && crossHeap.cmp(temp, crossHeap[cross])) {
+            swap(temp, crossHeap[cross]);
+            crossHeap.reheapUp(cross);
         }
-        else {
-            int cross = crosspond(maxheap.size(), minheap);
-            if (cross >= 0 && temp < minheap[cross]) {
-                swap(temp, minheap[cross]);
-                minheap.reheapUp(cross);
-            }
-            maxheap.push(temp);
-        }
+
+        curHeap.push(temp);
     }
 
     Data pop_min()
