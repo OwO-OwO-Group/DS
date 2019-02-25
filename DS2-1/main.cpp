@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
     string column[DATA_SIZE];
@@ -249,7 +249,6 @@ public:
     }
 
 public:
-
     void rebuild()
     {
         for (int i = heap.size() / 2; i >= 0; i--)
@@ -263,10 +262,7 @@ public:
         reheapUp(bottom());
     }
 
-    void push_back(Data temp)
-    {
-        heap.push_back(temp);
-    }
+    void push_back(Data temp) { heap.push_back(temp); }
 
     void pop()
     {
@@ -277,15 +273,12 @@ public:
         }
     }
 
-    void pop_back()
-    {
-        heap.pop_back();
-    }
+    void pop_back() { heap.pop_back(); }
 
     void print_ans()
     {
-        string name[3] = { "root", "bottom", "left bottom" };
-        int ans[3] = { 0, bottom(), leftbottom() };
+        string name[3] = {"root", "bottom", "left bottom"};
+        int ans[3] = {0, bottom(), leftbottom()};
         for (int i = 0; i < 3; i++) {
             cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
             heap[ans[i]].println();
@@ -311,29 +304,43 @@ class Deap {
     MaxHeap maxheap;
     MinHeap minheap;
     bool isminheap = true;
+
     bool isfull(int size)
     {
         return size == 1 ? false
-            : pow(2, floor(log2(size))) == pow(2, log2(size));
+                         : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
+
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
     int leftbottom() { return pow(2, floor(log2(minheap.size()))) - 1; }
-    Heap &bottomHeap() { if (isminheap) return minheap;
-                            else return maxheap; }
-    int crosspond(int cur, int side) {
+
+    Heap &bottomHeap()
+    {
+        if (isminheap)
+            return minheap;
+        else
+            return maxheap;
+    }
+
+    int crosspond(int cur, int side)
+    {
         if (side) {
             if (maxheap.size()) {
-                while (cur > maxheap.size() - 1) cur = (cur - 1) / 2;
+                while (cur > maxheap.size() - 1)
+                    cur = (cur - 1) / 2;
                 return cur;
             }
-            else return -1;
+            else
+                return -1;
         } // min look max
         else {
             if (minheap.size()) {
-                while (cur > minheap.size() - 1) cur = (cur - 1) / 2;
+                while (cur > minheap.size() - 1)
+                    cur = (cur - 1) / 2;
                 return cur;
             }
-            else return -1;
+            else
+                return -1;
         } // max look min
     }
 
@@ -368,12 +375,14 @@ public:
             if (isminheap) {
                 swap(minheap[minheap.root()], minheap[minheap.bottom()]);
                 minheap.pop_back();
-                if (isfull(minheap.size() + 1)) isminheap = false;
+                if (isfull(minheap.size() + 1))
+                    isminheap = false;
             }
             else {
                 swap(minheap[minheap.root()], maxheap[maxheap.bottom()]);
                 maxheap.pop_back();
-                if (isfull(maxheap.size() + 1)) isminheap = true;
+                if (isfull(maxheap.size() + 1))
+                    isminheap = true;
             }
             int cur = minheap.reheapDown(minheap.root());
             int cross = crosspond(cur, true);
@@ -384,17 +393,20 @@ public:
         }
     }
 
-    void pop_max() {
+    void pop_max()
+    {
         if (maxheap.size()) {
             if (!isminheap) {
                 swap(maxheap[maxheap.root()], maxheap[maxheap.bottom()]);
                 maxheap.pop_back();
-                if (isfull(maxheap.size() + 1)) isminheap = true;
+                if (isfull(maxheap.size() + 1))
+                    isminheap = true;
             }
             else {
                 swap(maxheap[maxheap.root()], minheap[minheap.bottom()]);
                 minheap.pop_back();
-                if (isfull(minheap.size() + 1)) isminheap = false;
+                if (isfull(minheap.size() + 1))
+                    isminheap = false;
             }
             int cur = maxheap.reheapDown(maxheap.root());
             int cross = crosspond(cur, false);
@@ -407,17 +419,17 @@ public:
 
     void print_ans()
     {
-        int ans[2] = { bottom(), leftbottom() };
+        int ans[2] = {bottom(), leftbottom()};
 
         // println left bottom data
         Heap &bottomheap = bottomHeap();
         cout << "bottom"
-            << ":[" << bottomheap[ans[0]].getorder() << ']';
+             << ":[" << bottomheap[ans[0]].getorder() << ']';
         bottomheap[ans[0]].println();
 
         // left bottom always at minheap
         cout << "left bottom"
-            << ":[" << minheap[ans[1]].getorder() << ']';
+             << ":[" << minheap[ans[1]].getorder() << ']';
         minheap[ans[1]].println();
     }
 };
