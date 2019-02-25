@@ -193,7 +193,7 @@ protected:
     vector<Data> heap;
 
 public:
-    bool exist(int index) { return index <= heap.size() - 1; }
+    bool exist(int index) { return 0 <= index && index < heap.size(); }
     int size() { return heap.size(); }
     int root() { return 0; }
     int bottom() { return heap.size() - 1; }
@@ -231,11 +231,11 @@ public:
         if (!exist(left) && !exist(right))
             return size;
 
-        // if right not exist, left is largest
+        // if right not exist, left is least
         if (!exist(right))
             return left;
 
-        // return most child
+        // return least child
         if (cmp(right, left))
             return left;
         else
@@ -429,8 +429,11 @@ public:
             replaceRoot(minheap);
 
             // minheap is modified so we reheap
+            int cur = minheap.reheapDown(minheap.root());
+
+            // if correspond is exist, we would check them and swap to make deap
+            // heap has a sense
             if (maxheap.size()) {
-                int cur = minheap.reheapDown(minheap.root());
                 int corres = corresNode(cur, maxheap);
                 if (corres >= 0 && minheap[cur] > maxheap[corres]) {
                     swap(minheap[cur], maxheap[corres]);
@@ -455,8 +458,11 @@ public:
             replaceRoot(maxheap);
 
             // maxheap is modified so we reheap
+            int cur = maxheap.reheapDown(maxheap.root());
+
+            // if correspond is exist, we would check them and swap to make deap
+            // heap has a sense
             if (maxheap.size()) {
-                int cur = maxheap.reheapDown(maxheap.root());
                 int corres = corresNode(cur, minheap);
                 if (maxheap[cur] < minheap[corres]) {
                     swap(maxheap[cur], minheap[corres]);
