@@ -57,7 +57,7 @@ static int stringToInt(string str)
     }
     catch (exception e) {
         cout << "ERROR : stoi error!" << endl;
-        cout << "Value : " << str << endl;
+        cout << "Value : \"" << str << "\"" << endl;
         return -1; // return error value
     }
 }
@@ -285,6 +285,12 @@ public:
             heap[ans[i]].println();
         }
     }
+
+    void print()
+    {
+        for (auto i : heap)
+            cout << i.column[selectOrder[0]] << endl;
+    }
 };
 
 class MaxHeap : public Heap {
@@ -335,6 +341,8 @@ class Deap {
     }
 
 public:
+    int size() { return minheap.size() + maxheap.size(); }
+
     void push(Data temp)
     {
         if (isminheap && isfull(minheap.size() + 1))
@@ -359,9 +367,11 @@ public:
         }
     }
 
-    void pop_min()
+    Data pop_min()
     {
+        Data result;
         if (minheap.size()) {
+            result = minheap[minheap.root()];
             if (isminheap) {
                 swap(minheap[minheap.root()], minheap[minheap.bottom()]);
                 minheap.pop_back();
@@ -381,11 +391,15 @@ public:
                 maxheap.reheapUp(cross);
             }
         }
+
+        return result;
     }
 
-    void pop_max()
+    Data pop_max()
     {
+        Data result;
         if (maxheap.size()) {
+            result = maxheap[maxheap.root()];
             if (!isminheap) {
                 swap(maxheap[maxheap.root()], maxheap[maxheap.bottom()]);
                 maxheap.pop_back();
@@ -405,6 +419,16 @@ public:
                 minheap.reheapUp(cross);
             }
         }
+        else {
+            result = minheap[minheap.root()];
+            minheap.pop_back();
+            if (isminheap && isfull(minheap.size() + 1))
+                isminheap = false;
+            else if (!isminheap && isfull(maxheap.size() + 1))
+                isminheap = true;
+        }
+
+        return result;
     }
 
     void print_ans()
@@ -421,6 +445,14 @@ public:
         cout << "left bottom"
              << ":[" << minheap[ans[1]].getorder() << ']';
         minheap[ans[1]].println();
+    }
+
+    void print()
+    {
+        cout << "minheap" << endl;
+        minheap.print();
+        cout << "maxheap" << endl;
+        maxheap.print();
     }
 };
 
@@ -550,7 +582,31 @@ public:
 void testDeap()
 {
     cout << "testDeap" << endl;
-    Deap deap1;
+    int size = 6;
+    int key[size] = {6, 3, 5, 9, 2, 10};
+    vector<Data> array(size);
+    for (int i = 0; i < size; i++)
+        array[i].column[selectOrder[0]] = to_string(key[i]);
+
+    Deap heap1;
+    for (int i = 0; i < size; i++)
+        heap1.push(array[i]);
+    heap1.print();
+
+    cout << "pop max" << endl;
+    while (heap1.size() > 0)
+        cout << heap1.pop_max().column[selectOrder[0]]
+             << " size:" << heap1.size() << endl,
+            heap1.pop_max(), heap1.print();
+
+    Deap heap2;
+    for (int i = 0; i < size; i++)
+        heap2.push(array[i]);
+
+    cout << "pop min" << endl;
+    while (heap2.size() > 0)
+        cout << heap2.pop_min().column[selectOrder[0]]
+             << " size:" << heap2.size() << endl;
 }
 
 void testMaxHeap()
@@ -564,9 +620,7 @@ void testMaxHeap()
 
     MaxHeap heap1(array);
     heap1.rebuild();
-
-    for (int i = 0; i < heap1.size(); i++)
-        cout << heap1[i].column[selectOrder[0]] << endl;
+    heap1.print();
 }
 
 void testMinHeap()
@@ -580,9 +634,7 @@ void testMinHeap()
 
     MinHeap heap1(array);
     heap1.rebuild();
-
-    for (int i = 0; i < heap1.size(); i++)
-        cout << heap1[i].column[selectOrder[0]] << endl;
+    heap1.print();
 }
 
 int debug(void)
