@@ -254,6 +254,7 @@ public:
     Heap() {}
     Heap(vector<Data> array) : heap(array) {}
 
+    // rebuld from array
     void rebuild()
     {
         for (int i = heap.size() / 2; i >= 0; i--)
@@ -269,6 +270,7 @@ public:
 
     void push_back(Data temp) { heap.push_back(temp); }
 
+    // pop root
     void pop()
     {
         if (heap.size()) {
@@ -290,6 +292,7 @@ public:
         }
     }
 
+    // debug print
     void print()
     {
         cout << "[";
@@ -336,7 +339,8 @@ class Deap {
         return !isminheap ? (Heap &)minheap : (Heap &)maxheap;
     }
 
-    int crosspond(int cur, Heap &side)
+    // Calculate the corresponding node
+    int corresNode(int cur, Heap &side)
     {
         if (side.size() == 0)
             return -1;
@@ -345,6 +349,7 @@ class Deap {
         return cur;
     }
 
+    // select filling heap
     void updateSideStage()
     {
         if (isminheap && isfull(minheap.size() + 1))
@@ -358,15 +363,19 @@ public:
 
     void push(Data temp)
     {
+        // call updateSideStage() to select filling heap
         updateSideStage();
 
+        // curHeap is filling heap, corresHeap is correspond
         Heap &curHeap = bottomHeap();
-        Heap &crossHeap = bottomHeapN();
-        int cross = crosspond(curHeap.size(), crossHeap);
+        Heap &corresHeap = bottomHeapN();
+        int corres = corresNode(curHeap.size(), corresHeap);
 
-        if (cross >= 0 && crossHeap.cmp(temp, crossHeap[cross])) {
-            swap(temp, crossHeap[cross]);
-            crossHeap.reheapUp(cross);
+        // if temp should pushing to the corresponding heap, swap data and
+        // reheap
+        if (corres >= 0 && corresHeap.cmp(temp, corresHeap[corres])) {
+            swap(temp, corresHeap[corres]);
+            corresHeap.reheapUp(corres);
         }
 
         curHeap.push(temp);
@@ -378,17 +387,20 @@ public:
         if (minheap.size()) {
             result = minheap[minheap.root()];
 
+            // using bottom of bottomheap to replace root of minheap
             Heap &bottomheap = bottomHeap();
             swap(minheap[minheap.root()], bottomheap[bottomheap.bottom()]);
             bottomheap.pop_back();
 
+            // max or min heap is changed, so update side stage
             updateSideStage();
 
+            // minheap is modified so we reheap
             int cur = minheap.reheapDown(minheap.root());
-            int cross = crosspond(cur, maxheap);
-            if (minheap[cur] > maxheap[cross]) {
-                swap(minheap[cur], maxheap[cross]);
-                maxheap.reheapUp(cross);
+            int corres = corresNode(cur, maxheap);
+            if (minheap[cur] > maxheap[corres]) {
+                swap(minheap[cur], maxheap[corres]);
+                maxheap.reheapUp(corres);
             }
         }
 
@@ -401,17 +413,20 @@ public:
         if (maxheap.size()) {
             result = maxheap[maxheap.root()];
 
+            // using bottom of bottomheap to replace root of maxheap
             Heap &bottomheap = bottomHeap();
             swap(maxheap[maxheap.root()], bottomheap[bottomheap.bottom()]);
             bottomheap.pop_back();
 
+            // max or min heap is changed, so update side stage
             updateSideStage();
 
+            // maxheap is modified so we reheap
             int cur = maxheap.reheapDown(maxheap.root());
-            int cross = crosspond(cur, minheap);
-            if (maxheap[cur] < minheap[cross]) {
-                swap(maxheap[cur], minheap[cross]);
-                minheap.reheapUp(cross);
+            int corres = corresNode(cur, minheap);
+            if (maxheap[cur] < minheap[corres]) {
+                swap(maxheap[cur], minheap[corres]);
+                minheap.reheapUp(corres);
             }
         }
         else {
@@ -428,7 +443,7 @@ public:
     {
         int ans[2] = {bottom(), leftbottom()};
 
-        // println left bottom data
+        // println bottom data
         Heap &bottomheap = bottomHeap();
         cout << "bottom"
              << ":[" << bottomheap[ans[0]].getorder() << ']';
