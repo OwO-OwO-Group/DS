@@ -679,7 +679,43 @@ int testDeap()
     return false;
 }
 
-void debug() { testDeap(); }
+void testMaxHeap()
+{
+    cout << endl << "== testMaxHeap ==" << endl << endl;
+    int size = 6;
+    int key[size] = {6, 3, 5, 9, 2, 10};
+    vector<Data> array(size);
+    for (int i = 0; i < size; i++)
+        array[i].column[selectOrder[0]] = to_string(key[i]);
+
+    MaxHeap heap1(array);
+    heap1.rebuild();
+    heap1.print();
+}
+
+void testMinHeap()
+{
+    cout << endl << "== testMinHeap ==" << endl << endl;
+    int size = 6;
+    int key[size] = {6, 3, 5, 9, 2, 10};
+    vector<Data> array(size);
+    for (int i = 0; i < size; i++)
+        array[i].column[selectOrder[0]] = to_string(key[i]);
+
+    MinHeap heap1(array);
+    heap1.rebuild();
+    heap1.print();
+}
+
+void debug()
+{
+    // Before finding a batter testing tool,
+    // please not remove three testing
+    // define "DEBUG1111" to enter testing
+    testMaxHeap();
+    testMinHeap();
+    testDeap();
+}
 
 int main(int argc, char *argv[])
 {
