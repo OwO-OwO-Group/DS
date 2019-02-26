@@ -193,7 +193,13 @@ protected:
     vector<Data> heap;
 
 public:
-    bool exist(int index) { return 0 <= index && index < heap.size(); }
+    bool exist(int index)
+    {
+        // heap.size() is unsigend int
+        // 0 - 1 underflow
+        return 0 <= index && index <= ((int)heap.size()) - 1;
+    }
+
     int size() { return heap.size(); }
     int root() { return 0; }
     int bottom() { return heap.size() - 1; }
