@@ -66,9 +66,15 @@ static int stringToInt(string str)
 static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
+    string column[DATA_SIZE];
+    int cache[DATA_SIZE];
+    void updateCache()
+    {
+        for (auto i : selectOrder)
+            cache[i] = stringToInt(column[i]);
+    }
 
 public:
-    string column[DATA_SIZE];
     friend istream &operator>>(istream &in, Data &data)
     {
         string input, temp;
@@ -102,6 +108,7 @@ public:
         else
             data.column[count] = to_string(order);
 
+        data.updateCache();
         return in;
     }
 
@@ -113,16 +120,24 @@ public:
         return out;
     }
 
+    string getData(int index) const { return column[index]; }
+
+    void setData(int index, string data)
+    {
+        column[index] = data;
+        updateCache();
+    }
+
     int convertToInt(int num) { return stringToInt(column[num]); }
 
     bool operator>(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            if (cache[i] > b.cache[i])
                 return true;
-            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            else if (cache[i] < b.cache[i])
                 return false;
-            // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
+            // else cache[i] == b.cache[i] then i++
         }
         return false;
     }
@@ -130,11 +145,11 @@ public:
     bool operator>=(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            if (cache[i] > b.cache[i])
                 return true;
-            else if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            else if (cache[i] < b.cache[i])
                 return false;
-            // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
+            // else cache[i] == b.cache[i] then i++
         }
         return true;
     }
@@ -142,11 +157,11 @@ public:
     bool operator<=(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            if (cache[i] < b.cache[i])
                 return true;
-            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            else if (cache[i] > b.cache[i])
                 return false;
-            // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
+            // else cache[i] == b.cache[i] then i++
         }
         return true;
     }
@@ -154,11 +169,11 @@ public:
     bool operator<(Data &b)
     {
         for (auto i : selectOrder) {
-            if (stringToInt(column[i]) < stringToInt(b.column[i]))
+            if (cache[i] < b.cache[i])
                 return true;
-            else if (stringToInt(column[i]) > stringToInt(b.column[i]))
+            else if (cache[i] > b.cache[i])
                 return false;
-            // else stringToInt(column[i]) == stringToInt(b.column[i] then i++
+            // else cache[i] == b.cache[i] then i++
         }
         return false;
     }
@@ -329,7 +344,7 @@ public:
     {
         cout << "[";
         for (auto i : heap)
-            cout << i.column[selectOrder[0]] << ", ";
+            cout << i.getData(selectOrder[0]) << ", ";
         if (heap.size() > 0)
             cout << "\b\b";
         cout << "]" << endl;
@@ -661,7 +676,7 @@ int testDeap()
     int size = sizeof(key) / sizeof(int);
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
-        array[i].column[selectOrder[0]] = to_string(key[i]);
+        array[i].setData(selectOrder[0], to_string(key[i]));
 
     Deap heap1;
     for (int i = 0; i < size; i++)
@@ -670,7 +685,7 @@ int testDeap()
 
     cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
-        cout << heap1.pop_max().column[selectOrder[0]]
+        cout << heap1.pop_max().getData(selectOrder[0])
              << " size:" << heap1.size() << endl,
             heap1.print();
 
@@ -680,7 +695,7 @@ int testDeap()
 
     cout << endl << "== pop min ==" << endl << endl;
     while (heap1.size() > 0)
-        cout << heap1.pop_min().column[selectOrder[0]]
+        cout << heap1.pop_min().getData(selectOrder[0])
              << " size:" << heap1.size() << endl,
             heap1.print();
 
@@ -694,7 +709,7 @@ void testMaxHeap()
     int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
-        array[i].column[selectOrder[0]] = to_string(key[i]);
+        array[i].setData(selectOrder[0], to_string(key[i]));
 
     MaxHeap heap1(array);
     heap1.rebuild();
@@ -707,7 +722,7 @@ void testMinHeap()
     int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
-        array[i].column[selectOrder[0]] = to_string(key[i]);
+        array[i].setData(selectOrder[0], to_string(key[i]));
 
     MinHeap heap1(array);
     heap1.rebuild();
