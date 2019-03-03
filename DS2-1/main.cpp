@@ -196,6 +196,7 @@ public:
 #define preNode(i) (i - 1) / 2
 #define rightNode(i) 2 * i + 2
 #define leftNode(i) 2 * i + 1
+#define NULL_NODE -1
 
 class Heap {
 public:
@@ -228,7 +229,7 @@ public:
 
         // return size if cur no child
         if (!exist(left) && !exist(right))
-            return -1;
+            return NULL_NODE;
 
         // if right not exist, left is largest
         if (!exist(right))
@@ -248,7 +249,7 @@ public:
 
         // return size if cur no child
         if (!exist(left) && !exist(right))
-            return -1;
+            return NULL_NODE;
 
         // if right not exist, left is least
         if (!exist(right))
@@ -495,8 +496,7 @@ public:
                 else if (!maxheap.exist(leftNode(cur))) {
                     int child = minheap.leastChild(corres);
                     // be sure that correspond children are smaller than cur
-                    if (child >= 0 &&
-                        maxheap[cur] < minheap[child]) {
+                    if (child >= 0 && maxheap[cur] < minheap[child]) {
                         swap(maxheap[cur], minheap[child]);
                     }
                 }
@@ -696,7 +696,7 @@ int testDeap()
     cout << endl << "== pop min ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_min().getData(selectOrder[0])
-            << " size:" << heap1.size() << endl,
+             << " size:" << heap1.size() << endl,
             heap1.print();
 
     return false;
