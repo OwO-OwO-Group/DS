@@ -63,7 +63,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = { DATA_STUDENTS };
+static vector<int> selectOrder = {DATA_STUDENTS};
 
 class Data {
 
@@ -313,14 +313,15 @@ public:
     void print_ans()
     {
         if (heap.size()) {
-            string name[3] = { "root", "bottom", "left bottom" };
-            int ans[3] = { 0, bottom(), leftbottom() };
+            string name[3] = {"root", "bottom", "left bottom"};
+            int ans[3] = {0, bottom(), leftbottom()};
             for (int i = 0; i < 3; i++) {
                 cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
                 heap[ans[i]].println();
             }
         }
-        else cout << "It's empty" << endl;
+        else
+            cout << "It's empty" << endl;
     }
 
     // debug print
@@ -359,7 +360,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-            : pow(2, floor(log2(size))) == pow(2, log2(size));
+                         : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
@@ -502,20 +503,21 @@ public:
     void print_ans()
     {
         if (minheap.size()) {
-            int ans[2] = { bottom(), leftbottom() };
+            int ans[2] = {bottom(), leftbottom()};
 
             // println bottom data
             Heap &bottomheap = bottomHeap();
             cout << "bottom"
-                << ":[" << bottomheap[ans[0]].getorder() << ']';
+                 << ":[" << bottomheap[ans[0]].getorder() << ']';
             bottomheap[ans[0]].println();
 
             // left bottom always at minheap
             cout << "left bottom"
-                << ":[" << minheap[ans[1]].getorder() << ']';
+                 << ":[" << minheap[ans[1]].getorder() << ']';
             minheap[ans[1]].println();
         }
-        else cout << "It's empty" << endl;
+        else
+            cout << "It's empty" << endl;
     }
 
     void print()
@@ -655,7 +657,7 @@ public:
 int testDeap()
 {
     cout << endl << "== testDeap ==" << endl << endl;
-    int key[] = { 6, 3, 5, 9, 2, 10, 13, 1, 23, 4 };
+    int key[] = {6, 3, 5, 9, 2, 10, 13, 1, 23, 4};
     int size = sizeof(key) / sizeof(int);
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
@@ -669,8 +671,8 @@ int testDeap()
     cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_max().column[selectOrder[0]]
-        << " size:" << heap1.size() << endl,
-        heap1.print();
+             << " size:" << heap1.size() << endl,
+            heap1.print();
 
     for (int i = 0; i < size; i++)
         heap1.push(array[i]);
@@ -679,8 +681,8 @@ int testDeap()
     cout << endl << "== pop min ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_min().column[selectOrder[0]]
-        << " size:" << heap1.size() << endl,
-        heap1.print();
+             << " size:" << heap1.size() << endl,
+            heap1.print();
 
     return false;
 }
@@ -689,7 +691,7 @@ int testDeap()
 void testMaxHeap()
 {
     cout << endl << "== testMaxHeap ==" << endl << endl;
-    int key[size] = { 6, 3, 5, 9, 2, 10 };
+    int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].column[selectOrder[0]] = to_string(key[i]);
@@ -702,7 +704,7 @@ void testMaxHeap()
 void testMinHeap()
 {
     cout << endl << "== testMinHeap ==" << endl << endl;
-    int key[size] = { 6, 3, 5, 9, 2, 10 };
+    int key[size] = {6, 3, 5, 9, 2, 10};
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].column[selectOrder[0]] = to_string(key[i]);
