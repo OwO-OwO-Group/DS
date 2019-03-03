@@ -225,11 +225,10 @@ public:
     {
         int left = leftNode(cur);
         int right = rightNode(cur);
-        int size = heap.size();
 
         // return size if cur no child
         if (!exist(left) && !exist(right))
-            return size;
+            return -1;
 
         // if right not exist, left is largest
         if (!exist(right))
@@ -246,11 +245,10 @@ public:
     {
         int left = leftNode(cur);
         int right = rightNode(cur);
-        int size = heap.size();
 
         // return size if cur no child
         if (!exist(left) && !exist(right))
-            return size;
+            return -1;
 
         // if right not exist, left is least
         if (!exist(right))
@@ -493,9 +491,11 @@ public:
                     swap(maxheap[cur], minheap[corres]);
                     minheap.reheapUp(corres);
                 }
+                // if cur is leaf
                 else if (!maxheap.exist(leftNode(cur))) {
                     int child = minheap.leastChild(corres);
-                    if (child < minheap.size() &&
+                    // be sure that correspond children are smaller than cur
+                    if (child >= 0 &&
                         maxheap[cur] < minheap[child]) {
                         swap(maxheap[cur], minheap[child]);
                     }
@@ -696,7 +696,7 @@ int testDeap()
     cout << endl << "== pop min ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_min().getData(selectOrder[0])
-             << " size:" << heap1.size() << endl,
+            << " size:" << heap1.size() << endl,
             heap1.print();
 
     return false;
