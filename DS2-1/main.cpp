@@ -619,7 +619,7 @@ public:
     bool task1()
     {
         string fileName =
-            fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
+            fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
         order = 1;
         // if fileName == "" then quit to menu
         if (fileName != "") {
@@ -645,7 +645,7 @@ public:
     bool task2()
     {
         string fileName =
-            fileInput(fin, "Input (601, 602, ...[0]Quit): ", "input");
+            fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
         order = 1;
         // if fileName == "" then quit to menu
         if (fileName != "") {
