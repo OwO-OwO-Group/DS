@@ -440,6 +440,9 @@ public:
 
         // max or min heap is changed, so update side stage
         updateSideStage();
+        // when maxheap is empty, it may switch to minheap
+        // function updateSideStage() can't work because it also use in insert
+        if(!maxheap.size()) isminheap = true;
     }
 
     // pop and return min data
@@ -455,17 +458,16 @@ public:
             // minheap is modified so we reheap
             int cur = minheap.reheapDown(minheap.root());
 
-            // if correspond is exist, we would check them and swap to make deap
+            // if cur is leaf and this heap is not empty and correspond is exist,
+            // we would check them and swap to make deap
             // heap has a sense
-            if (maxheap.size()) {
+            if (!minheap.exist(leftNode(cur)) && minheap.size()) {
                 int corres = corresNode(cur, maxheap);
                 if (corres >= 0 && minheap[cur] > maxheap[corres]) {
                     swap(minheap[cur], maxheap[corres]);
                     maxheap.reheapUp(corres);
                 }
             }
-            else
-                isminheap = true;
         }
 
         return result;
@@ -475,6 +477,7 @@ public:
     Data pop_max()
     {
         Data result;
+        // pop from max heap
         if (maxheap.size()) {
             result = maxheap[maxheap.root()];
 
@@ -484,26 +487,23 @@ public:
             // maxheap is modified so we reheap
             int cur = maxheap.reheapDown(maxheap.root());
 
-            // if correspond is exist, we would check them and swap to make deap
+            // if cur is leaf and this heap is not empty and correspond is exist,
+            // we would check them and swap to make deap
             // heap has a sense
-            if (maxheap.size()) {
+            if (!maxheap.exist(leftNode(cur)) && maxheap.size()) {
                 int corres = corresNode(cur, minheap);
                 if (maxheap[cur] < minheap[corres]) {
                     swap(maxheap[cur], minheap[corres]);
                     minheap.reheapUp(corres);
                 }
-                // if cur is leaf
-                else if (!maxheap.exist(leftNode(cur))) {
-                    int child = minheap.leastChild(corres);
-                    // be sure that correspond children are smaller than cur
-                    if (child >= 0 && maxheap[cur] < minheap[child]) {
-                        swap(maxheap[cur], minheap[child]);
-                    }
+                int child = minheap.leastChild(corres);
+                // be sure that correspond children are smaller than cur
+                if (child >= 0 && maxheap[cur] < minheap[child]) {
+                    swap(maxheap[cur], minheap[child]);
                 }
             }
-            else
-                isminheap = true;
         }
+        // pop from minheap
         else {
             result = minheap[minheap.root()];
 
@@ -782,7 +782,7 @@ int main(int argc, char *argv[])
         if (result)
             return 1;
         else
-            cout << endl;
+        cout << endl;
     };
 #endif
     return 0;
