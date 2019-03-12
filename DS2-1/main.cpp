@@ -16,6 +16,7 @@ using namespace std;
 #define MENU_QUIT               0
 #define MENU_MAXHEAP            1
 #define MENU_DEAP               2
+#define MENU_MINMAX             3
 
 #define DATA_SIZE               12
 #define DATA_ID                 0
@@ -63,7 +64,7 @@ static int stringToInt(string str)
 }
 
 // select column datatype must be integer
-static vector<int> selectOrder = {DATA_STUDENTS};
+static vector<int> selectOrder = { DATA_STUDENTS };
 
 class Data {
     string column[DATA_SIZE];
@@ -194,6 +195,7 @@ public:
 };
 
 #define preNode(i) (i - 1) / 2
+#define grandNode(i) (i - 3) / 4
 #define rightNode(i) 2 * i + 2
 #define leftNode(i) 2 * i + 1
 #define NULL_NODE -1
@@ -327,8 +329,8 @@ public:
     void print_ans()
     {
         if (heap.size()) {
-            string name[3] = {"root", "bottom", "left bottom"};
-            int ans[3] = {0, bottom(), leftbottom()};
+            string name[3] = { "root", "bottom", "left bottom" };
+            int ans[3] = { 0, bottom(), leftbottom() };
             for (int i = 0; i < 3; i++) {
                 cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
                 heap[ans[i]].println();
@@ -366,6 +368,96 @@ public:
     MinHeap(vector<Data> array) : Heap(array) {}
 };
 
+class MinMaxHeap : public Heap {
+
+private:
+    // min
+    bool isMin(int cur)
+    {
+        return ((int)floor(log2(cur + 1))) % 2 == 0;
+    } // right~
+
+    bool cmpMinMax(int cur, int pre)
+    {
+        // cur node , pre root
+        // min level pre (max) 小於新的值
+        // max level pre (min) 大於新的值
+        // true swap
+        return isMin(cur) ? heap[cur] > heap[pre] : heap[cur] < heap[pre];
+    } // right
+
+    bool cmp(Data &cur, Data &pre) { return cur > pre; }
+
+    bool cmp1(int &cur, int &pre)
+    {
+        // min level cur > pre
+        // max level cur < pre
+        // true swap
+        return isMin(cur) ? heap[cur] > heap[pre] : heap[cur] < heap[pre];
+    } // right
+
+public:
+    MinMaxHeap() : Heap() {}
+    MinMaxHeap(vector<Data> array) : Heap(array) {}
+
+    void reheapUp(int cur, int root = 0)
+    {
+        int pre = grandNode(cur);
+
+        // Compare and check is arrival root
+        if (isMin(cur)) {
+            while (pre >= 0 && heap[cur] < heap[pre]) {
+                swap(heap[cur], heap[pre]);
+                cur = pre;
+
+                // iterate until arrival root
+                pre = grandNode(cur);
+            }
+        }
+        else {
+            // max
+            while (pre >= 1 && heap[cur] > heap[pre]) {
+                swap(heap[cur], heap[pre]);
+                cur = pre;
+
+                // iterate until arrival root
+                pre = grandNode(cur);
+            }
+        }
+    }
+
+    void push(Data temp)
+    {
+        heap.push_back(temp);
+        // swap if not currect
+        int cur = bottom();
+
+        if (cmpMinMax(cur, preNode(cur))) {
+            swap(heap[cur], heap[preNode(cur)]);
+
+            // Reheap swap item
+            cur = preNode(cur);
+        }
+
+        reheapUp(cur);
+    }
+
+    void print_ans()
+    {
+        if (heap.size()) {
+            cout << "< min-max heap >" << endl;
+            string name[3] = { "root", "bottom", "left bottom" };
+            int ans[3] = { 0, bottom(), leftbottom() };
+            for (int i = 0; i < 3; i++) {
+                cout << name[i] << ":[" << heap[ans[i]].getorder() << ']';
+                heap[ans[i]].println();
+            }
+        }
+        else
+            cout << "It's empty" << endl;
+    }
+};
+
 class Deap {
     MaxHeap maxheap;
     MinHeap minheap;
@@ -374,7 +466,7 @@ class Deap {
     bool isfull(int size)
     {
         return size == 1 ? false
-                         : pow(2, floor(log2(size))) == pow(2, log2(size));
+            : pow(2, floor(log2(size))) == pow(2, log2(size));
     }
 
     int bottom() { return isminheap ? minheap.size() - 1 : maxheap.size() - 1; }
@@ -442,7 +534,8 @@ public:
         updateSideStage();
         // when maxheap is empty, it may switch to minheap
         // function updateSideStage() can't work because it also use in insert
-        if(!maxheap.size()) isminheap = true;
+        if (!maxheap.size())
+            isminheap = true;
     }
 
     // pop and return min data
@@ -458,9 +551,8 @@ public:
             // minheap is modified so we reheap
             int cur = minheap.reheapDown(minheap.root());
 
-            // if cur is leaf and this heap is not empty and correspond is exist,
-            // we would check them and swap to make deap
-            // heap has a sense
+            // if cur is leaf and this heap is not empty and correspond is
+            // exist, we would check them and swap to make deap heap has a sense
             if (!minheap.exist(leftNode(cur)) && minheap.size()) {
                 int corres = corresNode(cur, maxheap);
                 if (corres >= 0 && minheap[cur] > maxheap[corres]) {
@@ -487,9 +579,8 @@ public:
             // maxheap is modified so we reheap
             int cur = maxheap.reheapDown(maxheap.root());
 
-            // if cur is leaf and this heap is not empty and correspond is exist,
-            // we would check them and swap to make deap
-            // heap has a sense
+            // if cur is leaf and this heap is not empty and correspond is
+            // exist, we would check them and swap to make deap heap has a sense
             if (!maxheap.exist(leftNode(cur)) && maxheap.size()) {
                 int corres = corresNode(cur, minheap);
                 if (maxheap[cur] < minheap[corres]) {
@@ -518,17 +609,17 @@ public:
     void print_ans()
     {
         if (minheap.size()) {
-            int ans[2] = {bottom(), leftbottom()};
+            int ans[2] = { bottom(), leftbottom() };
 
             // println bottom data
             Heap &bottomheap = bottomHeap();
             cout << "bottom"
-                 << ":[" << bottomheap[ans[0]].getorder() << ']';
+                << ":[" << bottomheap[ans[0]].getorder() << ']';
             bottomheap[ans[0]].println();
 
             // left bottom always at minheap
             cout << "left bottom"
-                 << ":[" << minheap[ans[1]].getorder() << ']';
+                << ":[" << minheap[ans[1]].getorder() << ']';
             minheap[ans[1]].println();
         }
         else
@@ -553,6 +644,7 @@ class HandleFile {
     MaxHeap maxheap;
     MinHeap minheap; // test
     Deap deap;
+    MinMaxHeap minmaxheap;
 
     // common function
     int numberInput(string message, string errorMsg)
@@ -667,12 +759,38 @@ public:
 
         return fileName == ""; // {quit: 0, continue: 1} }
     }
+
+    bool task3()
+    {
+        string fileName =
+            fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
+        order = 1;
+        // if fileName == "" then quit to menu
+        if (fileName != "") {
+            Data temp;
+            while (fin >> temp) // >> overload
+                if (inputSuccess) {
+                    minmaxheap.push(temp);
+                    order++;
+                }
+
+            minmaxheap.print_ans();
+            // print out something
+        }
+        else {
+            cout << "switch to menu" << endl;
+        }
+
+        fin.close();
+
+        return fileName == ""; // {quit: 0, continue: 1} }
+    }
 };
 
 int testDeap()
 {
     cout << endl << "== testDeap ==" << endl << endl;
-    int key[] = {6, 3, 5, 9, 2, 10, 13, 1, 23, 4};
+    int key[] = { 6, 3, 5, 9, 2, 10, 13, 1, 23, 4 };
     int size = sizeof(key) / sizeof(int);
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
@@ -686,8 +804,8 @@ int testDeap()
     cout << endl << "== pop max ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_max().getData(selectOrder[0])
-             << " size:" << heap1.size() << endl,
-            heap1.print();
+        << " size:" << heap1.size() << endl,
+        heap1.print();
 
     for (int i = 0; i < size; i++)
         heap1.push(array[i]);
@@ -696,8 +814,8 @@ int testDeap()
     cout << endl << "== pop min ==" << endl << endl;
     while (heap1.size() > 0)
         cout << heap1.pop_min().getData(selectOrder[0])
-             << " size:" << heap1.size() << endl,
-            heap1.print();
+        << " size:" << heap1.size() << endl,
+        heap1.print();
 
     return false;
 }
@@ -706,7 +824,7 @@ int testDeap()
 void testMaxHeap()
 {
     cout << endl << "== testMaxHeap ==" << endl << endl;
-    int key[size] = {6, 3, 5, 9, 2, 10};
+    int key[size] = { 6, 3, 5, 9, 2, 10 };
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].setData(selectOrder[0], to_string(key[i]));
@@ -719,7 +837,7 @@ void testMaxHeap()
 void testMinHeap()
 {
     cout << endl << "== testMinHeap ==" << endl << endl;
-    int key[size] = {6, 3, 5, 9, 2, 10};
+    int key[size] = { 6, 3, 5, 9, 2, 10 };
     vector<Data> array(size);
     for (int i = 0; i < size; i++)
         array[i].setData(selectOrder[0], to_string(key[i]));
@@ -753,6 +871,7 @@ int main(int argc, char *argv[])
         cout << "* 0.          QUIT             *" << endl;
         cout << "* 1.        MAX-HEAP           *" << endl;
         cout << "* 2.          DEAP             *" << endl;
+        cout << "* 3.         MINMAX            *" << endl;
         cout << "choice: ";
 
         // 輸入選擇
@@ -773,6 +892,10 @@ int main(int argc, char *argv[])
             result = f.task2();
             break;
 
+        case MENU_MINMAX:
+            result = f.task3();
+            break;
+
         default:
             errorHandling("Error: Command not found!");
             continue;
@@ -782,7 +905,7 @@ int main(int argc, char *argv[])
         if (result)
             return 1;
         else
-        cout << endl;
+            cout << endl;
     };
 #endif
     return 0;
