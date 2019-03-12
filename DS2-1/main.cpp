@@ -404,13 +404,24 @@ public:
     {
         int pre = grandNode(cur);
 
-        // Compare and check is arrival root
-        while (cur > root && cmp1(cur, pre)) {
-            swap(heap[cur], heap[pre]);
-            cur = pre;
+        if (isMin(cur)) {
+            while (cur > 0 && heap[cur] > heap[pre]) {
+                swap(heap[cur], heap[pre]);
+                cur = pre;
 
-            // iterate until arrival root
-            pre = grandNode(cur);
+                // iterate until arrival root
+                pre = grandNode(cur);
+            }
+        }
+        else {
+            // max
+            while (cur > 0 && pre >= 1 && heap[cur] < heap[pre]) {
+                swap(heap[cur], heap[pre]);
+                cur = pre;
+
+                // iterate until arrival root
+                pre = grandNode(cur);
+            }
         }
     }
 
