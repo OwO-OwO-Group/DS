@@ -390,10 +390,10 @@ private:
 
     bool cmp1(int &cur, int &pre)
     {
-        // min level cur < pre
-        // max level cur > pre
+        // min level cur > pre
+        // max level cur < pre
         // true swap
-        return isMin(cur) ? heap[cur] < heap[pre] : heap[cur] > heap[pre];
+        return isMin(cur) ? heap[cur] > heap[pre] : heap[cur] < heap[pre];
     } // right
 
 public:
@@ -417,9 +417,9 @@ public:
     void push(Data temp)
     {
         heap.push_back(temp);
-
         // swap if not currect
         int cur = bottom();
+
         if (cmpMinMax(cur, preNode(cur))) {
             swap(heap[cur], heap[preNode(cur)]);
 
