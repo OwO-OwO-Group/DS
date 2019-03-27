@@ -7,6 +7,11 @@
 
 class Tree23 {
 
+    typedef struct Node {
+    } Node;
+
+    Node *root;
+
 public:
     void insert(Data);
 };
