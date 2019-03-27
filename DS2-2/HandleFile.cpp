@@ -74,3 +74,18 @@ bool HandleFile ::task1()
 
     return fileName == ""; // {quit: 0, continue: 1}
 }
+
+bool HandleFile ::task2()
+{
+    string fileName = fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
+    // if fileName == "" then quit to menu
+    if (fileName != "") {
+    }
+    else {
+        cout << "switch to menu" << endl;
+    }
+
+    fin.close();
+
+    return fileName == ""; // {quit: 0, continue: 1}
+}
