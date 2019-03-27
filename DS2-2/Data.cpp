@@ -1,12 +1,14 @@
+// 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
+// must to use -std=c++11 or higher version encoding=utf-8
 #include "Data.h"
 
-void Data :: updateCache()
+void Data ::updateCache()
 {
     for (auto i : selectOrder)
         cache[i] = stringToInt(column[i]);
 }
 
-istream& operator>>(istream &in, Data &data)
+istream &operator>>(istream &in, Data &data)
 {
     string input, temp;
     getline(in, input);
@@ -41,7 +43,7 @@ istream& operator>>(istream &in, Data &data)
     return in;
 }
 
-ostream& operator<<(ostream &out, Data &data)
+ostream &operator<<(ostream &out, Data &data)
 {
     for (int i = 0; i < DATA_SIZE; i++)
         out << data.column[i] << (i < DATA_SIZE - 1 ? '\t' : '\n');
@@ -49,13 +51,13 @@ ostream& operator<<(ostream &out, Data &data)
     return out;
 }
 
-void Data :: setData(int index, string data)
+void Data ::setData(int index, string data)
 {
     column[index] = data;
     updateCache();
 }
 
-bool Data :: operator>(Data &b)
+bool Data ::operator>(Data &b)
 {
     for (auto i : selectOrder) {
         if (cache[i] > b.cache[i])
@@ -67,7 +69,7 @@ bool Data :: operator>(Data &b)
     return false;
 }
 
-bool Data :: operator>=(Data &b)
+bool Data ::operator>=(Data &b)
 {
     for (auto i : selectOrder) {
         if (cache[i] > b.cache[i])
@@ -79,7 +81,7 @@ bool Data :: operator>=(Data &b)
     return true;
 }
 
-bool Data :: operator<=(Data &b)
+bool Data ::operator<=(Data &b)
 {
     for (auto i : selectOrder) {
         if (cache[i] < b.cache[i])
@@ -91,7 +93,7 @@ bool Data :: operator<=(Data &b)
     return true;
 }
 
-bool Data :: operator<(Data &b)
+bool Data ::operator<(Data &b)
 {
     for (auto i : selectOrder) {
         if (cache[i] < b.cache[i])
@@ -103,13 +105,13 @@ bool Data :: operator<(Data &b)
     return false;
 }
 
-void Data :: print()
+void Data ::print()
 {
     for (auto i : selectOrder)
         cout << ' ' << column[i];
 }
 
-void Data :: println()
+void Data ::println()
 {
     for (auto i : selectOrder)
         cout << ' ' << column[i] << endl;
