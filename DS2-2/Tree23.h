@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _TREE23_H_
 #define _TREE23_H_
-#include <Data.h>
+#include "Data.h"
 
 class Tree23 {
 
