@@ -4,6 +4,7 @@
 
 #include "HandleFile.h"
 #include "Header.h"
+#include "Test.h"
 #include <ctime>
 #include <iostream>
 #include <string>
