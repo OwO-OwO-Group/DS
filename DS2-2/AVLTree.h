@@ -6,6 +6,9 @@
 #include "Data.h"
 
 class AVLTree {
+    typedef struct Node {
+    } Node;
+
 public:
     void insert(Data);
 };
