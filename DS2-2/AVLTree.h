@@ -6,8 +6,11 @@
 #include "Data.h"
 
 class AVLTree {
+
     typedef struct Node {
     } Node;
+
+    Node *root;
 
 public:
     void insert(Data);
