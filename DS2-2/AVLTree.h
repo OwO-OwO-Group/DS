@@ -4,12 +4,17 @@
 #ifndef _AVLTREE_H_
 #define _AVLTREE_H_
 #include "Data.h"
+#include <vector>
+
+using namespace std;
 
 class AVLTree {
 
     typedef struct Node {
         Node *left, *right;
         int height;
+        vector<int> ids;
+        string key;
     } Node;
 
     Node *root;
@@ -19,8 +24,13 @@ class AVLTree {
     Node *LL_roate(Node *);
     Node *RR_roate(Node *);
 
+    void newHeight(Node *);
+    int getBF(Node *);
+
+    Node *insert(Node *node, int id, string const &key);
+
 public:
-    void insert(Data);
+    void insert(int id, string const &key);
 };
 
 #endif

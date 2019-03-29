@@ -30,10 +30,73 @@ AVLTree::Node *AVLTree::RR_roate(AVLTree::Node *cur)
     return right;
 }
 
-void AVLTree::insert(Data)
+void AVLTree::newHeight(Node *node)
 {
-    if (root == NULL) {
+    Node *left = node->left, *right = node->right;
+    if (left != NULL && right != NULL)
+        node->height =
+            left->height > right->height ? left->height : right->height;
+    else if (right != NULL)
+        node->height = right->height;
+    else if (left != NULL)
+        node->height = left->height;
+    else
+        node->height = 1;
+}
+
+int AVLTree::getBF(Node *node)
+{
+    if (node == NULL)
+        return 0;
+
+    Node *left = node->left, *right = node->right;
+    if (left != NULL && right != NULL)
+        return left->height - right->height;
+    else if (right != NULL)
+        return 0 - right->height;
+    else if (left != NULL)
+        return left->height - 0;
+    else
+        return 0;
+}
+
+AVLTree::Node *AVLTree::insert(Node *node, int id, string const &key)
+{
+    if (node == NULL) {
+        // create new node
+        node = new Node();
+        node->left = node->right = NULL;
+        node->key = key;
+        node->ids.push_back(id);
     }
+    else if (node->key == key)
+        node->ids.push_back(id);
     else {
+        if (key < node->key)
+            node->left = insert(node->left, id, key);
+        else if (key > node->key)
+            node->right = insert(node->right, id, key);
+
+        // count BF
+        Node *left = node->left, *right = node->right;
+        int nodeBF = getBF(node), rightBF = getBF(node), leftBF = getBF(node);
+        if (left != NULL && nodeBF == +2 && leftBF != -1)
+            node = LL_roate(node);
+        else if (left != NULL && nodeBF == +2 && leftBF == -1)
+            node = LR_roate(node);
+        else if (right != NULL && nodeBF == -2 && leftBF == +1)
+            node = RL_roate(node);
+        else if (right != NULL && nodeBF == -2 && leftBF != +1)
+            node = RR_roate(node);
     }
+
+    // count tree height
+    newHeight(node);
+
+    return node;
+}
+
+void AVLTree::insert(int id, string const &key)
+{
+    root = insert(root, id, key);
 }
