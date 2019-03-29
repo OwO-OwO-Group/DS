@@ -8,9 +8,16 @@
 class AVLTree {
 
     typedef struct Node {
+        Node *left, *right;
+        int height;
     } Node;
 
     Node *root;
+
+    Node *LR_roate(Node *);
+    Node *RL_roate(Node *);
+    Node *LL_roate(Node *);
+    Node *RR_roate(Node *);
 
 public:
     void insert(Data);
