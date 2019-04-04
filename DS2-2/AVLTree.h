@@ -24,7 +24,7 @@ class AVLTree {
     Node *LL_roate(Node *);
     Node *RR_roate(Node *);
     void removeNode(Node *cur);
-    void newHeight(Node *);
+    void newHeight(Node *, int);
     int getBF(Node *);
 
     Node *insert(Node *node, int id, const string &key);

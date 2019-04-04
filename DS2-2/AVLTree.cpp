@@ -30,16 +30,25 @@ AVLTree::Node *AVLTree::RR_roate(AVLTree::Node *cur)
     return right;
 }
 
-void AVLTree::newHeight(Node *node)
+void AVLTree::newHeight(Node *node, int deepMax)
 {
+    if (node == NULL)
+        return;
+
     Node *left = node->left, *right = node->right;
+    if (deepMax != 0) {
+        newHeight(left, deepMax - 1);
+        newHeight(right, deepMax - 1);
+    }
+
+    // count
     if (left != NULL && right != NULL)
         node->height =
-            left->height > right->height ? left->height : right->height;
+            (left->height > right->height ? left->height : right->height) + 1;
     else if (right != NULL)
-        node->height = right->height;
+        node->height = right->height + 1;
     else if (left != NULL)
-        node->height = left->height;
+        node->height = left->height + 1;
     else
         node->height = 1;
 }
@@ -81,19 +90,22 @@ AVLTree::Node *AVLTree::insert(Node *node, int id, const string &key)
 
         // count BF
         Node *left = node->left, *right = node->right;
-        int nodeBF = getBF(node), rightBF = getBF(node), leftBF = getBF(node);
+        int nodeBF = getBF(node);
+        int rightBF = getBF(node->right);
+        int leftBF = getBF(node->left);
+
         if (left != NULL && nodeBF == +2 && leftBF != -1)
             node = LL_roate(node);
         else if (left != NULL && nodeBF == +2 && leftBF == -1)
             node = LR_roate(node);
-        else if (right != NULL && nodeBF == -2 && leftBF == +1)
+        else if (right != NULL && nodeBF == -2 && rightBF == +1)
             node = RL_roate(node);
-        else if (right != NULL && nodeBF == -2 && leftBF != +1)
+        else if (right != NULL && nodeBF == -2 && rightBF != +1)
             node = RR_roate(node);
     }
 
     // count tree height
-    newHeight(node);
+    newHeight(node, 2);
 
     return node;
 }
