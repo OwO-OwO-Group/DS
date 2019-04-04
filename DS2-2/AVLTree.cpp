@@ -136,3 +136,11 @@ void AVLTree::removeNode(Node *cur)
 }
 
 void AVLTree::clear() { removeNode(root); }
+
+int AVLTree::height()
+{
+    if (root != NULL)
+        return root->height;
+    else
+        return 0;
+}

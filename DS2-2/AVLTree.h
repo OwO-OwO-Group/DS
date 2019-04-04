@@ -36,6 +36,7 @@ public:
     void inorder(vector<string> &);
     void preorder(vector<string> &);
     void clear();
+    int height();
     AVLTree();
 };
 
