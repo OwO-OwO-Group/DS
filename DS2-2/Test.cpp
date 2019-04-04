@@ -17,6 +17,7 @@ bool testAVLInsert_inorder(vector<string> &case1,
 {
     vector<string> result;
     AVLTree tree;
+    bool success = true;
 
     for (auto item : case1)
         tree.insert(0, item);
@@ -28,38 +29,113 @@ bool testAVLInsert_inorder(vector<string> &case1,
             cout << item << ", ";
 
         cout << endl;
-        return false;
+        success = false;
     }
+
     result.clear();
     tree.clear();
-    return true;
+    return success;
+}
+
+bool testAVLInsert_preorder(vector<string> &case1,
+                            vector<string> &case1RightPreorder)
+{
+    vector<string> result;
+    AVLTree tree;
+    bool success = true;
+
+    for (auto item : case1)
+        tree.insert(0, item);
+
+    tree.preorder(result);
+    if (result != case1RightPreorder) {
+        cout << endl;
+        for (auto item : result)
+            cout << item << ", ";
+
+        cout << endl;
+
+        success = false;
+    }
+
+    result.clear();
+    tree.clear();
+    return success;
+}
+
+bool testAVLHeight_case(vector<string> &case1, int height)
+{
+    AVLTree tree;
+    bool success = true;
+    for (auto item : case1)
+        tree.insert(0, item);
+
+    if (tree.height() != height) {
+        cout << tree.height() << endl;
+        success = false;
+    }
+
+    tree.clear();
+    return success;
+}
+
+int testAVLHeight()
+{
+    vector<string> result, cases;
+
+    // double rotation case 1 RL
+    cases = {"4", "2", "6", "1", "3", "5", "7", "G", "F"};
+    if (!testAVLHeight_case(cases, 4))
+        return 1;
+
+    // null tree
+    cases = {};
+    if (!testAVLHeight_case(cases, 0))
+        return 2;
+
+    // one height tree
+    cases = {"4"};
+    if (!testAVLHeight_case(cases, 1))
+        return 3;
+
+    // two height tree
+    cases = {"4", "5"};
+    if (!testAVLHeight_case(cases, 2))
+        return 4;
+    return 0;
 }
 
 int testAVLInsert()
 {
-
-    vector<string> result, cases, rightResult;
-    AVLTree tree;
+    vector<string> cases, rightResult;
 
     // double rotation case 1 RL
     cases = {"4", "2", "6", "1", "3", "5", "7", "G", "F"};
     rightResult = {"1", "2", "3", "4", "5", "6", "7", "F", "G"};
     if (!testAVLInsert_inorder(cases, rightResult))
         return 1;
+    rightResult = {"4", "2", "1", "3", "6", "5", "F", "7", "G"};
+    if (!testAVLInsert_preorder(cases, rightResult))
+        return 2;
 
     // double rotation case 2 RL
     cases = {"4", "2", "6", "1", "3", "5", "7", "G", "F", "E"};
     rightResult = {"1", "2", "3", "4", "5", "6", "7", "E", "F", "G"};
     if (!testAVLInsert_inorder(cases, rightResult))
-        return 2;
+        return 3;
+    rightResult = {"4", "2", "1", "3", "7", "6", "5", "F", "E", "G"};
+    if (!testAVLInsert_preorder(cases, rightResult))
+        return 4;
 
     return 0;
 }
+
 int test23Insert() { return 1; }
 
 void debug()
 {
     cout << "==== debug ==== " << endl;
     doTest(testAVLInsert(), "AVL Insert");
+    doTest(testAVLHeight(), "AVL Height");
     doTest(test23Insert(), "23 Insert");
 }
