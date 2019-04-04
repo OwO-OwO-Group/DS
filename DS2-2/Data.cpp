@@ -107,12 +107,12 @@ bool Data ::operator<(Data &b)
 
 void Data ::print()
 {
-    for (auto i : selectOrder)
+    for (auto i : selectPrint)
         cout << ' ' << column[i];
 }
 
 void Data ::println()
 {
-    for (auto i : selectOrder)
+    for (auto i : selectPrint)
         cout << ' ' << column[i] << endl;
 }

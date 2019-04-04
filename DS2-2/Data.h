@@ -25,6 +25,8 @@ using namespace std;
 // clang-format on
 
 static vector<int> selectOrder = {DATA_STUDENTS};
+static vector<int> selectPrint = {DATA_NAME, DATA_DEPARTMENT_NAME,
+                                  DATA_DAY_EXT_EDU, DATA_STAGE, DATA_STUDENTS};
 
 class Data {
     string column[DATA_SIZE];

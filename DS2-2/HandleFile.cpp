@@ -1,8 +1,10 @@
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version encoding=utf-8
 #include "HandleFile.h"
+#include "AVLTree.h"
+#include "Data.h"
 
-int HandleFile ::numberInput(string message, string errorMsg)
+int HandleFile::numberInput(string message, string errorMsg)
 {
     int result;
     while (true) {
@@ -15,7 +17,7 @@ int HandleFile ::numberInput(string message, string errorMsg)
     }
 }
 
-void HandleFile ::save(string saveName, vector<Data> &database)
+void HandleFile::save(string saveName, vector<Data> &database)
 {
     // closs all file
     if (fin.is_open())
@@ -30,13 +32,13 @@ void HandleFile ::save(string saveName, vector<Data> &database)
     cout << "Total number of records: " << database.size() << endl;
 }
 
-void HandleFile ::dropHeader(fstream &file)
+void HandleFile::dropHeader(fstream &file)
 {
     for (int i = 0; i < 3; ++i)
         file.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-string HandleFile ::fileInput(fstream &file, string message, string prefix)
+string HandleFile::fileInput(fstream &file, string message, string prefix)
 {
     string fileName;
     while (true) {
@@ -62,30 +64,51 @@ string HandleFile ::fileInput(fstream &file, string message, string prefix)
     }
 }
 
-bool HandleFile ::task1()
+bool HandleFile::task1()
 {
-    string fileName = fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
+    string fileName = fileInput(fin, "Input (201, 202, ...[0]Quit): ", "input");
+    vector<Data> database;
     // if fileName == "" then quit to menu
     if (fileName != "") {
     }
-    else {
+    else
         cout << "switch to menu" << endl;
-    }
 
     fin.close();
 
     return fileName == ""; // {quit: 0, continue: 1}
 }
 
-bool HandleFile ::task2()
+bool HandleFile::task2()
 {
-    string fileName = fileInput(fin, "Input (101, 102, ...[0]Quit): ", "input");
+    string fileName = fileInput(fin, "Input (201, 202, ...[0]Quit): ", "input");
+    vector<Data> database;
     // if fileName == "" then quit to menu
     if (fileName != "") {
+        AVLTree tree;
+        Data temp;
+        while (fin >> temp) { // >> overload
+            if (inputSuccess) {
+                tree.insert(database.size(),
+                            temp.getData(DATA_DEPARTMENT_NAME));
+                database.push_back(temp);
+            }
+        }
+
+        // show height
+        cout << "Tree height = " << tree.height() << endl;
+
+        // show root
+        vector<int> result;
+        tree.getRoot(result);
+        for (int i = 0; i < result.size(); i++) {
+            cout << (i + 1) << ": [" << (result[i] + 1) << "] ";
+            database[result[i]].print();
+            cout << endl;
+        }
     }
-    else {
+    else
         cout << "switch to menu" << endl;
-    }
 
     fin.close();
 

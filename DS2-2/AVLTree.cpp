@@ -156,3 +156,5 @@ int AVLTree::height()
     else
         return 0;
 }
+
+void AVLTree::getRoot(vector<int> &result) { result = root->ids; }

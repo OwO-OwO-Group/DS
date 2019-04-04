@@ -37,6 +37,7 @@ public:
     void preorder(vector<string> &);
     void clear();
     int height();
+    void getRoot(vector<int> &result);
     AVLTree();
 };
 
