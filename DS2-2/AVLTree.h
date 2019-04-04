@@ -9,7 +9,7 @@
 using namespace std;
 
 class AVLTree {
-
+public:
     typedef struct Node {
         Node *left, *right;
         int height;
@@ -17,6 +17,7 @@ class AVLTree {
         string key;
     } Node;
 
+private:
     Node *root;
 
     Node *LR_roate(Node *);
