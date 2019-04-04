@@ -4,7 +4,7 @@
 
 AVLTree::Node *AVLTree::LR_roate(AVLTree::Node *cur)
 {
-    cur->left = RR_roate(cur->right);
+    cur->left = RR_roate(cur->left);
     return LL_roate(cur);
 }
 
