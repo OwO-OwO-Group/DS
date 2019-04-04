@@ -23,14 +23,20 @@ class AVLTree {
     Node *RL_roate(Node *);
     Node *LL_roate(Node *);
     Node *RR_roate(Node *);
-
+    void removeNode(Node *cur);
     void newHeight(Node *);
     int getBF(Node *);
 
-    Node *insert(Node *node, int id, string const &key);
+    Node *insert(Node *node, int id, const string &key);
+    void inorder(vector<string> &, Node *);
+    void preorder(vector<string> &, Node *);
 
 public:
-    void insert(int id, string const &key);
+    void insert(int id, const string &key);
+    void inorder(vector<string> &);
+    void preorder(vector<string> &);
+    void clear();
+    AVLTree();
 };
 
 #endif

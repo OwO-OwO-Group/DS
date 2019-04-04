@@ -60,7 +60,9 @@ int AVLTree::getBF(Node *node)
         return 0;
 }
 
-AVLTree::Node *AVLTree::insert(Node *node, int id, string const &key)
+AVLTree::AVLTree() { root = NULL; }
+
+AVLTree::Node *AVLTree::insert(Node *node, int id, const string &key)
 {
     if (node == NULL) {
         // create new node
@@ -96,7 +98,41 @@ AVLTree::Node *AVLTree::insert(Node *node, int id, string const &key)
     return node;
 }
 
-void AVLTree::insert(int id, string const &key)
+void AVLTree::insert(int id, const string &key)
 {
     root = insert(root, id, key);
 }
+
+void AVLTree::inorder(vector<string> &vec, Node *cur)
+{
+    if (cur == NULL)
+        return;
+
+    inorder(vec, cur->left);
+    vec.push_back(cur->key);
+    inorder(vec, cur->right);
+}
+
+void AVLTree::preorder(vector<string> &vec, Node *cur)
+{
+    if (cur == NULL)
+        return;
+
+    vec.push_back(cur->key);
+    inorder(vec, cur->left);
+    inorder(vec, cur->right);
+}
+
+void AVLTree::inorder(vector<string> &vec) { inorder(vec, root); }
+void AVLTree::preorder(vector<string> &vec) { preorder(vec, root); }
+
+void AVLTree::removeNode(Node *cur)
+{
+    if (cur == NULL)
+        return;
+    removeNode(cur->left);
+    removeNode(cur->right);
+    delete cur;
+}
+
+void AVLTree::clear() { removeNode(root); }
