@@ -119,8 +119,8 @@ void AVLTree::preorder(vector<string> &vec, Node *cur)
         return;
 
     vec.push_back(cur->key);
-    inorder(vec, cur->left);
-    inorder(vec, cur->right);
+    preorder(vec, cur->left);
+    preorder(vec, cur->right);
 }
 
 void AVLTree::inorder(vector<string> &vec) { inorder(vec, root); }
