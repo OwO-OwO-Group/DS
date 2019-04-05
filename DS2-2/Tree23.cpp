@@ -26,6 +26,29 @@ Tree23::Node Tree23::*split(Tree23::Node *node)
     // 2 node
 }
 
+// get next node
+Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key)
+{
+    // return if node is leaf or has some key
+    if (isLeaf(node) || hasKey(node, key) != -1)
+        return node;
+
+    // check left of first key
+    if (node->data[0].key > key)
+        return node->subtree[0];
+
+    // check betwenn of two key
+    int keySize = isNodeN(node) - 1;
+    for (int i = 0; i < keySize - 1; i++)
+        if (node->data[i].key < key && node->data[i + 1].key > key)
+            return node->subtree[i + 1];
+
+    // check right of last key
+    if (node->data[keySize - 1].key < key)
+        return node->subtree[keySize];
+
+    return node;
+}
 void Tree23::insert(int id, const string &key)
 {
     // is null tree
