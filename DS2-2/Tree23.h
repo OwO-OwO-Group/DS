@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-#define TREE23_SIZE 2
+#define TREE23_SIZE 3
+#define TREE23_KEY_SIZE TREE23_SIZE - 1
 
 using namespace std;
 
@@ -17,10 +18,10 @@ public:
         struct {
             string key;
             vector<int> id;
-        } data[TREE23_SIZE];
+        } data[TREE23_KEY_SIZE];
 
         Node *pre;
-        Node *subtree[TREE23_SIZE + 1];
+        Node *subtree[TREE23_SIZE];
     } Node;
 
 private:

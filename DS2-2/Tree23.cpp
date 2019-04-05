@@ -102,10 +102,11 @@ int Tree23::height()
     return count;
 }
 
+// result root data
 void Tree23::getRoot(vector<int> &result)
 {
     result.clear();
-    for (int i = 0; i < TREE23_SIZE; i++) {
+    for (int i = 0; i < TREE23_KEY_SIZE; i++) {
         vector<int> *id = &(root->data[i].id);
         result.insert(id->end(), id->begin(), id->end());
     }
@@ -118,7 +119,7 @@ void Tree23::removeNode(Node *cur)
     if (cur == NULL)
         return;
 
-    for (int i = 0; i < TREE23_SIZE + 1; i++)
+    for (int i = 0; i < TREE23_SIZE; i++)
         removeNode(cur->subtree[i]);
 
     delete cur;
