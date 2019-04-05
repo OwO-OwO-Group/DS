@@ -49,6 +49,18 @@ Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key)
 
     return node;
 }
+
+// some key return index
+// not include return -1
+int Tree23::hasKey(Node *node, const string &key)
+{
+    for (int i = 0; i < isNodeN(node) - 1; i++) {
+        if (node->data[i].key == key)
+            return i;
+    }
+
+    return -1;
+}
 void Tree23::insert(int id, const string &key)
 {
     // is null tree
