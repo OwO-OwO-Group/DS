@@ -34,6 +34,7 @@ private:
     int isNodeN(Node *);
     void removeNode(Node *cur);
 
+    Node *nextPtr(Node *, const string &key, int &);
     void insertToNode(Node *, int id, const string &key);
     void sortLeaf(Tree23::Node *);
     bool isLeaf(Node *);
