@@ -53,6 +53,15 @@ int Tree23::hasKey(Node *node, const string &key)
 
     return -1;
 }
+
+// insert id to the node
+void Tree23::insertToNode(Tree23::Node *node, int id, const string &key)
+{
+    int keySize = node->size;
+    node->data[keySize].key = key;
+    node->data[keySize].id.push_back(id);
+    node->size++;
+}
 void Tree23::insert(int id, const string &key)
 {
     // is null tree

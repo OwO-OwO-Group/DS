@@ -27,6 +27,7 @@ private:
     int isNodeN(Node *);
     void removeNode(Node *cur);
 
+    void insertToNode(Node *, int id, const string &key);
     bool isLeaf(Node *);
 
 public:
