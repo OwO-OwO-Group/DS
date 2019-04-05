@@ -2,9 +2,58 @@
 // must to use -std=c++11 or higher version
 #include "Tree23.h"
 
-Tree23::Node Tree23::*split(Tree23::Node *node) {}
+bool Tree23::isLeaf(Node *node)
+{
+    if (isNodeN(node) == 0)
+        return true;
+    else
+        return false;
+}
 
-void Tree23::insert(int id, const string &key) {}
+int Tree23::isNodeN(Node *node)
+{
+    int result = 0;
+    for (int i = 0; i < TREE23_SIZE; i++) {
+        if (node->subtree[i] != NULL)
+            result++;
+    }
+
+    return result;
+}
+
+Tree23::Node Tree23::*split(Tree23::Node *node)
+{
+    // 2 node
+}
+
+void Tree23::insert(int id, const string &key)
+{
+    // is null tree
+    if (root == NULL) {
+        root = new Node();
+
+        // set NULL
+        root->pre = NULL;
+        for (int i = 0; i < TREE23_SIZE; i++)
+            root->subtree[i] = NULL;
+
+        // set first key
+        root->data[0].key = key;
+        root->data[0].id.push_back(id);
+    }
+    else {
+        Node *cur = root;
+        // find correct node and key
+        while (!isLeaf(cur) || cur) {
+        }
+
+        // isSome key
+        // if () {
+        //
+        // } else {
+        // }
+    }
+}
 
 int Tree23::height()
 {

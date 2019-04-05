@@ -27,7 +27,10 @@ private:
     Node *root;
 
     Node *split(Node *);
+    int isNodeN(Node *);
     void removeNode(Node *cur);
+
+    bool isLeaf(Node *);
 
 public:
     void insert(int id, const string &key);
