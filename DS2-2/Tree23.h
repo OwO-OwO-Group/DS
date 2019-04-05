@@ -31,6 +31,7 @@ private:
     Node *root;
 
     Node *split(Node *);
+    Node *newNode(Node *);
     int isNodeN(Node *);
     void removeNode(Node *cur);
 

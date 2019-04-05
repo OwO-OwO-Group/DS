@@ -77,16 +77,21 @@ void Tree23::sortLeaf(Tree23::Node *node)
     sort(node->data, node->data + keySize, cmp);
 }
 
+Tree23::Node *Tree23::newNode(Tree23::Node *pre)
+{
+    Tree23::Node *result = new Node();
+    // set NULL
+    result->pre = pre;
+    for (int i = 0; i < TREE23_SIZE; i++)
+        result->subtree[i] = NULL;
+    return result;
+}
+
 void Tree23::insert(int id, const string &key)
 {
     // is null tree
     if (root == NULL) {
-        root = new Node();
-
-        // set NULL
-        root->pre = NULL;
-        for (int i = 0; i < TREE23_SIZE; i++)
-            root->subtree[i] = NULL;
+        root = newNode(NULL);
 
         // set first key
         root->data[0].key = key;
