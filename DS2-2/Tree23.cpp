@@ -1,6 +1,7 @@
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version
 #include "Tree23.h"
+#include <algorithm>
 
 bool Tree23::isLeaf(Node *node)
 {
@@ -62,6 +63,16 @@ void Tree23::insertToNode(Tree23::Node *node, int id, const string &key)
     node->data[keySize].id.push_back(id);
     node->size++;
 }
+
+bool cmp(const Tree23::Data &A, const Tree23::Data &B) { return A.key > B.key; }
+
+// sort and modify leaf
+void Tree23::sortLeaf(Tree23::Node *node)
+{
+    int keySize = node->size;
+    sort(node->data, node->data + keySize, cmp);
+}
+
 void Tree23::insert(int id, const string &key)
 {
     // is null tree

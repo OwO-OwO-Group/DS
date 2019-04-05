@@ -14,7 +14,14 @@ using namespace std;
 
 class Tree23 {
 public:
+    typedef struct {
+        string key;
+        vector<int> id;
+    } Data;
 
+    typedef struct Node {
+        // key size + one buffer
+        Data data[TREE23_KEY_SIZE + 1];
         int size;
         Node *pre;
         Node *subtree[TREE23_SIZE];
@@ -28,6 +35,7 @@ private:
     void removeNode(Node *cur);
 
     void insertToNode(Node *, int id, const string &key);
+    void sortLeaf(Tree23::Node *);
     bool isLeaf(Node *);
 
 public:
