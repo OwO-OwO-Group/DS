@@ -70,9 +70,26 @@ void Tree23::insert(int id, const string &key)
         root->size = 1;
     }
     else {
+        Node *cur = root, *next = cur;
+        int subtreeIndex;
+        bool isFull;
+
         // find correct node and key
+        while (cur != (next = nextPtr(cur, key, subtreeIndex)))
+            cur = next;
 
         // isSome key
+        int index = hasKey(cur, key);
+        if (index == -1)
+            cur->data[index].id.push_back(id);
+        else // insert to node
+            insertToNode(cur, id, key);
+
+        // sort cur
+        sortLeaf(cur);
+
+        // split
+        cur->pre->subtree[subtreeIndex] = split(cur);
     }
 }
 
