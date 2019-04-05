@@ -11,16 +11,7 @@ bool Tree23::isLeaf(Node *node)
 }
 
 // count number of Node
-int Tree23::isNodeN(Node *node)
-{
-    int result = 0;
-    for (int i = 0; i < TREE23_SIZE; i++) {
-        if (node->subtree[i] != NULL)
-            result++;
-    }
-
-    return result;
-}
+int Tree23::isNodeN(Node *node) { return node->size + 1; }
 
 Tree23::Node Tree23::*split(Tree23::Node *node)
 {
@@ -39,7 +30,7 @@ Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key)
         return node->subtree[0];
 
     // check betwenn of two key
-    int keySize = isNodeN(node) - 1;
+    int keySize = node->size;
     for (int i = 0; i < keySize - 1; i++)
         if (node->data[i].key < key && node->data[i + 1].key > key)
             return node->subtree[i + 1];
@@ -76,18 +67,12 @@ void Tree23::insert(int id, const string &key)
         // set first key
         root->data[0].key = key;
         root->data[0].id.push_back(id);
+        root->size = 1;
     }
     else {
-        Node *cur = root;
         // find correct node and key
-        while (!isLeaf(cur) || cur) {
-        }
 
         // isSome key
-        // if () {
-        //
-        // } else {
-        // }
     }
 }
 
@@ -108,7 +93,7 @@ int Tree23::height()
 void Tree23::getRoot(vector<int> &result)
 {
     result.clear();
-    for (int i = 0; i < TREE23_KEY_SIZE; i++) {
+    for (int i = 0; i < root->size; i++) {
         vector<int> *id = &(root->data[i].id);
         result.insert(id->end(), id->begin(), id->end());
     }
@@ -121,7 +106,7 @@ void Tree23::removeNode(Node *cur)
     if (cur == NULL)
         return;
 
-    for (int i = 0; i < TREE23_SIZE; i++)
+    for (int i = 0; i < cur->size; i++)
         removeNode(cur->subtree[i]);
 
     delete cur;

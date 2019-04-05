@@ -14,12 +14,8 @@ using namespace std;
 
 class Tree23 {
 public:
-    typedef struct Node {
-        struct {
-            string key;
-            vector<int> id;
-        } data[TREE23_KEY_SIZE];
 
+        int size;
         Node *pre;
         Node *subtree[TREE23_SIZE];
     } Node;
