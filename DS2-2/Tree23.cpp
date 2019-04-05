@@ -10,6 +10,7 @@ bool Tree23::isLeaf(Node *node)
         return false;
 }
 
+// count number of Node
 int Tree23::isNodeN(Node *node)
 {
     int result = 0;
@@ -90,6 +91,7 @@ void Tree23::insert(int id, const string &key)
     }
 }
 
+// get height
 int Tree23::height()
 {
     int count = 0;
