@@ -11,6 +11,12 @@ bool Tree23::isLeaf(Node *node)
         return false;
 }
 
+// connect two node
+void Tree23::connect(Node *pre, Node *sub, int subIndex)
+{
+    pre->subtree[subIndex] = sub;
+    sub->pre = pre;
+}
 
 Tree23::Node::Node(Tree23::Node *getPre)
 {
