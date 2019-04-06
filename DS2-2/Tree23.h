@@ -36,11 +36,10 @@ private:
     Node *root;
 
     Node *split(Node *);
-    Node *newNode(Node *);
     void connect(Node *pre, Node *sub, int subIndex);
     int isNodeN(Node *);
     void removeNode(Node *cur);
-
+    int hasKey(Node *, const string &key);
     Node *nextPtr(Node *, const string &key, int &);
     void insertToNode(Node *, int id, const string &key);
     void sortLeaf(Tree23::Node *);
