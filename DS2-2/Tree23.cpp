@@ -3,9 +3,9 @@
 #include "Tree23.h"
 #include <algorithm>
 
-bool Tree23::isLeaf(Node *node)
+bool Tree23::Node::isLeaf()
 {
-    if (node->subtree[0] == NULL)
+    if (subtree[0] == NULL)
         return true;
     else
         return false;
@@ -41,7 +41,7 @@ void Tree23::Node::addKey(int id, const string &key)
 }
 
 // count number of Node
-int Tree23::isNodeN(Node *node) { return node->size + 1; }
+int Tree23::Node::isNodeN() { return size + 1; }
 
 Tree23::Node Tree23::*split(Tree23::Node *node)
 {
@@ -53,7 +53,7 @@ Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key,
                               int &subtreeIndex)
 {
     // return if node is leaf or has some key
-    if (isLeaf(node) || hasKey(node, key) != -1)
+    if (node->isLeaf() || node->hasKey(key) != -1)
         return node;
 
     // check left of first key
@@ -78,10 +78,10 @@ Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key,
 
 // some key return index
 // not include return -1
-int Tree23::hasKey(Node *node, const string &key)
+int Tree23::Node::hasKey(const string &key)
 {
-    for (int i = 0; i < isNodeN(node) - 1; i++) {
-        if (node->data[i].key == key)
+    for (int i = 0; i < isNodeN() - 1; i++) {
+        if (data[i].key == key)
             return i;
     }
 
@@ -100,10 +100,10 @@ void Tree23::insertToNode(Tree23::Node *node, int id, const string &key)
 bool cmp(const Tree23::Data &A, const Tree23::Data &B) { return A.key > B.key; }
 
 // sort and modify leaf
-void Tree23::sortLeaf(Tree23::Node *node)
+void Tree23::Node::sortLeaf()
 {
-    int keySize = node->size;
-    sort(node->data, node->data + keySize, cmp);
+    int keySize = size;
+    sort(data, data + keySize, cmp);
 }
 
 void Tree23::insert(int id, const string &key)
@@ -125,14 +125,14 @@ void Tree23::insert(int id, const string &key)
             cur = next;
 
         // isSome key
-        int index = hasKey(cur, key);
+        int index = cur->hasKey(key);
         if (index == -1)
             cur->data[index].id.push_back(id);
         else // insert to node
             insertToNode(cur, id, key);
 
-        // sort cur
-        sortLeaf(cur);
+            // sort cur
+            cur->sortLeaf();
 
         // split
         cur->pre->subtree[subtreeIndex] = split(cur);

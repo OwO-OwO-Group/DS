@@ -29,6 +29,11 @@ public:
 
         void addKey(const Data &);
         void addKey(int id, const string &key);
+
+        bool isLeaf();
+        int isNodeN();
+        int hasKey(const string &key);
+        void sortLeaf();
         Node(Node *);
     };
 
@@ -37,13 +42,10 @@ private:
 
     Node *split(Node *);
     void connect(Node *pre, Node *sub, int subIndex);
-    int isNodeN(Node *);
+
     void removeNode(Node *cur);
-    int hasKey(Node *, const string &key);
     Node *nextPtr(Node *, const string &key, int &);
     void insertToNode(Node *, int id, const string &key);
-    void sortLeaf(Tree23::Node *);
-    bool isLeaf(Node *);
 
 public:
     void insert(int id, const string &key);
