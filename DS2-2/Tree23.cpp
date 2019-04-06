@@ -5,7 +5,7 @@
 
 bool Tree23::isLeaf(Node *node)
 {
-    if (isNodeN(node) == 0)
+    if (node->subtree[0] == NULL)
         return true;
     else
         return false;
