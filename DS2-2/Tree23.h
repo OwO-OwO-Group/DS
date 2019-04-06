@@ -23,9 +23,9 @@ public:
     public:
         // key size + one buffer
         Data data[TREE23_KEY_SIZE + 1];
+        Node *subtree[TREE23_SIZE + 1];
         int size;
         Node *pre;
-        Node *subtree[TREE23_SIZE];
 
         void addKey(const Data &);
         void addKey(int id, const string &key);
@@ -34,6 +34,8 @@ public:
         int isNodeN();
         int hasKey(const string &key);
         void sortLeaf();
+        void remove(int);
+        void merge(Node *);
         Node(Node *);
     };
 

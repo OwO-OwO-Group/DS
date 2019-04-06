@@ -43,9 +43,76 @@ void Tree23::Node::addKey(int id, const string &key)
 // count number of Node
 int Tree23::Node::isNodeN() { return size + 1; }
 
-Tree23::Node Tree23::*split(Tree23::Node *node)
+void Tree23::Node::remove(int index)
 {
-    // 2 node
+    for (int i = index; i < size - 1; i++)
+        data[i] = data[i + 1];
+}
+
+// merge to left or right by order
+void Tree23::Node::merge(Node *node)
+{
+    if (data[size - 1].key < node->data[0].key) { // rightmost
+        data[size] = node->data[0];               // add a key
+        subtree[size] = node->subtree[0];
+        subtree[size + 1] = node->subtree[1];
+        size++;
+    }
+    else if (data[0].key > node->data[0].key) { // leftmost
+        for (int i = size; i >= 1; i--) {       // shift
+            data[i] = data[i - 1];
+            subtree[i] = subtree[i - 1];
+        }
+
+        // merge
+        data[0] = node->data[0]; // add a key
+        subtree[0] = node->subtree[0];
+        subtree[1] = node->subtree[1];
+
+        size++;
+    }
+}
+
+Tree23::Node *Tree23::split(Tree23::Node *node)
+{
+    // node is exist and full
+    if (node->size > TREE23_KEY_SIZE) {
+        if (node == NULL) { // is root
+            // create new root
+            Node *newRoot = new Node(NULL);
+            connect(newRoot, root, 0); // set pre
+            root = newRoot;            // replace root
+        }
+        else {
+            Node *left = new Node(node), *right = new Node(node),
+                 *pre = node->pre;
+
+            // key1
+            left->addKey(node->data[0]);
+            left->subtree[0] = node->subtree[0];
+            left->subtree[1] = node->subtree[1];
+
+            // key3
+            left->addKey(node->data[2]);
+            right->subtree[0] = node->subtree[2];
+            right->subtree[1] = node->subtree[3];
+
+            // merge node and pre_node
+            node->data[0] = node->data[1];
+            node->subtree[0] = left;
+            node->subtree[1] = right;
+            node->size = 1;
+            pre->merge(node);
+
+            // remove node
+            delete node;
+
+            // recursive
+            split(pre);
+        }
+    }
+    else
+        return node;
 }
 
 // get next node
@@ -129,13 +196,15 @@ void Tree23::insert(int id, const string &key)
         if (index == -1)
             cur->data[index].id.push_back(id);
         else // insert to node
+        {
             insertToNode(cur, id, key);
 
             // sort cur
             cur->sortLeaf();
 
-        // split
-        cur->pre->subtree[subtreeIndex] = split(cur);
+            // split
+            split(cur);
+        }
     }
 }
 
