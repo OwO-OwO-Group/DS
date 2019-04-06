@@ -14,10 +14,13 @@ using namespace std;
 
 class Tree23 {
 public:
-    typedef struct {
+    class Data {
+    public:
         string key;
         vector<int> id;
-    } Data;
+
+        void assign(const Data &);
+    };
 
     class Node {
     public:
@@ -29,6 +32,7 @@ public:
 
         void addKey(const Data &);
         void addKey(int id, const string &key);
+        void connect(Node *sub, int subIndex);
 
         bool isLeaf();
         int isNodeN();
@@ -43,7 +47,6 @@ private:
     Node *root;
 
     Node *split(Node *);
-    void connect(Node *pre, Node *sub, int subIndex);
 
     void removeNode(Node *cur);
     Node *nextPtr(Node *, const string &key, int &);

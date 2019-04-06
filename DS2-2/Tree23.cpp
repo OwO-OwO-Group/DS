@@ -12,24 +12,25 @@ bool Tree23::Node::isLeaf()
 }
 
 // connect two node
-void Tree23::connect(Node *pre, Node *sub, int subIndex)
+void Tree23::Node::connect(Node *sub, int subIndex)
 {
-    pre->subtree[subIndex] = sub;
-    sub->pre = pre;
+    subtree[subIndex] = sub;
+    if (sub != NULL)
+        sub->pre = this;
 }
 
 Tree23::Node::Node(Tree23::Node *getPre)
 {
     // set NULL
     pre = getPre;
-    for (int i = 0; i < TREE23_SIZE; i++)
+    for (int i = 0; i < TREE23_SIZE + 1; i++)
         subtree[i] = NULL;
     size = 0;
 }
 
 void Tree23::Node::addKey(const Data &getData)
 {
-    data[size] = getData;
+    data[size].assign(getData);
     size++;
 }
 
@@ -49,70 +50,80 @@ void Tree23::Node::remove(int index)
         data[i] = data[i + 1];
 }
 
-// merge to left or right by order
+void Tree23::Data::assign(const Tree23::Data &data)
+{
+    key = string(data.key);    // add a key
+    id = vector<int>(data.id); // add a ids
+}
+
+// merge by order
 void Tree23::Node::merge(Node *node)
 {
-    if (data[size - 1].key < node->data[0].key) { // rightmost
-        data[size] = node->data[0];               // add a key
-        subtree[size] = node->subtree[0];
-        subtree[size + 1] = node->subtree[1];
-        size++;
+    if (size == 0) {                   // empty node
+        data[0].assign(node->data[0]); // add a key
+        connect(node->subtree[0], 0);
+        connect(node->subtree[1], 1);
     }
-    else if (data[0].key > node->data[0].key) { // leftmost
-        for (int i = size; i >= 1; i--) {       // shift
+    else { // between
+        // find insert index
+        int index = 0;
+        while (index < size && data[index].key < node->data[0].key)
+            index++;
+
+        for (int i = size; i > index; i--) { // shift
             data[i] = data[i - 1];
-            subtree[i] = subtree[i - 1];
+            subtree[i + 1] = subtree[i];
         }
 
         // merge
-        data[0] = node->data[0]; // add a key
-        subtree[0] = node->subtree[0];
-        subtree[1] = node->subtree[1];
-
-        size++;
+        data[index].assign(node->data[0]); // add a key
+        connect(node->subtree[0], index);
+        connect(node->subtree[1], index + 1);
     }
+
+    size++;
 }
 
 Tree23::Node *Tree23::split(Tree23::Node *node)
 {
     // node is exist and full
     if (node->size > TREE23_KEY_SIZE) {
-        if (node == NULL) { // is root
+        if (node == root) { // is root
             // create new root
             Node *newRoot = new Node(NULL);
-            connect(newRoot, root, 0); // set pre
+            newRoot->connect(root, 0); // set pre
             root = newRoot;            // replace root
         }
-        else {
-            Node *left = new Node(node), *right = new Node(node),
-                 *pre = node->pre;
 
-            // key1
-            left->addKey(node->data[0]);
-            left->subtree[0] = node->subtree[0];
-            left->subtree[1] = node->subtree[1];
+        Node *pre = node->pre;
+        Node *left = new Node(pre), *right = new Node(pre);
 
-            // key3
-            left->addKey(node->data[2]);
-            right->subtree[0] = node->subtree[2];
-            right->subtree[1] = node->subtree[3];
+        // key1
+        left->addKey(node->data[0]);
+        left->connect(node->subtree[0], 0);
+        left->connect(node->subtree[1], 1);
 
-            // merge node and pre_node
-            node->data[0] = node->data[1];
-            node->subtree[0] = left;
-            node->subtree[1] = right;
-            node->size = 1;
-            pre->merge(node);
+        // key3
+        right->addKey(node->data[2]);
+        right->connect(node->subtree[2], 0);
+        right->connect(node->subtree[3], 1);
 
-            // remove node
-            delete node;
+        // merge node and pre_node
+        node->data[0].assign(node->data[1]);
+        node->subtree[0] = left;
+        node->subtree[1] = right;
+        node->size = 1;
 
-            // recursive
-            split(pre);
-        }
+        pre->merge(node);
+
+        // remove node
+        delete node;
+
+        // recursive
+        split(pre);
     }
-    else
-        return node;
+
+    return node;
 }
 
 // get next node
@@ -123,31 +134,19 @@ Tree23::Node *Tree23::nextPtr(Tree23::Node *node, const string &key,
     if (node->isLeaf() || node->hasKey(key) != -1)
         return node;
 
-    // check left of first key
-    if (node->data[0].key > key) {
-        return node->subtree[0];
-    }
+    // find next index
+    subtreeIndex = 0;
+    while (subtreeIndex < node->size && node->data[subtreeIndex].key < key)
+        subtreeIndex++;
 
-    // check betwenn of two key
-    int keySize = node->size;
-    for (int i = 0; i < keySize - 1; i++)
-        if (node->data[i].key < key && node->data[i + 1].key > key) {
-            subtreeIndex = i + 1;
-            return node->subtree[i + 1];
-        }
-
-    // check right of last key
-    if (node->data[keySize - 1].key < key)
-        return node->subtree[keySize];
-
-    return node;
+    return node->subtree[subtreeIndex];
 }
 
 // some key return index
 // not include return -1
 int Tree23::Node::hasKey(const string &key)
 {
-    for (int i = 0; i < isNodeN() - 1; i++) {
+    for (int i = 0; i < size; i++) {
         if (data[i].key == key)
             return i;
     }
@@ -164,14 +163,10 @@ void Tree23::insertToNode(Tree23::Node *node, int id, const string &key)
     node->size++;
 }
 
-bool cmp(const Tree23::Data &A, const Tree23::Data &B) { return A.key > B.key; }
+bool cmp(const Tree23::Data &A, const Tree23::Data &B) { return A.key < B.key; }
 
 // sort and modify leaf
-void Tree23::Node::sortLeaf()
-{
-    int keySize = size;
-    sort(data, data + keySize, cmp);
-}
+void Tree23::Node::sortLeaf() { sort(data, data + size, cmp); }
 
 void Tree23::insert(int id, const string &key)
 {
@@ -193,7 +188,7 @@ void Tree23::insert(int id, const string &key)
 
         // isSome key
         int index = cur->hasKey(key);
-        if (index == -1)
+        if (index != -1)
             cur->data[index].id.push_back(id);
         else // insert to node
         {
@@ -226,8 +221,8 @@ void Tree23::getRoot(vector<int> &result)
 {
     result.clear();
     for (int i = 0; i < root->size; i++) {
-        vector<int> *id = &(root->data[i].id);
-        result.insert(id->end(), id->begin(), id->end());
+        for (auto id : root->data[i].id)
+            result.push_back(id);
     }
 }
 

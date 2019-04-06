@@ -2,6 +2,7 @@
 // must to use -std=c++11 or higher version
 #include "Test.h"
 #include "AVLTree.h"
+#include "Tree23.h"
 #include <iostream>
 
 using namespace std;
@@ -130,7 +131,39 @@ int testAVLInsert()
     return 0;
 }
 
-int test23Insert() { return 1; }
+bool test23Insert_test1(vector<string> &case1)
+{
+    vector<string> result;
+    Tree23 tree;
+    bool success = true;
+
+    for (auto item : case1)
+        tree.insert(0, item);
+
+    result.clear();
+    tree.clear();
+    return success;
+}
+
+int test23Insert()
+{
+    vector<string> cases, rightResult;
+
+    // add case
+    cases = {"1", "2", "3", "4", "5", "9'", "8", "7", "6", "A"};
+    test23Insert_test1(cases);
+
+    cases = {"1", "2", "3", "4", "7", "5", "8"};
+    test23Insert_test1(cases);
+
+    cases = {"8", "5", "7", "4", "3", "2", "1"};
+    test23Insert_test1(cases);
+
+    // leftmost case
+    cases = {"4", "5", "6", "2", "3"};
+    test23Insert_test1(cases);
+    return 1;
+}
 
 void debug()
 {

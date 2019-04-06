@@ -3,6 +3,7 @@
 #include "HandleFile.h"
 #include "AVLTree.h"
 #include "Data.h"
+#include "Tree23.h"
 
 int HandleFile::numberInput(string message, string errorMsg)
 {
@@ -70,6 +71,26 @@ bool HandleFile::task1()
     vector<Data> database;
     // if fileName == "" then quit to menu
     if (fileName != "") {
+        Tree23 tree;
+        Data temp;
+        while (fin >> temp) { // >> overload
+            if (inputSuccess) {
+                tree.insert(database.size(), temp.getData(DATA_NAME));
+                database.push_back(temp);
+            }
+        }
+
+        // show height
+        cout << "Tree height = " << tree.height() << endl;
+
+        // show root
+        vector<int> result;
+        tree.getRoot(result);
+        for (int i = 0; i < result.size(); i++) {
+            cout << (i + 1) << ": [" << (result[i] + 1) << "] ";
+            database[result[i]].print();
+            cout << endl;
+        }
     }
     else
         cout << "switch to menu" << endl;
