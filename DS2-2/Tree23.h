@@ -27,6 +27,8 @@ public:
         Node *pre;
         Node *subtree[TREE23_SIZE];
 
+        void addKey(const Data &);
+        void addKey(int id, const string &key);
         Node(Node *);
     };
 

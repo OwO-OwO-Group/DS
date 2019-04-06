@@ -21,6 +21,19 @@ Tree23::Node::Node(Tree23::Node *getPre)
     size = 0;
 }
 
+void Tree23::Node::addKey(const Data &getData)
+{
+    data[size] = getData;
+    size++;
+}
+
+void Tree23::Node::addKey(int id, const string &key)
+{
+    data[size].key = key;
+    data[size].id.push_back(id);
+    size++;
+}
+
 // count number of Node
 int Tree23::isNodeN(Node *node) { return node->size + 1; }
 
@@ -94,9 +107,7 @@ void Tree23::insert(int id, const string &key)
         root = new Node(NULL);
 
         // set first key
-        root->data[0].key = key;
-        root->data[0].id.push_back(id);
-        root->size = 1;
+        root->addKey(id, key);
     }
     else {
         Node *cur = root, *next = cur;
