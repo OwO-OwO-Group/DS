@@ -11,6 +11,16 @@ bool Tree23::isLeaf(Node *node)
         return false;
 }
 
+
+Tree23::Node::Node(Tree23::Node *getPre)
+{
+    // set NULL
+    pre = getPre;
+    for (int i = 0; i < TREE23_SIZE; i++)
+        subtree[i] = NULL;
+    size = 0;
+}
+
 // count number of Node
 int Tree23::isNodeN(Node *node) { return node->size + 1; }
 
@@ -77,21 +87,11 @@ void Tree23::sortLeaf(Tree23::Node *node)
     sort(node->data, node->data + keySize, cmp);
 }
 
-Tree23::Node *Tree23::newNode(Tree23::Node *pre)
-{
-    Tree23::Node *result = new Node();
-    // set NULL
-    result->pre = pre;
-    for (int i = 0; i < TREE23_SIZE; i++)
-        result->subtree[i] = NULL;
-    return result;
-}
-
 void Tree23::insert(int id, const string &key)
 {
     // is null tree
     if (root == NULL) {
-        root = newNode(NULL);
+        root = new Node(NULL);
 
         // set first key
         root->data[0].key = key;

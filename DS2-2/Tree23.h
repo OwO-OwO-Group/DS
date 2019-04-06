@@ -19,13 +19,16 @@ public:
         vector<int> id;
     } Data;
 
-    typedef struct Node {
+    class Node {
+    public:
         // key size + one buffer
         Data data[TREE23_KEY_SIZE + 1];
         int size;
         Node *pre;
         Node *subtree[TREE23_SIZE];
-    } Node;
+
+        Node(Node *);
+    };
 
 private:
     Node *root;
