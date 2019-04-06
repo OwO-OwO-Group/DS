@@ -224,6 +224,8 @@ void Tree23::getRoot(vector<int> &result)
         for (auto id : root->data[i].id)
             result.push_back(id);
     }
+
+    sort(result.begin(), result.end());
 }
 
 Tree23::Tree23() { root = NULL; }
