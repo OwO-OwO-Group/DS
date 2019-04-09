@@ -256,10 +256,8 @@ void Tree23::find(vector<int> &result, const string &key)
     int index = cur->hasKey(key);
 
     if (index != -1) {
-        for (int i = 0; i < cur->size; i++) {
-            for (auto id : cur->data[i].id)
-                result.push_back(id);
-        }
+        for (auto id : cur->data[index].id)
+            result.push_back(id);
     }
 
     sort(result.begin(), result.end());
