@@ -4,6 +4,7 @@
 #include "AVLTree.h"
 #include "Data.h"
 #include "Tree23.h"
+#include <algorithm>
 
 int HandleFile::numberInput(string message, string errorMsg)
 {
@@ -126,6 +127,76 @@ bool HandleFile::task2()
             cout << (i + 1) << ": [" << (result[i] + 1) << "] ";
             database[result[i]].print();
             cout << endl;
+        }
+    }
+    else
+        cout << "switch to menu" << endl;
+
+    fin.close();
+
+    return fileName == ""; // {quit: 0, continue: 1}
+}
+
+void showResult(vector<Data> &database, vector<int> &result)
+{
+    for (int i = 0; i < result.size(); i++) {
+        cout << (i + 1) << ": [" << (result[i] + 1) << "] ";
+        database[result[i]].print();
+        cout << endl;
+    }
+}
+
+bool HandleFile::task3()
+{
+    string fileName = fileInput(fin, "Input (201, 202, ...[0]Quit): ", "input");
+    vector<Data> database;
+    // if fileName == "" then quit to menu
+    if (fileName != "") {
+        AVLTree avl;
+        Tree23 tree23;
+        Data temp;
+        while (fin >> temp) { // >> overload
+            if (inputSuccess) {
+                avl.insert(database.size(), temp.getData(DATA_DEPARTMENT_NAME));
+                tree23.insert(database.size(), temp.getData(DATA_NAME));
+                database.push_back(temp);
+            }
+        }
+
+        string name, departmentName;
+        vector<int> nameResult, departmentResult;
+
+        cout << "please make sure console is corrent encode(big5)" << endl;
+        cout << "Input university name [*]:";
+        cin >> name;
+
+        cout << "Input department name [*]:";
+        cin >> departmentName;
+
+        if (name == "*" && departmentName == "*") {
+            for (int i = 0; i < database.size(); i++) {
+                cout << (i + 1) << ": [" << (i + 1) << "] ";
+                database[i].print();
+                cout << endl;
+            }
+        }
+        else if (departmentName == "*") {
+            tree23.find(nameResult, name);
+            showResult(database, nameResult);
+        }
+        else if (name == "*") {
+            avl.find(departmentResult, departmentName);
+            showResult(database, departmentResult);
+        }
+        else {
+            tree23.find(nameResult, name);
+            avl.find(departmentResult, departmentName);
+
+            vector<int> result;
+            set_intersection(departmentResult.begin(), departmentResult.end(),
+                             nameResult.begin(), nameResult.end(),
+                             back_inserter(result));
+            showResult(database, result);
         }
     }
     else

@@ -57,6 +57,8 @@ public:
     int height();
     void getRoot(vector<int> &result);
     Tree23();
+
+    void find(vector<int> &result, const string &);
     void clear();
 };
 

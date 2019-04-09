@@ -13,6 +13,7 @@ using namespace std;
 #define MENU_QUIT               0
 #define MENU_TREE23             1
 #define MENU_AVL                2
+#define MENU_IQ                 3
 // clang-format on
 
 int main(int argc, char *argv[])
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
         cout << "* 0.          QUIT             *" << endl;
         cout << "* 1.        2-3 TREE           *" << endl;
         cout << "* 2.        AVL TREE           *" << endl;
+        cout << "* 3.   Intersection Query      *" << endl;
         cout << "choice: ";
 
         // ¿é¤J¿ï¾Ü
@@ -48,7 +50,9 @@ int main(int argc, char *argv[])
         case MENU_AVL:
             result = f.task2();
             break;
-
+        case MENU_IQ:
+            result = f.task3();
+            break;
         default:
             errorHandling("Error: Command not found!");
             continue;

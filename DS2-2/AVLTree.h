@@ -32,11 +32,14 @@ private:
     void inorder(vector<string> &, Node *);
     void preorder(vector<string> &, Node *);
 
+    void find(vector<int> &result, const string &, Node *);
+
 public:
     void insert(int id, const string &key);
     void inorder(vector<string> &);
     void preorder(vector<string> &);
     void clear();
+    void find(vector<int> &result, const string &);
     int height();
     void getRoot(vector<int> &result);
     AVLTree();

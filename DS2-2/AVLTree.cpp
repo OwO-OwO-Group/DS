@@ -158,3 +158,22 @@ int AVLTree::height()
 }
 
 void AVLTree::getRoot(vector<int> &result) { result = root->ids; }
+
+void AVLTree::find(vector<int> &result, const string &key, Node *cur)
+{
+    if (cur == NULL)
+        return;
+
+    if (cur->key > key)
+        find(result, key, cur->left);
+    else if (cur->key < key)
+        find(result, key, cur->right);
+    else // equal
+        result = cur->ids;
+}
+
+void AVLTree::find(vector<int> &result, const string &key)
+{
+    result.clear();
+    find(result, key, root);
+}

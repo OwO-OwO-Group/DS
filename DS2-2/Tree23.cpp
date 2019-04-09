@@ -242,3 +242,26 @@ void Tree23::removeNode(Node *cur)
 }
 
 void Tree23::clear() { removeNode(root); }
+
+void Tree23::find(vector<int> &result, const string &key)
+{
+    result.clear();
+
+    Node *cur = root, *next = cur;
+    int subtreeIndex;
+    // find correct node and key
+    while (cur != (next = nextPtr(cur, key, subtreeIndex)))
+        cur = next;
+
+    int index = cur->hasKey(key);
+
+    if (index != -1) {
+        for (int i = 0; i < cur->size; i++) {
+            for (auto id : cur->data[i].id)
+                result.push_back(id);
+        }
+    }
+
+    sort(result.begin(), result.end());
+}
+
