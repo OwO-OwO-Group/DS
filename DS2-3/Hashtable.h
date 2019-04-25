@@ -15,7 +15,7 @@ typedef struct Table {
 
 class Hashtable {
     int searchCount;
-    int successfulcount, unsuccessfulcount;
+    int successfulCount, unsuccessfulCount;
 
     Table *hashtable;
 
