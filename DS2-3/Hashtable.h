@@ -24,6 +24,7 @@ public:
     virtual int hash(char *str);
     bool save(string fileName);
     Hashtable(int size);
+    void clear();
     void search(char *str);
 };
 
