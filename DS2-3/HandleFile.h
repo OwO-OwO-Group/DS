@@ -12,17 +12,25 @@
 #include <string>
 using namespace std;
 
+#define EXIT -1
+#define NORMAL 0
+#define BINARY 1
+
 class HandleFile {
     fstream fin;
     fstream fout;
+    string fileName;
 
     // common function
     int numberInput(string message, string errorMsg);
 
-    string fileInput(fstream &file, string message, string prefix);
+    void save(string saveName, vector<Data> &database);
 
-    void txtToBin(string fileName);
-    bool task0();
+    void dropHeader(fstream &file);
+
+    int fileInput(fstream &file, string message, string prefix);
+
+    bool txtToBin();
 
 public:
     bool task1();

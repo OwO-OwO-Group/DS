@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             break;
 
         case MENU_DOUBLE_HASH:
-            result = f.task2();
+            // result = f.task2();
             break;
 
         default:

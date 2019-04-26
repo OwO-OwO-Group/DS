@@ -9,12 +9,37 @@
 #include <string>
 using namespace std;
 
+# define DATA_SIZE 9
+
 typedef struct Column {
     char sid[10];
     char sname[10];
     unsigned char score[6];
     float average;
 } Column;
+
+class Data {
+    struct Column column;
+
+public:
+    friend istream &operator>>(istream &in, Data &data);
+
+    friend ostream &operator<<(ostream &out, Data &data);
+
+    void setData(int index, string data);
+
+    bool operator>(Data &b);
+
+    bool operator>=(Data &b);
+
+    bool operator<=(Data &b);
+
+    bool operator<(Data &b);
+
+    char* getId();
+
+    void println();
+};
 
 #endif
 

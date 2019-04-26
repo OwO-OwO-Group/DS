@@ -30,7 +30,7 @@ static string getOnlyDigits(string str)
     return tmp;
 }
 
-static int sToi(string str)
+ int sToi(string str)
 {
     try {
         // "1,223,234,234,234"
@@ -45,5 +45,3 @@ static int sToi(string str)
         return -1; // return error value
     }
 }
-
-int stringToInt(string str) { return sToi(str); }
