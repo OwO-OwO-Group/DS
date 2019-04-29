@@ -47,21 +47,20 @@ int HandleFile::fileInput(fstream &file, string message, string prefix)
             return EXIT;
 
         file.open(prefix + fileName + ".bin", ios::in | ios::binary);
-        if (file) return BINARY;
-        else {
-            file.open(prefix + fileName + ".txt", ios::in);
-            if (file) return NORMAL;
-            else {
-                errorHandling("Error : there is no such file!");
-                continue; // input again
-            }
-        }
+        if (file)
+            return BINARY;
 
+        file.open(prefix + fileName + ".txt", ios::in);
+        if (file)
+            return NORMAL;
+
+        errorHandling("Error : there is no such file!");
+        continue; // input again
     }
 }
 
 bool HandleFile::txtToBin()
-{ 
+{
     if (fout.is_open())
         fout.close();
     fout.open("input" + fileName + ".bin", ios::out | ios::app | ios::binary);
