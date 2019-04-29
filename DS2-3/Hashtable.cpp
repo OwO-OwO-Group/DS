@@ -18,6 +18,7 @@ Hashtable::Hashtable(int rowSize)
 void Hashtable::setSize() {
     size = findPrimeMoreThan(rows * 1.2);
 }
+void Hashtable::clear() { delete hashtable; }
 
 void Hashtable::setMaxStep() {
     maxStep = 1;

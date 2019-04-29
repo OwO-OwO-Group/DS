@@ -100,6 +100,7 @@ bool HandleFile::task1()
         }
 
         save(table, "linear");
+        table.clear();
     }
     else
         cout << "switch to menu" << endl;
@@ -126,6 +127,7 @@ bool HandleFile::task2()
         }
 
         save(table, "double");
+        table.clear();
     }
     else
         cout << "switch to menu" << endl;
