@@ -16,12 +16,12 @@ typedef struct Table {
 class Hashtable {
     int searchCount;
     int successfulCount, unsuccessfulCount;
-
+    int size;
     Table *hashtable;
 
 public:
     virtual void insert();
-    virtual int hash(char *str);
+    int hash(char *str);
     bool save(string fileName);
     Hashtable(int size);
     void clear();
