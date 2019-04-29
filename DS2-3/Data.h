@@ -38,7 +38,8 @@ public:
 
     char* getId();
 
-    void println();
+    struct Column getColumn();
+
 };
 
 #endif

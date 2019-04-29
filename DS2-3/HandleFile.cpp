@@ -19,22 +19,18 @@ int HandleFile::numberInput(string message, string errorMsg)
     }
 }
 
-void HandleFile::save(string saveName, vector<Data> &database)
+void HandleFile::save(Hashtable &table, string prefix)
 {
-    // closs all file
-    if (fin.is_open())
-        fin.close();
+    if (fout.is_open())
+        fout.close();
 
-    fout.open(saveName, ios::out | ios::trunc);
-    for (Data i : database)
-        fout << i; // << overload
+    fout.open(prefix + fileName + ".txt", ios::out | ios::trunc);
+    table.save(fout);
 
     fout.close();
-
-    cout << "Total number of records: " << database.size() << endl;
 }
 
-int HandleFile::fileInput(fstream &file, string message, string prefix)
+int HandleFile::fileInput(string message, string prefix)
 {
     while (true) {
 
@@ -46,12 +42,12 @@ int HandleFile::fileInput(fstream &file, string message, string prefix)
         if (fileName == "0")
             return EXIT;
 
-        file.open(prefix + fileName + ".bin", ios::in | ios::binary);
-        if (file)
+        fin.open(prefix + fileName + ".bin", ios::in | ios::binary);
+        if (fin)
             return BINARY;
 
-        file.open(prefix + fileName + ".txt", ios::in);
-        if (file)
+        fin.open(prefix + fileName + ".txt", ios::in);
+        if (fin)
             return NORMAL;
 
         errorHandling("Error : there is no such file!");
@@ -59,11 +55,11 @@ int HandleFile::fileInput(fstream &file, string message, string prefix)
     }
 }
 
-bool HandleFile::txtToBin()
+bool HandleFile::txtToBin(string prefix)
 {
     if (fout.is_open())
         fout.close();
-    fout.open("input" + fileName + ".bin", ios::out | ios::app | ios::binary);
+    fout.open(prefix + fileName + ".bin", ios::out | ios::app | ios::binary);
 
     Data temp;
     while (fin >> temp) { // >> overload
@@ -75,67 +71,61 @@ bool HandleFile::txtToBin()
 
     if (fin.is_open())
         fin.close();
-
-    fin.open("input" + fileName + ".bin", ios::in | ios::binary);
+    fin.open(prefix + fileName + ".bin", ios::in | ios::binary);
 
     return 0;
 }
 
+int HandleFile::getRow() {
+    fin.seekg(0, fin.end);
+    int row = fin.tellg() / sizeof(struct Column);
+    fin.seekg(0, fin.beg);
+    return row;
+}
+
 bool HandleFile::task1()
 {
-    int finmode = fileInput(fin, "Input (301, 302, ...[0]Quit): ", "input");
+    int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
 
     if (finmode != EXIT) {
-        if (finmode == NORMAL) txtToBin(); // also reopen file
-
-        // prime table
-        #define N 1000
-        vector<int> prime;
-        for (int i = 2; i < N; i++)
-        {
-            bool isprime = true;
-            for (int j = 0; isprime && j < prime.size() && prime[j] <= sqrt(i); j++)
-            {
-                if (i % prime[j] == 0) isprime = false;
-            }
-            if (isprime) prime.push_back(i);
-        }
-        
-        fin.seekg(0, fin.end);
-        float row = fin.tellg() / sizeof(struct Column);
-        fin.seekg(0, fin.beg);
-
-        float size = row * 1.2;
-        int mod_num = 0;
-        for (int i = 0; !mod_num && i < prime.size(); i++)
-            if (prime[i] > size) mod_num = prime[i];
-
-        float step = row / 3;
-        int two_mod_num = 0;
-        for (int i = 0; !two_mod_num && i < prime.size(); i++)
-            if (prime[i] > step) two_mod_num = prime[i];
-
-        cout << mod_num << ' ' << two_mod_num << endl;
+        if (finmode == NORMAL) txtToBin("input"); // also reopen file
 
         // finmode == BINARY
+        int rows = getRow();
+        Hashtable_Linear table(rows);
         Data temp;
-        while (fin) {
+        while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
-            // use tmep
-
-            // hash func
-            char* id = temp.getId();
-            int hashkey = 1;
-            for (int i = 0; id[i] != '\0'; i++) {
-                if (hashkey > mod_num) hashkey = hashkey % mod_num;
-                hashkey = hashkey * id[i];
-            }
-
-            hashkey = hashkey % mod_num;
-
-            cout << hashkey << ' ';
-            cout << temp;
+            table.insert(temp);
         }
+
+        save(table, "linear");
+    }
+    else
+        cout << "switch to menu" << endl;
+
+    fin.close();
+
+    return 0;
+}
+
+bool HandleFile::task2()
+{
+    int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
+
+    if (finmode != EXIT) {
+        if (finmode == NORMAL) txtToBin("input"); // also reopen file
+
+        // finmode == BINARY
+        int rows = getRow();
+        Hashtable_Double table(rows);
+        Data temp;
+        while (fin.peek() != EOF) {
+            fin.read((char *)&temp, sizeof(temp));
+            table.insert(temp);
+        }
+
+        save(table, "double");
     }
     else
         cout << "switch to menu" << endl;

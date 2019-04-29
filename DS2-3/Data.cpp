@@ -79,3 +79,7 @@ ostream &operator<<(ostream &out, Data &data)
 char* Data::getId() {
     return column.sid;
 }
+
+struct Column Data::getColumn() {
+    return column;
+}

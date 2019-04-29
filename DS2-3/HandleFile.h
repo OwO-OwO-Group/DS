@@ -4,6 +4,7 @@
 #ifndef _HANDLEFILE_H_
 #define _HANDLEFILE_H_
 
+#include "Hashtable.h"
 #include "Data.h"
 #include "Header.h"
 #include <fstream>
@@ -24,13 +25,13 @@ class HandleFile {
     // common function
     int numberInput(string message, string errorMsg);
 
-    void save(string saveName, vector<Data> &database);
+    void save(Hashtable &table, string prefix);
 
-    void dropHeader(fstream &file);
+    int fileInput(string message, string prefix);
 
-    int fileInput(fstream &file, string message, string prefix);
+    int getRow();
 
-    bool txtToBin();
+    bool txtToBin(string prefix);
 
 public:
     bool task1();

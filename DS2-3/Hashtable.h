@@ -5,27 +5,51 @@
 #define _HASHTABLE_H_
 
 #include "Data.h"
+#include "Prime.h"
+#include <iomanip>
+#include <fstream>
 #include <iostream>
 using namespace std;
 
-typedef struct Table {
+class Table {
+public:
     int hashcode;
     Column column;
-} Table;
+
+    friend ostream &operator<<(ostream &out, Table &table);
+};
 
 class Hashtable {
-    int searchCount;
-    int successfulCount, unsuccessfulCount;
-    int size;
+protected:
+    int rows;
+    int size; // prime
+    int twoStep; // prime
+    double successful;
+    double unsuccessful;
     Table *hashtable;
 
-public:
-    virtual void insert();
     int hash(char *str);
-    bool save(string fileName);
+    void setTwoStep();
+    void setSize();
+public:
     Hashtable(int size);
     void clear();
-    void search(char *str);
+
+    void insert(Data data);
+    virtual void save(fstream &fout); // overload
+};
+
+class Hashtable_Linear : public Hashtable {
+public:
+    Hashtable_Linear(int size) :Hashtable(size) { setTwoStep(); };
+    virtual void save(fstream &fout); // overload
+};
+
+class Hashtable_Double : public Hashtable {
+    void setTwoStep();
+public:
+    Hashtable_Double(int size) :Hashtable(size) { setTwoStep(); };
+    virtual void save(fstream &fout); // overload
 };
 
 #endif
