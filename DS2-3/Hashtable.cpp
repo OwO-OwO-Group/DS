@@ -19,27 +19,32 @@ void Hashtable::setSize() {
     size = findPrimeMoreThan(rows * 1.2);
 }
 
-void Hashtable::setTwoStep() {
-    twoStep = 1;
+void Hashtable::setMaxStep() {
+    maxStep = 1;
 }
 
-int Hashtable::hash(char *str)
+int Hashtable::getStep(char *str) {
+    return maxStep;
+}
+
+int Hashtable::hash(char *str, int num)
 {
     int hashkey = 1;
     while (*str != '\0') {
-        if (hashkey > size)
-            hashkey = hashkey % size;
+        if (hashkey > num)
+            hashkey = hashkey % num;
         hashkey = hashkey * *str;
         str++;
     }
-    return hashkey % size;
+    return hashkey % num;
 }
 
 void Hashtable::insert(Data data) {
-    int hash_index = hash(data.getId());
+    int hash_index = hash(data.getId(), size);
+    int step = getStep(data.getId());
     int index = hash_index;
     while (hashtable[index].hashcode != -1) {
-        index += twoStep;
+        index += step;
         if (index >= size) index -= size;
     }
     hashtable[index].hashcode = hash_index;
@@ -65,9 +70,13 @@ void Hashtable::save(fstream &fout) {
 
     for (int i = 0; i < size; i++) {
         fout << '[' << setw(3) << i << "] " << hashtable[i] << endl;
+
         if (hashtable[i].hashcode != -1) {
-            int num = (i - hashtable[i].hashcode)/twoStep + 1;
-            success += (num < 0) ? (num + size) : num;
+            int step = getStep(hashtable[i].column.sid);
+            int num = i - hashtable[i].hashcode;
+            while (num < 0 || num % step != 0) 
+                num += size;
+            success += (num / step + 1);
             count++;
         }
         else { // hashcode == -1
@@ -87,19 +96,23 @@ void Hashtable::save(fstream &fout) {
 }
 
 void Hashtable_Linear::save(fstream &fout) {
-    fout << " --- Hash Table X --- (linear probing) " << endl;
+    fout << " --- Hash Table X --- (linear probing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
     cout << "Hash Table has been created" << endl;
     cout << "successful search: " << fixed << setprecision(4) << successful << " comparisons on average" << endl;
     cout << "unsuccessful search: " << fixed << setprecision(4) << unsuccessful << " comparisons on average" << endl;
 }
 
-void Hashtable_Double::setTwoStep() {
-    twoStep = findPrimeMoreThan(rows / 3.);
+void Hashtable_Double::setMaxStep() {
+    maxStep = findPrimeMoreThan(rows / 3.);
+}
+
+int Hashtable_Double::getStep(char *str) {
+    return maxStep - hash(str, maxStep);
 }
 
 void Hashtable_Double::save(fstream &fout) {
-    fout << " --- Hash Table Y --- (double hashing) " << endl;
+    fout << " --- Hash Table Y --- (double hashing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
     cout << "Hash Table has been created" << endl;
     cout << "successful search: " << fixed << setprecision(4) << successful << " comparisons on average" << endl;

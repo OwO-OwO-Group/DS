@@ -23,33 +23,35 @@ class Hashtable {
 protected:
     int rows;
     int size; // prime
-    int twoStep; // prime
+    int maxStep; // prime
     double successful;
     double unsuccessful;
     Table *hashtable;
 
-    int hash(char *str);
-    void setTwoStep();
+    int hash(char *str, int num);
+    virtual void setMaxStep();
+    virtual int getStep(char *str);
     void setSize();
 public:
     Hashtable(int size);
     void clear();
 
-    void insert(Data data);
-    virtual void save(fstream &fout); // overload
+    virtual void insert(Data data);
+    virtual void save(fstream &fout);
 };
 
 class Hashtable_Linear : public Hashtable {
 public:
-    Hashtable_Linear(int size) :Hashtable(size) { setTwoStep(); };
-    virtual void save(fstream &fout); // overload
+    Hashtable_Linear(int size) :Hashtable(size) { setMaxStep(); };
+    virtual void save(fstream &fout);
 };
 
 class Hashtable_Double : public Hashtable {
-    void setTwoStep();
+    virtual void setMaxStep();
+    virtual int getStep(char *str);
 public:
-    Hashtable_Double(int size) :Hashtable(size) { setTwoStep(); };
-    virtual void save(fstream &fout); // overload
+    Hashtable_Double(int size) :Hashtable(size) { setMaxStep(); };
+    virtual void save(fstream &fout);
 };
 
 #endif
