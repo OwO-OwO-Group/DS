@@ -98,10 +98,10 @@ void Hashtable_Linear::save(fstream &fout)
 {
     fout << " --- Hash Table X --- (linear probing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
-    cout << "Hash Table has been created" << endl;
-    cout << "successful search: " << fixed << setprecision(4) << successful
-         << " comparisons on average" << endl;
+    cout << "Hash Table X has been created." << endl;
     cout << "unsuccessful search: " << fixed << setprecision(4) << unsuccessful
+         << " comparisons on average" << endl;
+    cout << "successful search: " << fixed << setprecision(4) << successful
          << " comparisons on average" << endl;
 }
 
@@ -116,7 +116,7 @@ void Hashtable_Double::save(fstream &fout)
 {
     fout << " --- Hash Table Y --- (double hashing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
-    cout << "Hash Table has been created" << endl;
+    cout << "Hash Table Y has been created." << endl;
     cout << "successful search: " << fixed << setprecision(4) << successful
          << " comparisons on average" << endl;
 }
