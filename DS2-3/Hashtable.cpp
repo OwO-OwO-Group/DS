@@ -15,18 +15,13 @@ Hashtable::Hashtable(int rowSize)
         hashtable[i].hashcode = -1;
 }
 
-void Hashtable::setSize() {
-    size = findPrimeMoreThan(rows * 1.2);
-}
 void Hashtable::clear() { delete hashtable; }
 
-void Hashtable::setMaxStep() {
-    maxStep = 1;
-}
+void Hashtable::setSize() { size = findPrimeMoreThan(rows * 1.2); }
 
-int Hashtable::getStep(char *str) {
-    return maxStep;
-}
+void Hashtable::setMaxStep() { maxStep = 1; }
+
+int Hashtable::getStep(char *str) { return maxStep; }
 
 int Hashtable::hash(char *str, int num)
 {
@@ -40,13 +35,15 @@ int Hashtable::hash(char *str, int num)
     return hashkey % num;
 }
 
-void Hashtable::insert(Data data) {
+void Hashtable::insert(Data data)
+{
     int hash_index = hash(data.getId(), size);
     int step = getStep(data.getId());
     int index = hash_index;
     while (hashtable[index].hashcode != -1) {
         index += step;
-        if (index >= size) index -= size;
+        if (index >= size)
+            index -= size;
     }
     hashtable[index].hashcode = hash_index;
     hashtable[index].column = data.getColumn();
@@ -55,15 +52,15 @@ void Hashtable::insert(Data data) {
 ostream &operator<<(ostream &out, Table &table)
 {
     if (table.hashcode != -1) {
-        out << setw(10) << table.hashcode << ", "
-            << setw(10) << table.column.sid << ", "
-            << setw(10) << table.column.sname << ", "
-            << setw(10) << table.column.average;
+        out << setw(10) << table.hashcode << ", " << setw(10)
+            << table.column.sid << ", " << setw(10) << table.column.sname
+            << ", " << setw(10) << table.column.average;
     }
     return out;
 }
 
-void Hashtable::save(fstream &fout) {
+void Hashtable::save(fstream &fout)
+{
     int success = 0;
     int unsuccess = 0;
     int count = 0;
@@ -75,14 +72,15 @@ void Hashtable::save(fstream &fout) {
         if (hashtable[i].hashcode != -1) {
             int step = getStep(hashtable[i].column.sid);
             int num = i - hashtable[i].hashcode;
-            while (num < 0 || num % step != 0) 
+            while (num < 0 || num % step != 0)
                 num += size;
             success += (num / step + 1);
             count++;
         }
         else { // hashcode == -1
             unsuccess += (count + 1) * count / 2;
-            if (count == i) save_firstCount = count;
+            if (count == i)
+                save_firstCount = count;
             count = 0;
         }
     }
@@ -96,25 +94,29 @@ void Hashtable::save(fstream &fout) {
     unsuccessful = unsuccess / double(size);
 }
 
-void Hashtable_Linear::save(fstream &fout) {
+void Hashtable_Linear::save(fstream &fout)
+{
     fout << " --- Hash Table X --- (linear probing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
     cout << "Hash Table has been created" << endl;
-    cout << "successful search: " << fixed << setprecision(4) << successful << " comparisons on average" << endl;
-    cout << "unsuccessful search: " << fixed << setprecision(4) << unsuccessful << " comparisons on average" << endl;
+    cout << "successful search: " << fixed << setprecision(4) << successful
+         << " comparisons on average" << endl;
+    cout << "unsuccessful search: " << fixed << setprecision(4) << unsuccessful
+         << " comparisons on average" << endl;
 }
 
-void Hashtable_Double::setMaxStep() {
-    maxStep = findPrimeMoreThan(rows / 3.);
-}
+void Hashtable_Double::setMaxStep() { maxStep = findPrimeMoreThan(rows / 3.); }
 
-int Hashtable_Double::getStep(char *str) {
+int Hashtable_Double::getStep(char *str)
+{
     return maxStep - hash(str, maxStep);
 }
 
-void Hashtable_Double::save(fstream &fout) {
+void Hashtable_Double::save(fstream &fout)
+{
     fout << " --- Hash Table Y --- (double hashing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
     cout << "Hash Table has been created" << endl;
-    cout << "successful search: " << fixed << setprecision(4) << successful << " comparisons on average" << endl;
+    cout << "successful search: " << fixed << setprecision(4) << successful
+         << " comparisons on average" << endl;
 }

@@ -64,7 +64,7 @@ bool HandleFile::txtToBin(string prefix)
     Data temp;
     while (fin >> temp) { // >> overload
         if (inputSuccess) {
-            fout.write((char *) &temp, sizeof(temp));
+            fout.write((char *)&temp, sizeof(temp));
         }
     }
     fout.close();
@@ -76,7 +76,8 @@ bool HandleFile::txtToBin(string prefix)
     return 0;
 }
 
-int HandleFile::getRow() {
+int HandleFile::getRow()
+{
     fin.seekg(0, fin.end);
     int row = fin.tellg() / sizeof(struct Column);
     fin.seekg(0, fin.beg);
@@ -88,11 +89,12 @@ bool HandleFile::task1()
     int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
 
     if (finmode != EXIT) {
-        if (finmode == NORMAL) txtToBin("input"); // also reopen file
+        if (finmode == NORMAL)
+            txtToBin("input"); // also reopen file
 
         // finmode == BINARY
         int rows = getRow();
-        Hashtable_Linear table(rows);
+        Hashtable_Linear table = Hashtable_Linear(rows);
         Data temp;
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
@@ -115,11 +117,12 @@ bool HandleFile::task2()
     int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
 
     if (finmode != EXIT) {
-        if (finmode == NORMAL) txtToBin("input"); // also reopen file
+        if (finmode == NORMAL)
+            txtToBin("input"); // also reopen file
 
         // finmode == BINARY
         int rows = getRow();
-        Hashtable_Double table(rows);
+        Hashtable_Double table = Hashtable_Double(rows);
         Data temp;
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
