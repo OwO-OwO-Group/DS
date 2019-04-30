@@ -1,6 +1,7 @@
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version encoding=utf-8
 #include "Data.h"
+#include <cstring>
 
 istream &operator>>(istream &in, Data &data)
 {
@@ -25,8 +26,7 @@ istream &operator>>(istream &in, Data &data)
         if (c != '\t')
             temp += c;
         else {
-            switch (count) 
-            {
+            switch (count) {
             case 0:
                 strcpy(data.column.sid, temp.c_str());
                 break;
@@ -37,7 +37,8 @@ istream &operator>>(istream &in, Data &data)
                 data.column.average = stof(temp);
                 break;
             default:
-                if(count < 8) data.column.score[count-2] = stoi(temp);
+                if (count < 8)
+                    data.column.score[count - 2] = stoi(temp);
                 break;
             }
             count++;
@@ -53,10 +54,8 @@ istream &operator>>(istream &in, Data &data)
 
 ostream &operator<<(ostream &out, Data &data)
 {
-    for (int i = 0; i < DATA_SIZE; i++)
-    {
-        switch (i)
-        {
+    for (int i = 0; i < DATA_SIZE; i++) {
+        switch (i) {
         case 0:
             out << data.column.sid;
             break;
@@ -76,10 +75,6 @@ ostream &operator<<(ostream &out, Data &data)
     return out;
 }
 
-char* Data::getId() {
-    return column.sid;
-}
+char *Data::getId() { return column.sid; }
 
-struct Column Data::getColumn() {
-    return column;
-}
+struct Column Data::getColumn() { return column; }
