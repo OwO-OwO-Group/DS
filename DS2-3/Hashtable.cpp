@@ -73,14 +73,18 @@ void Hashtable::save(fstream &fout)
         fout << '[' << setw(3) << i << "] " << hashtable[i] << endl;
 
         if (hashtable[i].hashcode != -1) {
+            // count success
             int step = getStep(hashtable[i].column.sid);
             int num = i - hashtable[i].hashcode;
+
+            // get how many steps
             while (num < 0 || num % step != 0)
                 num += size;
             success += (num / step + 1);
             count++;
         }
         else { // hashcode == -1
+            // count unsuccess
             unsuccess += (count + 1) * count / 2;
             if (count == i)
                 save_firstCount = count;
@@ -89,6 +93,7 @@ void Hashtable::save(fstream &fout)
     }
 
     // hashcode == -1
+    // count unsuccess
     unsuccess += (count + 1) * count / 2;
     if (hashtable[size - 1].hashcode != -1)
         unsuccess += count * save_firstCount;
