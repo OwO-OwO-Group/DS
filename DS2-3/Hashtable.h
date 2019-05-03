@@ -24,6 +24,7 @@ protected:
     int rows;
     int size;    // prime
     int maxStep; // prime
+
     double successful;
     double unsuccessful;
     Table *hashtable;

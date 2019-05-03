@@ -9,6 +9,7 @@ Hashtable::Hashtable(int rowSize)
 {
     rows = rowSize;
     setSize();
+    successful = 0;
 
     // new table
     hashtable = new Table[size];
@@ -44,8 +45,10 @@ void Hashtable::insert(Data &data)
         index += step;
         if (index >= size)
             index -= size;
+        successful++;
     }
 
+    successful++;
     // set data
     hashtable[index].hashcode = hash_index;
     hashtable[index].column = data.getColumn();
@@ -64,7 +67,6 @@ ostream &operator<<(ostream &out, Table &table)
 
 void Hashtable::save(fstream &fout)
 {
-    int success = 0;
     int unsuccess = 0;
     int count = 0;
     int save_firstCount = 0;
@@ -73,14 +75,6 @@ void Hashtable::save(fstream &fout)
         fout << '[' << setw(3) << i << "] " << hashtable[i] << endl;
 
         if (hashtable[i].hashcode != -1) {
-            // count success
-            int step = getStep(hashtable[i].column.sid);
-            int num = i - hashtable[i].hashcode;
-
-            // get how many steps
-            while (num < 0 || num % step != 0)
-                num += size;
-            success += (num / step + 1);
             count++;
         }
         else { // hashcode == -1
@@ -98,7 +92,7 @@ void Hashtable::save(fstream &fout)
     if (hashtable[size - 1].hashcode != -1)
         unsuccess += count * save_firstCount;
 
-    successful = success / double(rows);
+    successful /= double(rows);
     unsuccessful = unsuccess / double(size);
 }
 
