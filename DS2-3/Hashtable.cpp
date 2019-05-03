@@ -8,7 +8,6 @@ using namespace std;
 Hashtable::Hashtable(int rowSize)
 {
     rows = rowSize;
-    buildPrime(20000);
     setSize();
 
     // new table
