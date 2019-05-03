@@ -33,7 +33,7 @@ int Hashtable::hash(char *str, int num)
     return hashkey;
 }
 
-void Hashtable::insert(Data data)
+void Hashtable::insert(Data &data)
 {
     int hash_index = hash(data.getId(), size);
     int step = getStep(data.getId());

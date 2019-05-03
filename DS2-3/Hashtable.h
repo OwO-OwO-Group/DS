@@ -6,8 +6,8 @@
 
 #include "Data.h"
 #include "Prime.h"
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 using namespace std;
 
@@ -22,7 +22,7 @@ public:
 class Hashtable {
 protected:
     int rows;
-    int size; // prime
+    int size;    // prime
     int maxStep; // prime
     double successful;
     double unsuccessful;
@@ -32,25 +32,27 @@ protected:
     virtual void setMaxStep();
     virtual int getStep(char *str);
     void setSize();
+
 public:
     Hashtable(int size);
     void clear();
 
-    virtual void insert(Data data);
+    virtual void insert(Data &data);
     virtual void save(fstream &fout);
 };
 
 class Hashtable_Linear : public Hashtable {
 public:
-    Hashtable_Linear(int size) :Hashtable(size) { setMaxStep(); };
+    Hashtable_Linear(int size) : Hashtable(size) { setMaxStep(); };
     virtual void save(fstream &fout);
 };
 
 class Hashtable_Double : public Hashtable {
     virtual void setMaxStep();
     virtual int getStep(char *str);
+
 public:
-    Hashtable_Double(int size) :Hashtable(size) { setMaxStep(); };
+    Hashtable_Double(int size) : Hashtable(size) { setMaxStep(); };
     virtual void save(fstream &fout);
 };
 
