@@ -20,8 +20,6 @@ int main(int argc, char *argv[])
     int mode;   // 選單選項
     int result; // 指令回傳檢查
 
-    buildPrime(20000);
-
     while (true) {
 
         // 輸出選單

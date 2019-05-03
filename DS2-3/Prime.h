@@ -9,7 +9,7 @@ using namespace std;
 
 static vector<int> prime;
 
-void buildPrime(int n);
+void buildPrimes(int n);
 int findPrimeMoreThan(double d);
 
 #endif

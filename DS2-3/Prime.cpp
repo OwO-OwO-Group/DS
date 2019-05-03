@@ -1,29 +1,41 @@
 #include "Prime.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
 using namespace std;
 
-void buildPrime(int n)
+void buildPrimes(int n)
 {
-    prime.push_back(2);
-    for (int i = 3; i <= n; i += 2) {
+    if (prime.size() == 0) {
+        prime.push_back(2);
+        prime.push_back(3);
+    }
+
+    for (int i = prime.back() + 2; n > 0; i += 2) {
+
         bool isprime = true;
         for (int j = 0; isprime && j < prime.size() && prime[j] <= sqrt(i);
              j++) {
             if (i % prime[j] == 0)
                 isprime = false;
         }
+
         if (isprime)
-            prime.push_back(i);
+            prime.push_back(i), n--;
     }
 }
 
 int findPrimeMoreThan(double d)
 {
-    for (auto i : prime)
-        if (i > d)
-            return i;
+    auto up = upper_bound(prime.begin(), prime.end(), d);
 
-    return -1;
+    // check up is exist and more than d
+    // if not found then build prime table
+    while (up == prime.end()) {
+        buildPrimes(1);
+        up = upper_bound(prime.begin(), prime.end(), d);
+    }
+
+    return *up;
 }
