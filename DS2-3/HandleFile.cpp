@@ -42,10 +42,12 @@ int HandleFile::fileInput(string message, string prefix)
         if (fileName == "0")
             return EXIT;
 
+        // load .bin if exist
         fin.open(prefix + fileName + ".bin", ios::in | ios::binary);
         if (fin)
             return BINARY;
 
+        // else load .txt
         fin.open(prefix + fileName + ".txt", ios::in);
         if (fin)
             return NORMAL;
@@ -61,14 +63,16 @@ bool HandleFile::txtToBin(string prefix)
         fout.close();
     fout.open(prefix + fileName + ".bin", ios::out | ios::app | ios::binary);
 
+    // load into memory and write to .bin
     Data temp;
     while (fin >> temp) { // >> overload
-        if (inputSuccess) {
+        if (inputSuccess)
             fout.write((char *)&temp, sizeof(temp));
-        }
     }
+
     fout.close();
 
+    // reopen file
     if (fin.is_open())
         fin.close();
     fin.open(prefix + fileName + ".bin", ios::in | ios::binary);
@@ -78,6 +82,7 @@ bool HandleFile::txtToBin(string prefix)
 
 int HandleFile::getRow()
 {
+    // counting rows number
     fin.seekg(0, fin.end);
     int row = fin.tellg() / sizeof(struct Column);
     fin.seekg(0, fin.beg);
@@ -96,11 +101,14 @@ bool HandleFile::task1()
         int rows = getRow();
         Hashtable_Linear table = Hashtable_Linear(rows);
         Data temp;
+
+        // one by one load column
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
             table.insert(temp);
         }
 
+        // save and print statistics
         save(table, "linear");
         table.clear();
     }
@@ -124,11 +132,14 @@ bool HandleFile::task2()
         int rows = getRow();
         Hashtable_Double table = Hashtable_Double(rows);
         Data temp;
+
+        // one by one load column
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
             table.insert(temp);
         }
 
+        // save and print statistics
         save(table, "double");
         table.clear();
     }

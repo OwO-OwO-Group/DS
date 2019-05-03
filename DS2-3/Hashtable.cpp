@@ -10,6 +10,8 @@ Hashtable::Hashtable(int rowSize)
     rows = rowSize;
     buildPrime(20000);
     setSize();
+
+    // new table
     hashtable = new Table[size];
     for (int i = 0; i < size; i++)
         hashtable[i].hashcode = -1;
@@ -26,13 +28,10 @@ int Hashtable::getStep(char *str) { return maxStep; }
 int Hashtable::hash(char *str, int num)
 {
     int hashkey = 1;
-    while (*str != '\0') {
-        if (hashkey > num)
-            hashkey = hashkey % num;
-        hashkey = hashkey * *str;
-        str++;
-    }
-    return hashkey % num;
+    while (*str != '\0')
+        hashkey = (hashkey * *str) % num, str++;
+
+    return hashkey;
 }
 
 void Hashtable::insert(Data data)
@@ -40,11 +39,15 @@ void Hashtable::insert(Data data)
     int hash_index = hash(data.getId(), size);
     int step = getStep(data.getId());
     int index = hash_index;
+
+    // address not empty
     while (hashtable[index].hashcode != -1) {
         index += step;
         if (index >= size)
             index -= size;
     }
+
+    // set data
     hashtable[index].hashcode = hash_index;
     hashtable[index].column = data.getColumn();
 }
@@ -56,6 +59,7 @@ ostream &operator<<(ostream &out, Table &table)
             << table.column.sid << ", " << setw(10) << table.column.sname
             << ", " << setw(10) << table.column.average;
     }
+
     return out;
 }
 
