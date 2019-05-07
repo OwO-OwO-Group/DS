@@ -49,6 +49,9 @@ void Hashtable::insert(Data &data)
         collisions++;
         step = getStep(data.getId(), collisions);
         index = (hash_index + step) % size;
+
+        if (collisions > size * 4)
+            throw "Timeout";
     }
 
     successful += 1 + collisions;

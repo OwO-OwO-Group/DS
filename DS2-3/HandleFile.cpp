@@ -153,31 +153,36 @@ bool HandleFile::task2()
 
 bool HandleFile::task3()
 {
-    int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
+    try {
+        int finmode = fileInput("Input (301, 302, ...[0]Quit): ", "input");
 
-    if (finmode != EXIT) {
-        if (finmode == NORMAL)
-            txtToBin("input"); // also reopen file
+        if (finmode != EXIT) {
+            if (finmode == NORMAL)
+                txtToBin("input"); // also reopen file
 
-        // finmode == BINARY
-        int rows = getRow();
-        Hashtable_Quadratic table = Hashtable_Quadratic(rows);
-        Data temp;
+            // finmode == BINARY
+            int rows = getRow();
+            Hashtable_Quadratic table = Hashtable_Quadratic(rows);
+            Data temp;
 
-        // one by one load column
-        while (fin.peek() != EOF) {
-            fin.read((char *)&temp, sizeof(temp));
-            table.insert(temp);
+            // one by one load column
+            while (fin.peek() != EOF) {
+                fin.read((char *)&temp, sizeof(temp));
+                table.insert(temp);
+            }
+
+            // save and print statistics
+            save(table, "quadratic");
+            table.clear();
         }
+        else
+            cout << "switch to menu" << endl;
 
-        // save and print statistics
-        save(table, "quadratic");
-        table.clear();
+        fin.close();
     }
-    else
-        cout << "switch to menu" << endl;
-
-    fin.close();
+    catch (string &e) {
+        cout << e;
+    }
 
     return 0;
 }
