@@ -4,8 +4,8 @@
 #ifndef _HANDLEFILE_H_
 #define _HANDLEFILE_H_
 
-#include "Hashtable.h"
 #include "Data.h"
+#include "Hashtable.h"
 #include "Header.h"
 #include <fstream>
 #include <iostream>
@@ -36,6 +36,7 @@ class HandleFile {
 public:
     bool task1();
     bool task2();
+    bool task3();
 };
 
 #endif

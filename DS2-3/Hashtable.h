@@ -31,7 +31,7 @@ protected:
 
     int hash(char *str, int num);
     virtual void setMaxStep();
-    virtual int getStep(char *str);
+    virtual int getStep(char *str, int collisions);
     void setSize();
 
 public:
@@ -50,10 +50,18 @@ public:
 
 class Hashtable_Double : public Hashtable {
     virtual void setMaxStep();
-    virtual int getStep(char *str);
+    virtual int getStep(char *str, int collisions);
 
 public:
     Hashtable_Double(int size) : Hashtable(size) { setMaxStep(); };
+    virtual void save(fstream &fout);
+};
+
+class Hashtable_Quadratic : public Hashtable {
+public:
+    Hashtable_Quadratic(int size) : Hashtable(size) { setMaxStep(); };
+
+    virtual int getStep(char *str, int collisions);
     virtual void save(fstream &fout);
 };
 

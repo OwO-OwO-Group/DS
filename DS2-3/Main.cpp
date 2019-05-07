@@ -13,6 +13,7 @@ using namespace std;
 #define MENU_QUIT               0
 #define MENU_LINEAR             1
 #define MENU_DOUBLE_HASH        2
+#define MENU_QUADRATIC_HASH     3
 // clang-format on
 
 int main(int argc, char *argv[])
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
         cout << "* 0.          Quit             *" << endl;
         cout << "* 1.      Linear Probing       *" << endl;
         cout << "* 2.       Double Hash         *" << endl;
+        cout << "* 3.     Quadratic Hash        *" << endl;
         cout << "choice: ";
 
         // ¿é¤J¿ï¾Ü
@@ -45,6 +47,9 @@ int main(int argc, char *argv[])
 
         case MENU_DOUBLE_HASH:
             result = f.task2();
+            break;
+        case MENU_QUADRATIC_HASH:
+            result = f.task3();
             break;
 
         default:
