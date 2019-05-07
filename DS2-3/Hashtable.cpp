@@ -23,7 +23,10 @@ void Hashtable::setSize() { size = findPrimeMoreThan(rows * 1.2); }
 
 void Hashtable::setMaxStep() { maxStep = 1; }
 
-int Hashtable::getStep(char *str, int collisions) { return maxStep; }
+int Hashtable::getStep(char *str, int collisions)
+{
+    return maxStep * collisions;
+}
 
 int Hashtable::hash(char *str, int num)
 {
@@ -45,7 +48,7 @@ void Hashtable::insert(Data &data)
     while (hashtable[index].hashcode != -1) {
         collisions++;
         step = getStep(data.getId(), collisions);
-        index = (index + step) % size;
+        index = (hash_index + step) % size;
     }
 
     successful += 1 + collisions;
@@ -74,8 +77,7 @@ void Hashtable::save(fstream &fout)
         int count = 0, index = i;
         while (hashtable[index].hashcode != -1) {
             count++;
-            index =
-                (index + getStep(hashtable[index].column.sid, count)) % size;
+            index = (i + getStep(hashtable[index].column.sid, count)) % size;
         }
 
         unsuccessful += count;
@@ -98,7 +100,7 @@ void Hashtable_Linear::save(fstream &fout)
 
 void Hashtable_Quadratic::save(fstream &fout)
 {
-    fout << " --- Hash Table Z --- (linear probing)" << endl;
+    fout << " --- Hash Table Z --- (quadratic probing)" << endl;
     Hashtable::save(fout); // pair <success, unsuccess>
     cout << "Hash Table Z has been created." << endl;
     cout << "unsuccessful search: " << fixed << setprecision(4) << unsuccessful
@@ -116,7 +118,7 @@ void Hashtable_Double::setMaxStep() { maxStep = findPrimeMoreThan(rows / 3.); }
 
 int Hashtable_Double::getStep(char *str, int collisions)
 {
-    return maxStep - hash(str, maxStep);
+    return (maxStep - hash(str, maxStep)) * collisions;
 }
 
 void Hashtable_Double::save(fstream &fout)
