@@ -2,7 +2,7 @@
 
 ./build.sh
 
-echo "1 301 1 302 2 301 2 302 3 301" | ./a.out
+echo "1 301 1 302 2 301 2 302 3 301 3 306 3 307 3 308" | ./a.out
 
 # check demo
 for file in $(ls -1 demo/*.txt)
