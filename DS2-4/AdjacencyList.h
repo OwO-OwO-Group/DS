@@ -47,6 +47,8 @@ class AdjacencyList {
     // build map
     void buildMapping();
 
+    void BFS(ID, vector<string> &);
+
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
 
@@ -56,7 +58,6 @@ class AdjacencyList {
 public:
     void clear();
     void load();
-    void BFS(ID, vector<ID>);
     bool task1();
     bool task2();
 };

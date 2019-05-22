@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -42,6 +43,37 @@ vector<node>::iterator AdjacencyList::addNode(ID id)
     return it;
 }
 
+
+void AdjacencyList::BFS(ID id, vector<string> &v)
+{
+    // clear old vector
+    v.clear();
+
+    queue<string> bfsQueue;
+
+    // add first node
+    string nodeID = id;
+    bfsQueue.push(nodeID);
+
+    // BFS
+    while (!bfsQueue.empty()) {
+
+        // has not visited
+        if (find(v.begin(), v.end(), nodeID) == v.end()) {
+            int i = indexMapping[id];
+
+            // put all data to vector and queue
+            for (auto it : nodes[i].linked) {
+                bfsQueue.push(it.id);
+                v.push_back(it.id);
+            }
+        }
+
+        // next node
+        nodeID = bfsQueue.front();
+        bfsQueue.pop();
+    }
+}
 
 void AdjacencyList::buildMapping()
 {
