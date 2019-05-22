@@ -150,5 +150,23 @@ bool AdjacencyList::task1()
     return 0;
 }
 
-bool AdjacencyList::task2() { return 0; }
+bool AdjacencyList::task2()
+{
+    // is task1 done
+    if (!nodes.empty()) {
+        // influence data
+
+        // Traversing
+        for (auto it : nodes) {
+        }
+
+        // sort influence
+
+        // save cnt file
+    }
+    else
+        cout << "" << endl;
+
+    return 0;
+}
 
