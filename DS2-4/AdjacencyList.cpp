@@ -43,6 +43,20 @@ vector<node>::iterator AdjacencyList::addNode(ID id)
     return it;
 }
 
+bool operator<(Link const &l, float const weight) { return l.weight < weight; }
+
+void AdjacencyList::connect(ID A, ID B, float weight)
+{
+
+    // add getID if not exist
+    auto getIt = addNode(B);
+
+    // add putID if not exist
+    auto putIt = addNode(A);
+
+    // linear search and insert
+    // insert
+}
 
 void AdjacencyList::BFS(ID id, vector<string> &v)
 {
@@ -123,6 +137,7 @@ bool AdjacencyList::task1()
         // one by one load column
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
+            connect(temp.getID, temp.putID, temp.weight);
         }
 
         buildMapping();
