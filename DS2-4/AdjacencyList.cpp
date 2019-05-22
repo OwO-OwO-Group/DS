@@ -42,6 +42,22 @@ vector<node>::iterator AdjacencyList::addNode(ID id)
     return it;
 }
 
+
+void AdjacencyList::buildMapping()
+{
+    // clear old map
+    IndexMapping.clear();
+
+    for (int i = 0; i < nodes.size(); i++)
+        IndexMapping[nodes[i].id] = i;
+}
+
+void AdjacencyList::debug_buildMapping()
+{
+    for (auto it : nodes)
+        cout << it.id << " " << IndexMapping[it.id] << endl;
+}
+
 int AdjacencyList::fileInput(string message, string prefix)
 {
     while (true) {
@@ -76,6 +92,8 @@ bool AdjacencyList::task1()
         while (fin.peek() != EOF) {
             fin.read((char *)&temp, sizeof(temp));
         }
+
+        buildMapping();
     }
     else
         cout << "switch to menu" << endl;

@@ -28,7 +28,7 @@ typedef struct node {
 
 class AdjacencyList {
     vector<node> nodes;
-    map<ID, int> IndexMapping;
+    map<string, int> IndexMapping;
 
     fstream fin;
     fstream fout;
@@ -44,9 +44,16 @@ class AdjacencyList {
     // Add node if not exist
     vector<node>::iterator addNode(ID id);
 
-public:
+    // build map
+    void buildMapping();
+
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
+
+    // test function
+    void debug_buildMapping();
+
+public:
     void clear();
     void load();
     void BFS(ID, vector<ID>);
