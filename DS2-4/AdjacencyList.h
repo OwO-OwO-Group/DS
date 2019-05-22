@@ -4,12 +4,17 @@
 #ifndef _ADJACENCY_LISTS_H_
 #define _ADJACENCY_LISTS_H_
 
+#include "Data.h"
+#include <fstream>
 #include <map>
 #include <vector>
 
 using namespace std;
 
-typedef char Id[10];
+#define EXIT -1
+#define BINARY 0
+
+typedef char ID[10];
 
 typedef struct link {
     ID id;
@@ -18,19 +23,33 @@ typedef struct link {
 
 typedef struct node {
     ID id;
-    vector<Link>;
-} Link;
+    vector<Link> Linked;
+} Node;
 
 class AdjacencyList {
     vector<node> nodes;
+    map<ID, int> IndexMapping;
+
+    fstream fin;
+    fstream fout;
+    string fileName;
 
     void isExistID(ID);
+
+    // common function
+    int numberInput(string message, string errorMsg);
+
+    int fileInput(string message, string prefix);
 
 public:
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
     void addNode(ID node);
     void clear();
+    void load();
+    void BFS(ID, vector<ID>);
+    bool task1();
+    bool task2();
 };
 
 #endif

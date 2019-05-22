@@ -1,6 +1,7 @@
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version
 
+#include "AdjacencyList.h"
 #include "Header.h"
 #include <ctime>
 #include <iostream>
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
         // 輸入選擇
         cin >> mode;
 
-        HandleFile f;
+        AdjacencyList f;
 
         // 判斷選擇的內容
         switch (mode) {
@@ -38,9 +39,11 @@ int main(int argc, char *argv[])
             return 0; // 退出
 
         case MENU_LOAD:
+            result = f.task1();
             break;
 
         case MENU_INFLUENCE:
+            result = f.task2();
             break;
 
         default:
