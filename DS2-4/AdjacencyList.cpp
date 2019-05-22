@@ -3,6 +3,8 @@
 
 #include "AdjacencyList.h"
 #include "Header.h"
+#include <algorithm>
+#include <cstring>
 #include <iostream>
 
 using namespace std;
@@ -18,6 +20,26 @@ int AdjacencyList::numberInput(string message, string errorMsg)
         else
             errorHandling("Error : " + errorMsg);
     }
+}
+
+bool operator<(Node const &n, ID const id) { return strcmp(n.id, id) < 0; }
+
+// Add node if not exist
+vector<node>::iterator AdjacencyList::addNode(ID id)
+{
+    // Binary search
+    auto it = lower_bound(nodes.begin(), nodes.end(), id);
+
+    // has putID
+    if (it == nodes.end() || strcmp(it->id, id) != 0) {
+        Node tmp;
+        strcpy(tmp.id, id);
+        tmp.Linked = vector<Link>();
+
+        it = nodes.insert(it, tmp);
+        cout << "Add " << id << endl;
+    }
+    return it;
 }
 
 int AdjacencyList::fileInput(string message, string prefix)

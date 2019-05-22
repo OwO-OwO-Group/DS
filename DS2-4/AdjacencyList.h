@@ -41,10 +41,12 @@ class AdjacencyList {
 
     int fileInput(string message, string prefix);
 
+    // Add node if not exist
+    vector<node>::iterator addNode(ID id);
+
 public:
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
-    void addNode(ID node);
     void clear();
     void load();
     void BFS(ID, vector<ID>);
