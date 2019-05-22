@@ -23,12 +23,12 @@ typedef struct link {
 
 typedef struct node {
     ID id;
-    vector<Link> Linked;
+    vector<Link> linked;
 } Node;
 
 class AdjacencyList {
     vector<node> nodes;
-    map<string, int> IndexMapping;
+    map<string, int> indexMapping;
 
     fstream fin;
     fstream fout;

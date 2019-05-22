@@ -34,11 +34,11 @@ vector<node>::iterator AdjacencyList::addNode(ID id)
     if (it == nodes.end() || strcmp(it->id, id) != 0) {
         Node tmp;
         strcpy(tmp.id, id);
-        tmp.Linked = vector<Link>();
+        tmp.linked = vector<Link>();
 
         it = nodes.insert(it, tmp);
-        cout << "Add " << id << endl;
     }
+
     return it;
 }
 
@@ -46,16 +46,16 @@ vector<node>::iterator AdjacencyList::addNode(ID id)
 void AdjacencyList::buildMapping()
 {
     // clear old map
-    IndexMapping.clear();
+    indexMapping.clear();
 
     for (int i = 0; i < nodes.size(); i++)
-        IndexMapping[nodes[i].id] = i;
+        indexMapping[nodes[i].id] = i;
 }
 
 void AdjacencyList::debug_buildMapping()
 {
     for (auto it : nodes)
-        cout << it.id << " " << IndexMapping[it.id] << endl;
+        cout << it.id << " " << indexMapping[it.id] << endl;
 }
 
 int AdjacencyList::fileInput(string message, string prefix)
