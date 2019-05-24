@@ -78,9 +78,9 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
         // has not visited
         if (notExist(v, nodeID)) {
             int i = indexMapping[nodeID];
-            v.push_back(nodeID);
+            v.push_back(nodeID); // mark visited
 
-            // put all data to vector and queue
+            // put not visited node to queue
             for (auto it : nodes[i].linked) {
                 if (notExist(v, it.id))
                     bfsQueue.push(it.id);
