@@ -69,28 +69,26 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
     queue<string> bfsQueue;
 
     // add first node
-    string nodeID = id;
-    bfsQueue.push(nodeID);
+    bfsQueue.push(id);
+    string nodeID;
 
     // BFS
-    while (true) {
+    while (!bfsQueue.empty()) {
+        // current node
+        nodeID = bfsQueue.front();
         bfsQueue.pop();
 
         // has not visited
         if (notExist(v, nodeID)) {
             int i = indexMapping[nodeID];
-            v.push_back(nodeID); // mark visited
+            v.push_back(nodeID);
 
-            // put not visited node to queue
+            // put all data to vector and queue
             for (auto it : nodes[i].linked) {
                 if (notExist(v, it.id))
                     bfsQueue.push(it.id);
             }
         }
-
-        // next node
-        if (!bfsQueue.empty()) nodeID = bfsQueue.front();
-        else break;
     }
 
     v.erase(v.begin());
@@ -163,10 +161,11 @@ bool AdjacencyList::task1()
         int count = 1;
         for (auto putIt : nodes) {
             int count_L = 1;
-            fout << "[" << count << "] " << putIt.id 
-                << " : total " << putIt.linked .size() << " edges\n";
+            fout << "[" << count << "] " << putIt.id << " : total "
+                 << putIt.linked.size() << " edges\n";
             for (auto linkIt : putIt.linked)
-                fout << "\t(" << count_L++ << ") " << linkIt.id << " " << linkIt.weight << " ";
+                fout << "\t(" << count_L++ << ") " << linkIt.id << " "
+                     << linkIt.weight << " ";
             fout << endl << endl;
             count++;
         }
@@ -210,8 +209,8 @@ bool AdjacencyList::task2()
         int count = 1;
         for (auto infIt : inodes) {
             int count_L = 1;
-            fout << "[" << count << "] " << infIt.id 
-                << " : total influence " << infIt.list.size() << " people\n";
+            fout << "[" << count << "] " << infIt.id << " : total influence "
+                 << infIt.list.size() << " people\n";
             for (auto listIt : infIt.list)
                 fout << "\t(" << count_L++ << ") " << listIt << " ";
             fout << endl << endl;
