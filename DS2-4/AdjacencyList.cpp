@@ -60,6 +60,7 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     insertIt = list.insert(insertIt, {B, weight});
 }
 
+#define notExist(vec1, str1) find(vec1.begin(), vec1.end(), str1) == vec1.end()
 void AdjacencyList::BFS(const string &id, vector<string> &v)
 {
     // clear old vector
@@ -75,12 +76,12 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
     while (!bfsQueue.empty()) {
 
         // has not visited
-        if (find(v.begin(), v.end(), nodeID) == v.end()) {
+        if (notExist(v, nodeID)) {
             int i = indexMapping[id];
 
             // put all data to vector and queue
             for (auto it : nodes[i].linked) {
-                if (find(v.begin(), v.end(), it.id) == v.end()) {
+                if (notExist(v, it.id)) {
                     bfsQueue.push(it.id);
                     v.push_back(it.id);
                 }
