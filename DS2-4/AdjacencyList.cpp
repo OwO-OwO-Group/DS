@@ -158,11 +158,13 @@ bool AdjacencyList::task1()
     // output adj file
     fout.open("pairs" + fileName + ".adj", ios::out);
     if (fout) {
+        int count = 0;
         for (auto putIt : nodes) {
-            fout << putIt.id << " ";
+            fout << "[" << count << "] " << putIt.id << " ";
             for (auto linkIt : putIt.linked)
                 fout << linkIt.id << " " << linkIt.weight << " ";
             fout << endl;
+            count++;
         }
 
         fout.close();
@@ -201,11 +203,14 @@ bool AdjacencyList::task2()
     // save cnt file
     fout.open("pairs" + fileName + ".cnt", ios::out);
     if (fout) {
+        int count = 0;
         for (auto infIt : inodes) {
-            fout << infIt.id << " " << infIt.list.size() << " ";
+            fout << "[" << count << "] " << infIt.id << " " << infIt.list.size()
+                 << " ";
             for (auto listIt : infIt.list)
                 fout << listIt << " ";
             fout << endl;
+            count++;
         }
 
         fout.close();
