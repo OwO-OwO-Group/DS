@@ -26,6 +26,11 @@ typedef struct node {
     vector<Link> linked;
 } Node;
 
+typedef struct InfluenceNode {
+    string id;
+    vector<string> list;
+} INode;
+
 class AdjacencyList {
     vector<node> nodes;
     map<string, int> indexMapping;
@@ -47,7 +52,7 @@ class AdjacencyList {
     // build map
     void buildMapping();
 
-    void BFS(ID, vector<string> &);
+    void BFS(string, vector<string> &);
 
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
@@ -57,7 +62,6 @@ class AdjacencyList {
 
 public:
     void clear();
-    void load();
     bool task1();
     bool task2();
 };

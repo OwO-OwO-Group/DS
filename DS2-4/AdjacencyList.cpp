@@ -59,7 +59,7 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     insertIt = list.insert(insertIt, {B, weight});
 }
 
-void AdjacencyList::BFS(ID id, vector<string> &v)
+void AdjacencyList::BFS(string id, vector<string> &v)
 {
     // clear old vector
     v.clear();
@@ -132,6 +132,9 @@ bool AdjacencyList::task1()
     int finmode = fileInput("Input (401, 402, ...[0]Quit): ", "pairs");
 
     if (finmode != EXIT) {
+        // clear vector
+        nodes.clear();
+
         // finmode == BINARY
         Column temp;
 
@@ -141,7 +144,10 @@ bool AdjacencyList::task1()
             connect(temp.getID, temp.putID, temp.weight);
         }
 
+        // speed up search id
         buildMapping();
+
+        // output adj file
     }
     else
         cout << "switch to menu" << endl;
@@ -151,22 +157,33 @@ bool AdjacencyList::task1()
     return 0;
 }
 
+bool cmpINode(const INode &A, const INode &B)
+{
+    return A.list.size() > B.list.size();
+}
+
 bool AdjacencyList::task2()
 {
     // is task1 done
     if (!nodes.empty()) {
         // influence data
+        vector<INode> inodes;
 
         // Traversing
         for (auto it : nodes) {
+            INode tmp = {it.id, vector<string>()};  //
+            BFS(tmp.id, tmp.list);                  // BFS
+            sort(tmp.list.begin(), tmp.list.end()); // sort by ID
+            inodes.push_back(tmp);                  // push
         }
 
         // sort influence
+        sort(inodes.begin(), inodes.end(), cmpINode);
 
         // save cnt file
     }
     else
-        cout << "" << endl;
+        cout << "Please execute task1 first." << endl;
 
     return 0;
 }
