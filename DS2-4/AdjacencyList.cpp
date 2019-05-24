@@ -51,7 +51,7 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     auto putIt = addNode(A);
 
     // linear search and insert
-    vector<Link> list = putIt->linked;
+    vector<Link> &list = putIt->linked;
     auto insertIt = list.begin();
     while (insertIt != list.end() && insertIt->weight >= weight)
         ++insertIt;
@@ -153,6 +153,17 @@ bool AdjacencyList::task1()
     buildMapping();
 
     // output adj file
+    fout.open("pairs" + fileName + ".adj", ios::out);
+    if (fout) {
+        for (auto putIt : nodes) {
+            fout << putIt.id << " ";
+            for (auto linkIt : putIt.linked)
+                fout << linkIt.id << " " << linkIt.weight << " ";
+            fout << endl;
+        }
+
+        fout.close();
+    }
 
     return 0;
 }
