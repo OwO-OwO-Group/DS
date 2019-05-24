@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int AdjacencyList::numberInput(string message, string errorMsg)
+int AdjacencyList::numberInput(const string &message, const string &errorMsg)
 {
     int result;
     while (true) {
@@ -27,7 +27,7 @@ int AdjacencyList::numberInput(string message, string errorMsg)
 bool operator<(Node const &n, string const id) { return n.id < id; }
 
 // Add node if not exist
-vector<node>::iterator AdjacencyList::addNode(string id)
+vector<node>::iterator AdjacencyList::addNode(const string &id)
 {
     // Binary search
     auto it = lower_bound(nodes.begin(), nodes.end(), id);
@@ -60,7 +60,7 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     insertIt = list.insert(insertIt, {B, weight});
 }
 
-void AdjacencyList::BFS(string id, vector<string> &v)
+void AdjacencyList::BFS(const string &id, vector<string> &v)
 {
     // clear old vector
     v.clear();
@@ -108,7 +108,7 @@ void AdjacencyList::debug_buildMapping()
         cout << it.id << " " << indexMapping[it.id] << endl;
 }
 
-int AdjacencyList::fileInput(string message, string prefix)
+int AdjacencyList::fileInput(const string &message, const string &prefix)
 {
     while (true) {
         // input file name

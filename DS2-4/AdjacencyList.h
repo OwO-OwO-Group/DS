@@ -42,17 +42,17 @@ class AdjacencyList {
     void isExistID(ID);
 
     // common function
-    int numberInput(string message, string errorMsg);
+    int numberInput(const string &message, const string &errorMsg);
 
-    int fileInput(string message, string prefix);
+    int fileInput(const string &message, const string &prefix);
 
     // Add node if not exist
-    vector<node>::iterator addNode(string id);
+    vector<node>::iterator addNode(const string &id);
 
     // build map
     void buildMapping();
 
-    void BFS(string, vector<string> &);
+    void BFS(const string &, vector<string> &);
 
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
