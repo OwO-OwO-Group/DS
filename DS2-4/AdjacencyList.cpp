@@ -53,8 +53,8 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     // linear search and insert
     vector<Link> list = putIt->linked;
     auto insertIt = list.begin();
-    while (insertIt != list.end() || insertIt->weight >= weight)
-        insertIt++;
+    while (insertIt != list.end() && insertIt->weight >= weight)
+        ++insertIt;
 
     // insert
     insertIt = list.insert(insertIt, {B, weight});
