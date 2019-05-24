@@ -73,7 +73,8 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
     bfsQueue.push(nodeID);
 
     // BFS
-    while (!bfsQueue.empty()) {
+    while (true) {
+        bfsQueue.pop();
 
         // has not visited
         if (notExist(v, nodeID)) {
@@ -88,9 +89,11 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
         }
 
         // next node
-        nodeID = bfsQueue.front();
-        bfsQueue.pop();
+        if (!bfsQueue.empty()) nodeID = bfsQueue.front();
+        else break;
     }
+
+    v.erase(v.begin());
 }
 
 void AdjacencyList::buildMapping()
@@ -157,12 +160,14 @@ bool AdjacencyList::task1()
     // output adj file
     fout.open("pairs" + fileName + ".adj", ios::out);
     if (fout) {
-        int count = 0;
+        int count = 1;
         for (auto putIt : nodes) {
-            fout << "[" << count << "] " << putIt.id << " ";
+            int count_L = 1;
+            fout << "[" << count << "] " << putIt.id 
+                << " : total " << putIt.linked .size() << " edges\n";
             for (auto linkIt : putIt.linked)
-                fout << linkIt.id << " " << linkIt.weight << " ";
-            fout << endl;
+                fout << "\t(" << count_L++ << ") " << linkIt.id << " " << linkIt.weight << " ";
+            fout << endl << endl;
             count++;
         }
 
@@ -202,13 +207,14 @@ bool AdjacencyList::task2()
     // save cnt file
     fout.open("pairs" + fileName + ".cnt", ios::out);
     if (fout) {
-        int count = 0;
+        int count = 1;
         for (auto infIt : inodes) {
-            fout << "[" << count << "] " << infIt.id << " "
-                 << infIt.list.size() - 1 << " ";
+            int count_L = 1;
+            fout << "[" << count << "] " << infIt.id 
+                << " : total influence " << infIt.list.size() << " people\n";
             for (auto listIt : infIt.list)
-                fout << listIt << " ";
-            fout << endl;
+                fout << "\t(" << count_L++ << ") " << listIt << " ";
+            fout << endl << endl;
             count++;
         }
 
