@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 {
     int mode;   // 選單選項
     int result; // 指令回傳檢查
+    AdjacencyList f;
 
     while (true) {
 
@@ -30,8 +31,6 @@ int main(int argc, char *argv[])
 
         // 輸入選擇
         cin >> mode;
-
-        AdjacencyList f;
 
         // 判斷選擇的內容
         switch (mode) {

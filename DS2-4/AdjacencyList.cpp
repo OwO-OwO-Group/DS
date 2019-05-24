@@ -80,8 +80,10 @@ void AdjacencyList::BFS(string id, vector<string> &v)
 
             // put all data to vector and queue
             for (auto it : nodes[i].linked) {
-                bfsQueue.push(it.id);
-                v.push_back(it.id);
+                if (find(v.begin(), v.end(), it.id) == v.end()) {
+                    bfsQueue.push(it.id);
+                    v.push_back(it.id);
+                }
             }
         }
 
@@ -196,6 +198,18 @@ bool AdjacencyList::task2()
     sort(inodes.begin(), inodes.end(), cmpINode);
 
     // save cnt file
+    fout.open("pairs" + fileName + ".cnt", ios::out);
+    if (fout) {
+        for (auto infIt : inodes) {
+            fout << infIt.id << " " << infIt.list.size() << " ";
+            for (auto listIt : infIt.list)
+                fout << listIt << " ";
+            fout << endl;
+        }
+
+        fout.close();
+    }
+
     return 0;
 }
 
