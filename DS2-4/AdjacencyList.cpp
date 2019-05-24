@@ -77,14 +77,13 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
 
         // has not visited
         if (notExist(v, nodeID)) {
-            int i = indexMapping[id];
+            int i = indexMapping[nodeID];
+            v.push_back(nodeID);
 
             // put all data to vector and queue
             for (auto it : nodes[i].linked) {
-                if (notExist(v, it.id)) {
+                if (notExist(v, it.id))
                     bfsQueue.push(it.id);
-                    v.push_back(it.id);
-                }
             }
         }
 
@@ -205,8 +204,8 @@ bool AdjacencyList::task2()
     if (fout) {
         int count = 0;
         for (auto infIt : inodes) {
-            fout << "[" << count << "] " << infIt.id << " " << infIt.list.size()
-                 << " ";
+            fout << "[" << count << "] " << infIt.id << " "
+                 << infIt.list.size() - 1 << " ";
             for (auto listIt : infIt.list)
                 fout << listIt << " ";
             fout << endl;
