@@ -50,7 +50,13 @@ void AdjacencyList::connect(ID A, ID B, float weight)
     auto putIt = addNode(A);
 
     // linear search and insert
+    vector<Link> list = putIt->linked;
+    auto insertIt = list.begin();
+    while (insertIt != list.end() || insertIt->weight >= weight)
+        insertIt++;
+
     // insert
+    insertIt = list.insert(insertIt, {B, weight});
 }
 
 void AdjacencyList::BFS(ID id, vector<string> &v)
