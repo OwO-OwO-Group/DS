@@ -17,12 +17,12 @@ using namespace std;
 typedef char ID[10];
 
 typedef struct link {
-    ID id;
+    string id;
     float weight;
 } Link;
 
 typedef struct node {
-    ID id;
+    string id;
     vector<Link> linked;
 } Node;
 
@@ -42,7 +42,7 @@ class AdjacencyList {
     int fileInput(string message, string prefix);
 
     // Add node if not exist
-    vector<node>::iterator addNode(ID id);
+    vector<node>::iterator addNode(string id);
 
     // build map
     void buildMapping();

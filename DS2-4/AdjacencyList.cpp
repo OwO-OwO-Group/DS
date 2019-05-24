@@ -23,22 +23,17 @@ int AdjacencyList::numberInput(string message, string errorMsg)
     }
 }
 
-bool operator<(Node const &n, ID const id) { return strcmp(n.id, id) < 0; }
+bool operator<(Node const &n, string const id) { return n.id < id; }
 
 // Add node if not exist
-vector<node>::iterator AdjacencyList::addNode(ID id)
+vector<node>::iterator AdjacencyList::addNode(string id)
 {
     // Binary search
     auto it = lower_bound(nodes.begin(), nodes.end(), id);
 
     // has putID
-    if (it == nodes.end() || strcmp(it->id, id) != 0) {
-        Node tmp;
-        strcpy(tmp.id, id);
-        tmp.linked = vector<Link>();
-
-        it = nodes.insert(it, tmp);
-    }
+    if (it == nodes.end() || it->id != id)
+        it = nodes.insert(it, {id, vector<Link>()});
 
     return it;
 }
