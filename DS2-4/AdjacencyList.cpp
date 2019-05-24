@@ -147,7 +147,7 @@ bool AdjacencyList::task1()
     // one by one load column
     while (fin.peek() != EOF) {
         fin.read((char *)&temp, sizeof(temp));
-        connect(temp.getID, temp.putID, temp.weight);
+        connect(temp.putID, temp.getID, temp.weight);
     }
 
     fin.close();
