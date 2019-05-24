@@ -16,10 +16,11 @@ int AdjacencyList::numberInput(string message, string errorMsg)
     while (true) {
         cout << message;
         cin >> result;
+
         if (cin && result > -1)
             return result;
-        else
-            errorHandling("Error : " + errorMsg);
+
+        errorHandling("Error : " + errorMsg);
     }
 }
 
@@ -108,7 +109,6 @@ void AdjacencyList::debug_buildMapping()
 int AdjacencyList::fileInput(string message, string prefix)
 {
     while (true) {
-
         // input file name
         cout << message;
         cin >> fileName;
@@ -123,7 +123,6 @@ int AdjacencyList::fileInput(string message, string prefix)
             return BINARY;
 
         errorHandling("Error : there is no such file!");
-        continue; // input again
     }
 }
 
@@ -131,28 +130,29 @@ bool AdjacencyList::task1()
 {
     int finmode = fileInput("Input (401, 402, ...[0]Quit): ", "pairs");
 
-    if (finmode != EXIT) {
-        // clear vector
-        nodes.clear();
-
-        // finmode == BINARY
-        Column temp;
-
-        // one by one load column
-        while (fin.peek() != EOF) {
-            fin.read((char *)&temp, sizeof(temp));
-            connect(temp.getID, temp.putID, temp.weight);
-        }
-
-        // speed up search id
-        buildMapping();
-
-        // output adj file
-    }
-    else
+    if (finmode == EXIT) {
         cout << "switch to menu" << endl;
+        return 0;
+    }
+
+    // clear vector
+    nodes.clear();
+
+    // finmode == BINARY
+    Column temp;
+
+    // one by one load column
+    while (fin.peek() != EOF) {
+        fin.read((char *)&temp, sizeof(temp));
+        connect(temp.getID, temp.putID, temp.weight);
+    }
 
     fin.close();
+
+    // speed up search id
+    buildMapping();
+
+    // output adj file
 
     return 0;
 }
@@ -164,27 +164,27 @@ bool cmpINode(const INode &A, const INode &B)
 
 bool AdjacencyList::task2()
 {
-    // is task1 done
-    if (!nodes.empty()) {
-        // influence data
-        vector<INode> inodes;
-
-        // Traversing
-        for (auto it : nodes) {
-            INode tmp = {it.id, vector<string>()};  //
-            BFS(tmp.id, tmp.list);                  // BFS
-            sort(tmp.list.begin(), tmp.list.end()); // sort by ID
-            inodes.push_back(tmp);                  // push
-        }
-
-        // sort influence
-        sort(inodes.begin(), inodes.end(), cmpINode);
-
-        // save cnt file
-    }
-    else
+    // is task1 not done
+    if (nodes.empty()) {
         cout << "Please execute task1 first." << endl;
+        return 0;
+    }
 
+    // influence data
+    vector<INode> inodes;
+
+    // Traversing
+    for (auto it : nodes) {
+        INode tmp = {it.id, vector<string>()};  //
+        BFS(tmp.id, tmp.list);                  // BFS
+        sort(tmp.list.begin(), tmp.list.end()); // sort by ID
+        inodes.push_back(tmp);                  // push
+    }
+
+    // sort influence
+    sort(inodes.begin(), inodes.end(), cmpINode);
+
+    // save cnt file
     return 0;
 }
 
