@@ -106,7 +106,7 @@ void AdjacencyList::BFS(const string &id, set<string> &v)
         }
     }
 
-    v.erase(v.begin());
+    v.erase(id);
 }
 
 void AdjacencyList::buildMapping()
@@ -272,7 +272,7 @@ void AdjacencyList::DFS(const string &id, set<string> &v, float valid)
         }
     }
 
-    v.erase(v.begin());
+    v.erase(id);
 }
 
 bool AdjacencyList::task3()
