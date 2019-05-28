@@ -284,7 +284,7 @@ bool AdjacencyList::task3()
     }
 
     // valid float (0,1]
-    float valid = floatInput("input valid value:", "must in (0.1, 1.0]");
+    float valid = floatInput("input valid value:", "must in (0.0, 1.0]");
 
     // influence data
     vector<INode> inodes;
