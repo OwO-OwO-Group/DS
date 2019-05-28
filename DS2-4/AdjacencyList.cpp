@@ -7,6 +7,7 @@
 #include <cstring>
 #include <iostream>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -18,6 +19,20 @@ int AdjacencyList::numberInput(const string &message, const string &errorMsg)
         cin >> result;
 
         if (cin && result > -1)
+            return result;
+
+        errorHandling("Error : " + errorMsg);
+    }
+}
+
+float AdjacencyList::floatInput(const string &message, const string &errorMsg)
+{
+    float result;
+    while (true) {
+        cout << message;
+        cin >> result;
+
+        if (cin && 0 < result && result <= 1)
             return result;
 
         errorHandling("Error : " + errorMsg);
@@ -61,7 +76,7 @@ void AdjacencyList::connect(ID A, ID B, float weight)
 }
 
 #define notExist(vec1, str1) find(vec1.begin(), vec1.end(), str1) == vec1.end()
-void AdjacencyList::BFS(const string &id, vector<string> &v)
+void AdjacencyList::BFS(const string &id, set<string> &v)
 {
     // clear old vector
     v.clear();
@@ -79,13 +94,13 @@ void AdjacencyList::BFS(const string &id, vector<string> &v)
         bfsQueue.pop();
 
         // has not visited
-        if (notExist(v, nodeID)) {
+        if (v.find(nodeID) == v.end()) {
             int i = indexMapping[nodeID];
-            v.push_back(nodeID);
+            v.insert(nodeID);
 
             // put all data to vector and queue
             for (auto it : nodes[i].linked) {
-                if (notExist(v, it.id))
+                if (v.find(it.id) == v.end())
                     bfsQueue.push(it.id);
             }
         }
@@ -178,7 +193,12 @@ bool AdjacencyList::task1()
 
 bool cmpINode(const INode &A, const INode &B)
 {
-    return A.list.size() > B.list.size();
+    if (A.list.size() > B.list.size())
+        return true;
+    else if (A.list.size() < B.list.size())
+        return false;
+    else
+        return A.id < B.id;
 }
 
 bool AdjacencyList::task2()
@@ -194,10 +214,9 @@ bool AdjacencyList::task2()
 
     // Traversing
     for (auto it : nodes) {
-        INode tmp = {it.id, vector<string>()};  //
-        BFS(tmp.id, tmp.list);                  // BFS
-        sort(tmp.list.begin(), tmp.list.end()); // sort by ID
-        inodes.push_back(tmp);                  // push
+        INode tmp = {it.id, set<string>()}; //
+        BFS(tmp.id, tmp.list);              // BFS
+        inodes.push_back(tmp);              // push
     }
 
     // sort influence
@@ -205,6 +224,83 @@ bool AdjacencyList::task2()
 
     // save cnt file
     fout.open("pairs" + fileName + ".cnt", ios::out);
+    if (fout) {
+        int count = 1;
+        for (auto infIt : inodes) {
+            int count_L = 1;
+            fout << "[" << count << "] " << infIt.id << " : total influence "
+                 << infIt.list.size() << " people\n";
+            for (auto listIt : infIt.list)
+                fout << "\t(" << count_L++ << ") " << listIt << " ";
+            fout << endl << endl;
+            count++;
+        }
+
+        fout.close();
+    }
+
+    return 0;
+}
+
+void AdjacencyList::DFS(const string &id, set<string> &v, float valid)
+{
+    // clear old vector
+    v.clear();
+
+    stack<string> stack;
+
+    // add first node
+    stack.push(id);
+    string nodeID;
+
+    // DFS
+    while (!stack.empty()) {
+        // current node
+        nodeID = stack.top();
+        stack.pop();
+
+        // has not visited
+        if (v.find(nodeID) == v.end()) {
+            int i = indexMapping[nodeID];
+            v.insert(nodeID);
+
+            // put all data to vector and queue
+            for (auto it : nodes[i].linked) {
+                if (v.find(it.id) == v.end() && it.weight >= valid)
+                    stack.push(it.id);
+            }
+        }
+    }
+
+    v.erase(v.begin());
+}
+
+bool AdjacencyList::task3()
+{
+    // is task1 not done
+    if (nodes.empty()) {
+        cout << "Please execute task1 first." << endl;
+        return 0;
+    }
+
+    // valid float (0,1]
+    float valid = floatInput("input valid value:", "must in (0.1, 1.0]");
+
+    // influence data
+    vector<INode> inodes;
+
+    // Traversing
+    for (auto it : nodes) {
+        INode tmp = {it.id, set<string>()}; //
+        DFS(tmp.id, tmp.list, valid);       // DFS
+        inodes.push_back(tmp);              // push
+    }
+
+    // sort influence
+    sort(inodes.begin(), inodes.end(), cmpINode);
+
+    // save cnt file
+    fout.open("pairs" + fileName + ".inf", ios::out);
     if (fout) {
         int count = 1;
         for (auto infIt : inodes) {

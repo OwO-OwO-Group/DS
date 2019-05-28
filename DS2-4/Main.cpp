@@ -12,6 +12,7 @@ using namespace std;
 #define MENU_QUIT               0
 #define MENU_LOAD               1
 #define MENU_INFLUENCE          2
+#define MENU_VALID              3
 // clang-format on
 
 int main(int argc, char *argv[])
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
         cout << "* 0.          Quit             *" << endl;
         cout << "* 1.   Load Adjacency Lists    *" << endl;
         cout << "* 2.        Influence          *" << endl;
+        cout << "* 3.          Valid            *" << endl;
         cout << "choice: ";
 
         // ¿é¤J¿ï¾Ü
@@ -43,6 +45,10 @@ int main(int argc, char *argv[])
 
         case MENU_INFLUENCE:
             result = f.task2();
+            break;
+
+        case MENU_VALID:
+            result = f.task3();
             break;
 
         default:

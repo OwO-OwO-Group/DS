@@ -7,6 +7,7 @@
 #include "Data.h"
 #include <fstream>
 #include <map>
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -28,7 +29,7 @@ typedef struct node {
 
 typedef struct InfluenceNode {
     string id;
-    vector<string> list;
+    set<string> list;
 } INode;
 
 class AdjacencyList {
@@ -43,7 +44,7 @@ class AdjacencyList {
 
     // common function
     int numberInput(const string &message, const string &errorMsg);
-
+    float floatInput(const string &message, const string &errorMsg);
     int fileInput(const string &message, const string &prefix);
 
     // Add node if not exist
@@ -52,7 +53,8 @@ class AdjacencyList {
     // build map
     void buildMapping();
 
-    void BFS(const string &, vector<string> &);
+    void BFS(const string &, set<string> &);
+    void DFS(const string &, set<string> &, float);
 
     // connect A to B, weight
     void connect(ID A, ID B, float weight);
@@ -64,6 +66,7 @@ public:
     void clear();
     bool task1();
     bool task2();
+    bool task3();
 };
 
 #endif
