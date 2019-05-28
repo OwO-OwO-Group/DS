@@ -7,8 +7,8 @@
 #include "Data.h"
 #include <fstream>
 #include <map>
-#include <set>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -55,6 +55,7 @@ class AdjacencyList {
 
     void BFS(const string &, set<string> &);
     void DFS(const string &, set<string> &, float);
+    vector<INode> findSpreader(vector<INode> &);
 
     // connect A to B, weight
     void connect(ID A, ID B, float weight);

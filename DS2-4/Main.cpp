@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
         case MENU_INFLUENCE:
             result = f.task2();
             break;
-
         case MENU_VALID:
             result = f.task3();
             break;

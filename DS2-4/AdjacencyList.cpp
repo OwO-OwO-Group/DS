@@ -109,6 +109,31 @@ void AdjacencyList::BFS(const string &id, set<string> &v)
     v.erase(id);
 }
 
+vector<INode> AdjacencyList::findSpreader(vector<INode> &v)
+{
+    vector<INode> temp;
+    set<string> influenced;
+    set<string> temp_set;
+
+    for (auto i : v) {
+        bool influence = false;
+        for (auto j : i.list) {
+            auto setIt = influenced.find(j);
+            if (setIt == influenced.end()) temp_set.insert(j);
+            else {
+                influence = true;
+                break;
+            }
+        }
+        if (influence == false) {
+            temp.push_back(i);
+            influenced.insert(temp_set.begin(), temp_set.end());
+        }
+    }
+
+    return temp;
+}
+
 void AdjacencyList::buildMapping()
 {
     // clear old map
@@ -239,6 +264,20 @@ bool AdjacencyList::task2()
         fout.close();
     }
 
+    vector<INode> spreader = findSpreader(inodes);
+
+    int count = 1;
+    for (auto infIt : spreader) {
+        int count_L = 1;
+        cout << "[" << count << "] " << infIt.id << " : total influence "
+            << infIt.list.size() << " people\n";
+        // for (auto listIt : infIt.list)
+            // cout << "\t(" << count_L++ << ") " << listIt << " ";
+        cout << endl << endl;
+        if (count == 3) break;
+        count++;
+    }
+
     return 0;
 }
 
@@ -318,4 +357,3 @@ bool AdjacencyList::task3()
 
     return 0;
 }
-
