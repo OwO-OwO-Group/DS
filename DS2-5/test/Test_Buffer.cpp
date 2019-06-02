@@ -12,6 +12,30 @@ bool operator==(Column const &c1, Column const &c2)
            c1.weight == c2.weight;
 }
 
+void loadToVector(vector<Column> &v, fstream &fs)
+{
+    fs.clear();
+    fs.seekg(0, ios::beg);
+
+    Column tmp;
+    while (!fs.eof()) {
+        fs.read((char *)&tmp, sizeof(Column));
+        v.push_back(tmp);
+    }
+}
+
+void compare(vector<Column> &v1, vector<Column> &v2, const string &name1,
+             const string &name2)
+{
+    if (!equal(v1.begin(), v1.end(), v2.begin()) || v1.size() != v2.size()) {
+        cout << "read error" << endl;
+        cout << name1 << " row:" << v1.size() << endl;
+        cout << name2 << " row:" << v2.size() << endl;
+    }
+    else
+        cout << name1 << " row:" << v1.size() << endl;
+}
+
 void testRead()
 {
     fstream fs;
@@ -31,26 +55,12 @@ void testRead()
         }
 
         // gen rightResult
-        fs.clear();
-        fs.seekg(0, ios::beg);
-
-        Column tmp;
-        while (!fs.eof()) {
-            fs.read((char *)&tmp, sizeof(Column));
-            rightResult.push_back(tmp);
-        }
+        loadToVector(rightResult, fs);
 
         fs.close();
 
         // compare
-        if (!equal(bufferResult.begin(), bufferResult.end(),
-                   rightResult.begin())) {
-            cout << "read error" << endl;
-            cout << "buffer row:" << bufferResult.size() << endl;
-            cout << "file row:" << rightResult.size() << endl;
-        }
-        else
-            cout << "file row:" << rightResult.size() << endl;
+        compare(rightResult, bufferResult, "file", "buffer");
     }
     else
         cout << "fs error" << endl;
