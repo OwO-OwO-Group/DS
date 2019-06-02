@@ -11,16 +11,19 @@ BufferRead::BufferRead(fstream *in, int limit, int bufferSize)
     size = bufferSize;
     buffer = new Column[size];
 
+    head = 0;
     fs = in;
-    readLimit = limit;
+    resetLimit(limit);
 
     // set index and load
-    load();
+    if (fs != NULL)
+        load();
 }
 
-void BufferRead::setIn(fstream &in)
+void BufferRead::setIn(fstream *in, int newHead)
 {
-    fs = &in;
+    head = newHead;
+    fs = in;
     readSize = index = 0;
 }
 
@@ -28,7 +31,7 @@ void BufferRead::load()
 {
     fs->read((char *)buffer, sizeof(Column) * size);
     readSize = fs->gcount() / sizeof(Column);
-    readLimit -= size;
+    head += readSize;
     index = 0;
 }
 
@@ -40,22 +43,43 @@ BufferRead::operator bool()
     return true;
 }
 
+Column *BufferRead::getCurrent()
+{
+    // buffer is empty (index >= 50)
+    if (index >= readSize) {
+        fs->clear();
+        fs->seekg(head * sizeof(Column));
+        // readLimit is N
+        if (readLimit > head && fs->peek() != EOF)
+            load();
+        else {
+            return NULL;
+        }
+    }
+
+    // return current index then plus
+    return &buffer[index];
+}
+
 Column *BufferRead::read()
 {
     // buffer is empty (index >= 50)
     if (index >= readSize) {
+        fs->clear();
+        fs->seekg(head * sizeof(Column));
         // readLimit is N
-        if (readLimit > 0 && fs->peek() != EOF)
+        if (readLimit > head && fs->peek() != EOF)
             load();
-        else
+        else {
             return NULL;
+        }
     }
 
     // return current index then plus
     return &buffer[index++];
 }
 
-void BufferRead::resetLimit(int limit) { readLimit = limit; }
+void BufferRead::resetLimit(int limit) { readLimit = limit + head; }
 BufferRead::~BufferRead() { delete buffer; }
 
 BufferWrite::BufferWrite(fstream *out, int bufferSize)
@@ -66,9 +90,9 @@ BufferWrite::BufferWrite(fstream *out, int bufferSize)
     count = 0;
 }
 
-void BufferWrite::setOut(fstream &out)
+void BufferWrite::setOut(fstream *out)
 {
-    fs = &out;
+    fs = out;
     count = 0;
 }
 
@@ -89,6 +113,8 @@ void BufferWrite::write(Column *data)
 
 void BufferWrite::flush()
 {
+
+    cout << "null " << count << endl;
     fs->write((char *)buffer, sizeof(Column) * count);
     count = 0;
 }

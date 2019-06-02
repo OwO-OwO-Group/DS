@@ -17,6 +17,7 @@ using namespace std;
 class BufferRead {
     fstream *fs;
     int index;
+    int head;
     int readLimit;
     int size, readSize;
 
@@ -27,8 +28,9 @@ public:
     Column *buffer;
     BufferRead(fstream *in, int limit, int bufferSize);
     void resetLimit(int);
-    void setIn(fstream &in);
+    void setIn(fstream *in, int newHead);
     Column *read();
+    Column *getCurrent();
     ~BufferRead();
 };
 
@@ -40,7 +42,8 @@ class BufferWrite {
 
 public:
     BufferWrite(fstream *out, int bufferSize);
-    void setOut(fstream &out) void write(Column *data);
+    void setOut(fstream *out);
+    void write(Column *data);
     void flush();
     ~BufferWrite();
 };

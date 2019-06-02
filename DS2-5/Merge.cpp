@@ -27,18 +27,14 @@ string mergeSort(string nameA, string nameB)
 
     // set file pointer
     fstream fs1, fs2;
-    fs1.open(nameA, ios::in | ios::out | ios::binary);
+    fs1.open(nameA, ios::in | ios::binary);
 
+    int fileSize = getRow(fs1);
     // create nameB
     fs2.open(nameB, ios::out | ios::binary);
-    fs2.close();
-
-    fs2.open(nameB, ios::in | ios::out | ios::binary);
 
     if (!fs1 || !fs2)
         throw "Open block error";
-
-    int fileSize = getRow(fs1);
 
     int offset = 0;
 
@@ -46,13 +42,13 @@ string mergeSort(string nameA, string nameB)
     do {
         // set block pointer to
         cout << offset << " " << offset + n << endl;
-        read1.setIn(fs1, offset);
-        read2.setIn(fs1, offset + n);
-        write1.setOut(fs2);
+        read1.setIn(&fs1, offset);
+        read2.setIn(&fs1, offset + n);
+        write1.setOut(&fs2);
         // is eof
-        if (offset > fileSize) {
+        if (offset >= fileSize) {
             // swap A B
-            swap(fs1, fs2);
+            // swap(fs1, fs2);
             swap(nameA, nameB);
 
             //
@@ -60,14 +56,13 @@ string mergeSort(string nameA, string nameB)
             offset = 0;
 
             // seekg A
-            fs1.clear();
-            fs1.seekg(0, ios::beg);
+            fs1.close();
+            fs2.close();
+
+            fs1.open(nameA, ios::in | ios::binary);
 
             // seekg B
-            fs2.clear();
-            fs2.seekg(0, ios::beg);
-
-            cout << "reset" << offset << endl;
+            fs2.open(nameB, ios::out | ios::binary);
         }
         else {
             read1.resetLimit(n);
@@ -79,7 +74,7 @@ string mergeSort(string nameA, string nameB)
 
     fs1.close();
     fs2.close();
-    return nameB;
+    return nameA;
 }
 
 Column *weightMax(Column *d1, Column *d2)
@@ -100,11 +95,19 @@ Column *weightMax(Column *d1, Column *d2)
 
 void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
 {
-    Column *d1, *d2;
+    Column *d1, *d2, *max;
+    int count = 0;
     do {
-        d1 = b1.read();
-        d2 = b2.read();
-        w.write(weightMax(d1, d2));
-    } while (d1 != NULL && d2 != NULL);
+        d1 = b1.getCurrent();
+        d2 = b2.getCurrent();
+        max = weightMax(d1, d2);
+        if (max == d1)
+            b1.read();
+        else if (max == d2)
+            b2.read();
+        w.write(max);
+        count++;
+    } while (d1 != NULL || d2 != NULL);
+    cout << count << endl;
 }
 
