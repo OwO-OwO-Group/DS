@@ -20,16 +20,25 @@ BufferRead::BufferRead(fstream &in, int limit, int bufferSize)
 void BufferRead::load()
 {
     fs->read((char *)buffer, sizeof(Column) * size);
+    readSize = fs->gcount() / sizeof(Column);
     readLimit -= size;
     index = 0;
+}
+
+BufferRead::operator bool()
+{
+    if (index >= readSize && fs->peek() == EOF)
+        return false;
+
+    return true;
 }
 
 Column *BufferRead::read()
 {
     // buffer is empty (index >= 50)
-    if (index >= size) {
+    if (index >= readSize) {
         // readLimit is N
-        if (readLimit > 0 && !fs->eof())
+        if (readLimit > 0 && fs->peek() != EOF)
             load();
         else
             return NULL;

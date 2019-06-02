@@ -13,11 +13,12 @@ class BufferRead {
     fstream *fs;
     int index;
     int readLimit;
-    int size;
+    int size, readSize;
 
     void load();
 
 public:
+    operator bool();
     Column *buffer;
     BufferRead(fstream &in, int limit, int bufferSize);
     void resetLimit(int);

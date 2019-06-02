@@ -18,7 +18,7 @@ void loadToVector(vector<Column> &v, fstream &fs)
     fs.seekg(0, ios::beg);
 
     Column tmp;
-    while (!fs.eof()) {
+    while (fs.peek() != EOF) {
         fs.read((char *)&tmp, sizeof(Column));
         v.push_back(tmp);
     }
@@ -47,7 +47,7 @@ void testRead()
         // gen bufferResult
         BufferRead br = BufferRead(fs, 20, 10);
         Column *data;
-        while (!fs.eof()) {
+        while (br) {
             if ((data = br.read()) != NULL)
                 bufferResult.push_back(*data);
             else
