@@ -3,40 +3,48 @@
 
 #include "Buffer.h"
 #include <iostream>
+
 using namespace std;
-BufferRead::BufferRead(fstream *in, int limit, int bufferSize)
+
+BufferRead::BufferRead(fstream &in, int limit, int bufferSize)
 {
-    fs = in;
+    fs = &in;
     size = bufferSize;
     buffer = new Column[size];
     readLimit = limit;
+
+    // set index and load
+    load();
+}
+
+void BufferRead::load()
+{
+    fs->read((char *)buffer, sizeof(Column) * size);
+    readLimit -= size;
     index = 0;
 }
 
-Column *BufferRead::buffer_read()
+Column *BufferRead::read()
 {
     // buffer is empty (index >= 50)
-    if (index >= 50) {
+    if (index >= size) {
         // readLimit is N
-        if (readLimit > 0 && !fs->eof()) {
-            // load to buffer
-            fs->read((char *)buffer, sizeof(buffer));
-            readLimit -= size;
-            index = 0;
-        }
+        if (readLimit > 0 && !fs->eof())
+            load();
         else
             return NULL;
     }
+
     // return current index then plus
-    return buffer + index++;
+    return &buffer[index++];
 }
 
 void BufferRead::resetLimit(int limit) { readLimit = limit; }
 BufferRead::~BufferRead() { delete buffer; }
 
-BufferWrite::BufferWrite(fstream *out, int bufferSize)
+BufferWrite::BufferWrite(fstream &out, int bufferSize)
 {
-    fs = out;
+    fs = &out;
     size = bufferSize;
     buffer = new Column[size];
     count = 0;

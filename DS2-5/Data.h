@@ -5,8 +5,8 @@
 #define _DATA_H_
 
 #include "Header.h"
+#include <cstring>
 #include <iostream>
-#include <string>
 using namespace std;
 
 #define DATA_SIZE 3

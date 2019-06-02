@@ -15,11 +15,13 @@ class BufferRead {
     int readLimit;
     int size;
 
+    void load();
+
 public:
     Column *buffer;
-    BufferRead(fstream *in, int limit, int bufferSize);
+    BufferRead(fstream &in, int limit, int bufferSize);
     void resetLimit(int);
-    Column *buffer_read();
+    Column *read();
     ~BufferRead();
 };
 
@@ -30,7 +32,7 @@ class BufferWrite {
     int size;
 
 public:
-    BufferWrite(fstream *out, int bufferSize);
+    BufferWrite(fstream &out, int bufferSize);
     void write(Column *data);
     void flush();
     ~BufferWrite();
