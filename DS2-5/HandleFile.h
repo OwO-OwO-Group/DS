@@ -17,7 +17,6 @@ using namespace std;
 
 class HandleFile {
     fstream fin;
-    fstream fout;
     string fileName;
 
     // common function
