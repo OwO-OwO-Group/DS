@@ -9,3 +9,9 @@ g++ test_dir/Buffer.cpp test_dir/Test_Buffer.cpp
 ./a.out
 
 # ls *.bin | grep '[0-9]*' -o
+echo test task1
+
+./build.sh
+echo "1 501 0" | ./a.out
+clear
+./testWeight.py sort501.bin
