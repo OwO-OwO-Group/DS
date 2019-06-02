@@ -20,8 +20,9 @@ class BufferRead {
 public:
     operator bool();
     Column *buffer;
-    BufferRead(fstream &in, int limit, int bufferSize);
+    BufferRead(fstream *in, int limit, int bufferSize);
     void resetLimit(int);
+    void setIn(fstream &in);
     Column *read();
     ~BufferRead();
 };
@@ -33,8 +34,8 @@ class BufferWrite {
     int size;
 
 public:
-    BufferWrite(fstream &out, int bufferSize);
-    void write(Column *data);
+    BufferWrite(fstream *out, int bufferSize);
+    void setOut(fstream &out) void write(Column *data);
     void flush();
     ~BufferWrite();
 };
