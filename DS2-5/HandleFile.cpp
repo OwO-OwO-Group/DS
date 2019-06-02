@@ -77,7 +77,7 @@ bool HandleFile::task1()
     tmpFile1 = mergeSort(tmpFile1, tmpFile2);
 
     // rename
-    rename(tmpFile1.c_str(), ("sort" + fileName + ".bin").c_str());
+    rename(tmpFile1.c_str(), ("sorted" + fileName + ".bin").c_str());
 
     return 0;
 }
