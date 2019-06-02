@@ -18,53 +18,56 @@ int getRow(fstream &fin)
 string mergeSort(string nameA, string nameB)
 {
     // set buffer size
-    BufferRead read1 = BufferRead(NULL, 0, 50), read2 = BufferRead(NULL, 0, 50);
-    BufferWrite write1 = BufferWrite(NULL, 100);
+    BufferRead read1 = BufferRead(NULL, 0, BUFFER_READ_SIZE),
+               read2 = BufferRead(NULL, 0, BUFFER_READ_SIZE);
+    BufferWrite write1 = BufferWrite(NULL, BUFFER_WRITE_SIZE);
 
     // set n
     int n = 200;
 
     // set file pointer
-    fstream block1, block2, fout1, fout2;
-    block1.open(nameA, ios::in | ios::out | ios::binary);
-    block2.open(nameA, ios::in | ios::out | ios::binary);
-    fout1.open(nameB, ios::in | ios::out | ios::binary);
-    fout2.open(nameB, ios::in | ios::out | ios::binary);
+    fstream fs1, fs2;
+    fs1.open(nameA, ios::in | ios::out | ios::binary);
 
-    if (!block1 || !block2 || !fout1 || !fout2)
+    // create nameB
+    fs2.open(nameB, ios::out | ios::binary);
+    fs2.close();
+
+    fs2.open(nameB, ios::in | ios::out | ios::binary);
+
+    if (!fs1 || !fs2)
         throw "Open block error";
 
-    int fileSize = getRow(block1);
+    int fileSize = getRow(fs1);
 
     int offset = 0;
 
+    cout << "123: " << fileSize << endl;
     do {
         // set block pointer to
-        block1.seekg(offset, ios::beg);
-        block2.seekg(offset + n, ios::beg);
-        read1.setIn(block1);
-        read2.setIn(block1);
-        write1.setOut(fout1);
-
+        cout << offset << " " << offset + n << endl;
+        read1.setIn(fs1, offset);
+        read2.setIn(fs1, offset + n);
+        write1.setOut(fs2);
         // is eof
-        if (block1.eof()) {
+        if (offset > fileSize) {
             // swap A B
-            swap(block1, fout1);
-            swap(block2, fout2);
+            swap(fs1, fs2);
+            swap(nameA, nameB);
 
             //
             n *= 2;
             offset = 0;
 
             // seekg A
-            block1.clear();
-            block1.seekg(0, ios::beg);
-            block2.clear();
-            block2.seekg(0, ios::beg);
+            fs1.clear();
+            fs1.seekg(0, ios::beg);
 
             // seekg B
-            fout1.clear();
-            fout1.seekg(0, ios::beg);
+            fs2.clear();
+            fs2.seekg(0, ios::beg);
+
+            cout << "reset" << offset << endl;
         }
         else {
             read1.resetLimit(n);
@@ -72,7 +75,11 @@ string mergeSort(string nameA, string nameB)
             mergeSortBlock(read1, read2, write1);
             offset += 2 * n;
         }
-    } while (n >= fileSize);
+    } while (n < fileSize);
+
+    fs1.close();
+    fs2.close();
+    return nameB;
 }
 
 Column *weightMax(Column *d1, Column *d2)
@@ -84,7 +91,11 @@ Column *weightMax(Column *d1, Column *d2)
     if (d2 == NULL)
         return d1;
 
-    return d1->weight > d2->weight ? d1 : d2;
+    if (d1->weight > d2->weight)
+        return d1;
+    else if (d1->weight < d2->weight)
+        return d2;
+    return d1;
 }
 
 void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
@@ -94,6 +105,6 @@ void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
         d1 = b1.read();
         d2 = b2.read();
         w.write(weightMax(d1, d2));
-    } while (d1 == NULL && d2 == NULL);
+    } while (d1 != NULL && d2 != NULL);
 }
 
