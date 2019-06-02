@@ -7,7 +7,12 @@
 #include "Data.h"
 #include <fstream>
 #include <iostream>
+
 using namespace std;
+
+#define BUFFER_READ_SIZE 50
+#define BUFFER_WRITE_SIZE 100
+#define BUFFER_MAX_SIZE 200
 
 class BufferRead {
     fstream *fs;
