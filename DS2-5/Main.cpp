@@ -25,9 +25,8 @@ int main(int argc, char *argv[])
         // 輸出選單
         cout << "              MENU              " << endl;
         cout << "* 0.          Quit             *" << endl;
-        cout << "* 1.   Load Adjacency Lists    *" << endl;
-        cout << "* 2.        Influence          *" << endl;
-        cout << "* 3.          Valid            *" << endl;
+        cout << "* 1.       External Sort       *" << endl;
+        cout << "* 2.       Primary Index       *" << endl;
         cout << "choice: ";
 
         // 輸入選擇
