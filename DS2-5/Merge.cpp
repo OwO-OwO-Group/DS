@@ -38,10 +38,8 @@ string mergeSort(string nameA, string nameB)
 
     int offset = 0;
 
-    cout << "123: " << fileSize << endl;
     do {
         // set block pointer to
-        cout << offset << " " << offset + n << endl;
         read1.setIn(&fs1, offset);
         read2.setIn(&fs1, offset + n);
         write1.setOut(&fs2);
@@ -96,7 +94,6 @@ Column *weightMax(Column *d1, Column *d2)
 void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
 {
     Column *d1, *d2, *max;
-    int count = 0;
     do {
         d1 = b1.getCurrent();
         d2 = b2.getCurrent();
@@ -106,8 +103,6 @@ void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
         else if (max == d2)
             b2.read();
         w.write(max);
-        count++;
     } while (d1 != NULL || d2 != NULL);
-    cout << count << endl;
 }
 

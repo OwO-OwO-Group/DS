@@ -114,7 +114,6 @@ void BufferWrite::write(Column *data)
 void BufferWrite::flush()
 {
 
-    cout << "null " << count << endl;
     fs->write((char *)buffer, sizeof(Column) * count);
     count = 0;
 }
