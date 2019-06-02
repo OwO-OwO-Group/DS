@@ -54,6 +54,8 @@ bool HandleFile::task1()
         return 0;
     }
 
+    // timing
+    clock_t t = clock();
     // open two file
     string tmpFile1 = "tmp1.bin", tmpFile2 = "tmp2.bin";
 
@@ -78,7 +80,7 @@ bool HandleFile::task1()
 
     // rename
     rename(tmpFile1.c_str(), ("sorted" + fileName + ".bin").c_str());
-
+    cout << "time: " << (clock() - t) << " ms" << endl;
     return 0;
 }
 
