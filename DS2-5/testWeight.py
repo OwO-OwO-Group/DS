@@ -8,15 +8,16 @@ filename = sys.argv[1]
 
 with open(filename, 'rb') as f:
     pre = 1.0
+    count = 0
     while True:
         data = f.read(slen)
         if not data: break
         a = s.unpack(data)
-        if a[2] <= pre:
-            pre = a[2]
-        else:
-            print("err {} {}".format(pre, a[2]))
-            break
-    
+        if a[2] > pre:
+            print("err [{}] {} [{}] {}".format(count - 1, pre, count, a[2]))
+            #break
+
+        count = count + 1
+        pre = a[2]
 
 
