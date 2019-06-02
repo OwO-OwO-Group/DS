@@ -25,8 +25,6 @@ class HandleFile {
 
     int fileInput(string message, string prefix);
 
-    int getRow();
-
 public:
     bool task1();
     bool task2();

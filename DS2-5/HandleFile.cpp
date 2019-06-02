@@ -39,15 +39,6 @@ int HandleFile::fileInput(string message, string prefix)
     }
 }
 
-int HandleFile::getRow()
-{
-    // counting rows number
-    fin.seekg(0, fin.end);
-    int row = fin.tellg() / sizeof(struct Column);
-    fin.seekg(0, fin.beg);
-    return row;
-}
-
 bool HandleFile::task1()
 {
     int finmode = fileInput("Input (401, 402, ...[0]Quit): ", "pairs");
