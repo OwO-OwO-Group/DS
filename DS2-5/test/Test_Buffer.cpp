@@ -28,7 +28,7 @@ void compare(vector<Column> &v1, vector<Column> &v2, const string &name1,
              const string &name2)
 {
     if (!equal(v1.begin(), v1.end(), v2.begin()) || v1.size() != v2.size()) {
-        cout << "read error" << endl;
+        cout << "error" << endl;
         cout << name1 << " row:" << v1.size() << endl;
         cout << name2 << " row:" << v2.size() << endl;
     }
@@ -38,6 +38,7 @@ void compare(vector<Column> &v1, vector<Column> &v2, const string &name1,
 
 void testRead()
 {
+    cout << "[testRead]" << endl;
     fstream fs;
     fs.open("pairs501.bin", ios::in | ios::binary);
     vector<Column> bufferResult, rightResult;
@@ -66,7 +67,50 @@ void testRead()
         cout << "fs error" << endl;
 }
 
-void testWrite() {}
+void testWrite()
+{
+    cout << "[testWrite]" << endl;
+    fstream fs, fout;
+    string debug1 = "debug501.bin", input1 = "pairs501.bin";
+    // gen debug file
+    fs.open(input1, ios::in | ios::binary);
+    fout.open(debug1, ios::out | ios::binary);
+    if (fs && fout) {
+        Column tmp;
+        BufferWrite bw = BufferWrite(fout, 200);
+        while (fs.peek() != EOF) {
+            fs.read((char *)&tmp, sizeof(Column));
+            bw.write(&tmp);
+        }
+
+        bw.flush();
+        fs.close();
+        fout.close();
+    }
+    else
+        cout << "gen write fs error" << endl;
+
+    // read two file
+    vector<Column> bufferResult, rightResult;
+    fs.open(input1, ios::in | ios::binary);
+    if (fs) {
+        loadToVector(rightResult, fs);
+        fs.close();
+    }
+    else
+        cout << "load pairs fs error" << endl;
+
+    fs.open(debug1, ios::in | ios::binary);
+    if (fs) {
+        loadToVector(bufferResult, fs);
+        fs.close();
+    }
+    else
+        cout << "load debug fs error" << endl;
+
+    // compare
+    compare(rightResult, bufferResult, "file", "buffer");
+}
 
 int main()
 {
