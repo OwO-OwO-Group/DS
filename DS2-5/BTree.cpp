@@ -1,3 +1,4 @@
+
 // 第10組 106127116 許逸翔 10612150 林詠翔 資訊二甲
 // must to use -std=c++11 or higher version
 #include "BTree.h"
@@ -242,3 +243,24 @@ void Tree23::removeNode(Node *cur)
 }
 
 void Tree23::clear() { removeNode(root); }
+
+void Tree23::find(vector<int> &result, const string &key)
+{
+    result.clear();
+
+    Node *cur = root, *next = cur;
+    int subtreeIndex;
+    // find correct node and key
+    while (cur != (next = nextPtr(cur, key, subtreeIndex)))
+        cur = next;
+
+    int index = cur->hasKey(key);
+
+    if (index != -1) {
+        for (auto id : cur->data[index].id)
+            result.push_back(id);
+    }
+
+    sort(result.begin(), result.end());
+}
+
