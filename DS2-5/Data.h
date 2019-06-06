@@ -17,5 +17,13 @@ typedef struct Column {
     float weight;
 } Column;
 
+class Data {
+public:
+    float key;
+    vector<int> id;
+
+    void assign(const Data &);
+};
+
 #endif
 

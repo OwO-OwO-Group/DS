@@ -4,10 +4,12 @@
 #include "HandleFile.h"
 #include "Buffer.h"
 #include "Merge.h"
+#include "BTree.h"
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
-#include <vector> // test
+#include <vector>
+
 using namespace std;
 
 int HandleFile::numberInput(string message, string errorMsg)
@@ -92,6 +94,48 @@ bool HandleFile::task2()
         cout << "switch to menu" << endl;
         return 0;
     }
+
+    /*
+    BPTree tree;
+    int offset = 0;
+    Column tmp[BUFFER_MAX_SIZE];
+    while (fin.peek() != EOF) {
+        fin.read((char *)&tmp, sizeof(Column) * BUFFER_MAX_SIZE);
+        int len = fin.gcount() / sizeof(Column);
+        for (int i = 0; i < len; i++) {
+            tree.insert(offset, tmp[i].weight);
+            offset += sizeof(Column);
+        }
+    }
+    fin.close();
+    */
+
+    Data data;
+    float key_pre = -1, key_cur;
+    BPTree tree;
+    int offset = 0;
+    Column tmp[BUFFER_MAX_SIZE];
+    while (fin.peek() != EOF) {
+        fin.read((char *)&tmp, sizeof(Column) * BUFFER_MAX_SIZE);
+        int len = fin.gcount() / sizeof(Column);
+        for (int i = 0; i < len; i++) {
+            key_cur = tmp[i].weight;
+            if (key_pre != key_cur) {
+                if (key_pre != -1) {
+                    tree.insert(data);
+                    data.id.clear();
+                }
+                data.key = key_cur;
+                key_pre = key_cur;
+            }
+            data.id.push_back(offset);
+            offset += 1;
+        }
+    }
+    tree.insert(data);
+    fin.close();
+
+    tree.printList();
 
     return 0;
 }
