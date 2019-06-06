@@ -338,7 +338,10 @@ void BPTree::printList()
     while (cur != NULL) {
         for (int i = cur->size -1; i >= 0; i--) {
             cout << '[' << count++ << "] " << cur->data[i].key << " : ";
-            cout << cur->data[i].id[0] << endl;
+            cout << cur->data[i].id[0];
+            for (int j = 1; j < cur->data[i].id.size(); j++)
+                cout << ", " << cur->data[i].id[j];
+            cout << endl;
         }
         cur = cur->left;
     }

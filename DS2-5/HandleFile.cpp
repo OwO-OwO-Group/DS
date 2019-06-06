@@ -95,7 +95,7 @@ bool HandleFile::task2()
         return 0;
     }
 
-    /*
+    /* insert one by one
     BPTree tree;
     int offset = 0;
     Column tmp[BUFFER_MAX_SIZE];
@@ -104,12 +104,12 @@ bool HandleFile::task2()
         int len = fin.gcount() / sizeof(Column);
         for (int i = 0; i < len; i++) {
             tree.insert(offset, tmp[i].weight);
-            offset += sizeof(Column);
+            offset += 1;
         }
     }
     fin.close();
     */
-
+    /* after sort, insert data
     Data data;
     float key_pre = -1, key_cur;
     BPTree tree;
@@ -133,6 +133,26 @@ bool HandleFile::task2()
         }
     }
     tree.insert(data);
+    fin.close();
+    */
+
+    // after sort, insert the first one of each weight
+    float key_pre = -1, key_cur;
+    BPTree tree;
+    int offset = 0;
+    Column tmp[BUFFER_MAX_SIZE];
+    while (fin.peek() != EOF) {
+        fin.read((char *)&tmp, sizeof(Column) * BUFFER_MAX_SIZE);
+        int len = fin.gcount() / sizeof(Column);
+        for (int i = 0; i < len; i++) {
+            key_cur = tmp[i].weight;
+            if (key_pre != key_cur) {
+                tree.insert(offset, key_cur);
+                key_pre = key_cur;
+            }
+            offset += 1;
+        }
+    }
     fin.close();
 
     tree.printList();
