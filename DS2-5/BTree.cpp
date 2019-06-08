@@ -3,6 +3,7 @@
 // must to use -std=c++11 or higher version
 #include "BTree.h"
 #include <algorithm>
+#include <iomanip>
 
 // initialize
 BPTree::BPTree() { root = NULL; }
@@ -18,7 +19,7 @@ BPTree::Node::Node(BPTree::Node *getPre)
 
 // traversal
 BPTree::Node *BPTree::nextPtr(BPTree::Node *node, const float &key,
-    int &subtreeIndex)
+                              int &subtreeIndex)
 {
     // return if node is leaf or has some key
     if (node->isLeaf() || node->hasKey(key) != -1)
@@ -69,11 +70,10 @@ void BPTree::find(vector<int> &result, const float &key)
     // sort(result.begin(), result.end());
 }
 
-
 // insert
 void Data::assign(const Data &data)
 {
-    key = float(data.key);    // add a key
+    key = float(data.key);     // add a key
     id = vector<int>(data.id); // add a ids
 }
 void BPTree::insert(const Data &data)
@@ -167,7 +167,7 @@ bool cmp(const Data &A, const Data &B) { return A.key < B.key; }
 void BPTree::Node::sortLeaf() { sort(data, data + size, cmp); }
 
 // split
-BPTree::Node* BPTree::splitleaf(BPTree::Node *node)
+BPTree::Node *BPTree::splitleaf(BPTree::Node *node)
 {
     // node is exist and full
     if (node->size > TREE_KEY_SIZE) {
@@ -180,16 +180,20 @@ BPTree::Node* BPTree::splitleaf(BPTree::Node *node)
 
         Node *pre = node->pre;
         Node *leftNode = new Node(pre), *rightNode = new Node(pre);
-        
+
         // copy data
         for (int i = 0; i < node->size; i++) {
-            if(i < KEY_RMID_INDEX) leftNode->addKey(node->data[i]);
-            else rightNode->addKey(node->data[i]);
+            if (i < KEY_RMID_INDEX)
+                leftNode->addKey(node->data[i]);
+            else
+                rightNode->addKey(node->data[i]);
         }
 
         // relink list
-        if (node->left) node->left->right = leftNode;
-        if (node->right) node->right->left = rightNode;
+        if (node->left)
+            node->left->right = leftNode;
+        if (node->right)
+            node->right->left = rightNode;
         leftNode->left = node->left;
         leftNode->right = rightNode;
         rightNode->left = leftNode;
@@ -212,7 +216,7 @@ BPTree::Node* BPTree::splitleaf(BPTree::Node *node)
 
     return node;
 }
-BPTree::Node* BPTree::split(BPTree::Node *node)
+BPTree::Node *BPTree::split(BPTree::Node *node)
 {
     // node is exist and full
     if (node->size > TREE_KEY_SIZE) {
@@ -228,12 +232,16 @@ BPTree::Node* BPTree::split(BPTree::Node *node)
 
         // copy data & subtree
         for (int i = 0; i < node->size; i++) {
-            if (i < KEY_RMID_INDEX) leftNode->addKey(node->data[i]);
-            else if (i > KEY_RMID_INDEX) rightNode->addKey(node->data[i]);
+            if (i < KEY_RMID_INDEX)
+                leftNode->addKey(node->data[i]);
+            else if (i > KEY_RMID_INDEX)
+                rightNode->addKey(node->data[i]);
         }
         for (int i = 0; i <= node->size; i++) {
-            if (i < DATA_RMID_INDEX) leftNode->connect(node->subtree[i], i);
-            else rightNode->connect(node->subtree[i], i - DATA_RMID_INDEX);
+            if (i < DATA_RMID_INDEX)
+                leftNode->connect(node->subtree[i], i);
+            else
+                rightNode->connect(node->subtree[i], i - DATA_RMID_INDEX);
         }
 
         // merge node and pre_node
@@ -336,8 +344,9 @@ void BPTree::printList()
 
     int count = 1;
     while (cur != NULL) {
-        for (int i = cur->size -1; i >= 0; i--) {
-            cout << '[' << count++ << "] " << cur->data[i].key << " : ";
+        for (int i = cur->size - 1; i >= 0; i--) {
+            cout << '[' << setw(5) << count++ << "] " << setw(8)
+                 << cur->data[i].key << " : ";
             cout << cur->data[i].id[0];
             for (int j = 1; j < cur->data[i].id.size(); j++)
                 cout << ", " << cur->data[i].id[j];
@@ -346,9 +355,4 @@ void BPTree::printList()
         cur = cur->left;
     }
 }
-
-
-
-
-
 
