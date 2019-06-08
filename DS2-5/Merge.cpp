@@ -46,20 +46,16 @@ string mergeSort(string nameA, string nameB)
         // is eof
         if (offset >= fileSize) {
             // swap A B
-            // swap(fs1, fs2);
             swap(nameA, nameB);
 
-            //
+            // increase block size
             n *= 2;
             offset = 0;
 
-            // seekg A
+            // reopen
             fs1.close();
             fs2.close();
-
             fs1.open(nameA, ios::in | ios::binary);
-
-            // seekg B
             fs2.open(nameB, ios::out | ios::binary);
         }
         else {
@@ -97,11 +93,14 @@ void mergeSortBlock(BufferRead &b1, BufferRead &b2, BufferWrite &w)
     do {
         d1 = b1.getCurrent();
         d2 = b2.getCurrent();
+
+        // pop max
         max = weightMax(d1, d2);
         if (max == d1)
             b1.read();
         else if (max == d2)
             b2.read();
+
         w.write(max);
     } while (d1 != NULL || d2 != NULL);
 }
