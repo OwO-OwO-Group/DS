@@ -17,13 +17,13 @@ int getRow(fstream &fin)
 // return sorted file
 string mergeSort(string nameA, string nameB)
 {
-    // set buffer size
-    BufferRead read1 = BufferRead(NULL, 0, BUFFER_READ_SIZE),
-               read2 = BufferRead(NULL, 0, BUFFER_READ_SIZE);
-    BufferWrite write1 = BufferWrite(NULL, BUFFER_WRITE_SIZE);
-
     // set n
-    int n = 200;
+    int n = 1600;
+
+    // set buffer size
+    BufferRead read1 = BufferRead(NULL, 0, n / 4),
+               read2 = BufferRead(NULL, 0, n / 4);
+    BufferWrite write1 = BufferWrite(NULL, n / 2);
 
     // set file pointer
     fstream fs1, fs2;
